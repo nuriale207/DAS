@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "958537595512",
+    "project_id": "app-das",
+    "storage_bucket": "app-das.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:958537595512:android:515f120451717640100b8d",
+        "android_client_info": {
+          "package_name": "com.example.das"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "958537595512-lmdd5jfstpuea5m5k3cdg947k1jltuok.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXIGRfKSk4iAZh3uFo1XZTrGQYBUWA-ow"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "958537595512-lmdd5jfstpuea5m5k3cdg947k1jltuok.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
