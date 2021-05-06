@@ -11,11 +11,9 @@ import androidx.work.WorkManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,14 +25,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.io.ByteArrayOutputStream;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -58,7 +52,11 @@ public class LoginActivity extends AppCompatActivity {
         inputEmail = findViewById(R.id.nombreUsuarioEdit);
         inputPassword = findViewById(R.id.contraseñaEdit);
 
-
+        //En caso de haber girado la pantalla se añaden los valores escritos previamente
+        if(savedInstanceState!=null){
+            inputEmail.setText(savedInstanceState.getString("email"));
+            inputPassword.setText(savedInstanceState.getString("contraseña"));
+        }
         //Obtener la instancia de autenticación de Firebase
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -187,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             }
                             else{
-                                startActivity(new Intent(LoginActivity.this, ChatsActivity.class));
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
 
                                 SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                                 preferencias.edit().putString("id",id).apply();
@@ -202,6 +200,14 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+    }
+    //En caso de que la aplicación se detenga se almacenan los nombres escritos hasta el momento
+    @Override
+    protected void onSaveInstanceState (Bundle savedInstanceState) {
+
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("email",inputEmail.getText().toString());
+        savedInstanceState.putString("contraseña",inputPassword.getText().toString());
     }
 
 

@@ -16,7 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/añadirImagen"
         app:layout_constraintTop_toBottomOf="@+id/editGenero" />
 
     <ImageView
@@ -24,7 +24,7 @@
         android:layout_width="153dp"
         android:layout_height="168dp"
         app:layout_constraintBottom_toTopOf="@+id/añadirImagen"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/editNombreUsuario"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -37,8 +37,8 @@
         android:background="#FB7979"
         android:backgroundTint="#FDA4A4"
         android:text="Añadir Imagen"
-        app:layout_constraintBottom_toTopOf="@+id/editNombreUsuario"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/registrarse"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
@@ -53,8 +53,8 @@
         app:layout_constraintBottom_toTopOf="@+id/editFechaNacimiento"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/añadirImagen" />
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editFechaNacimiento"
@@ -69,7 +69,7 @@
         app:layout_constraintBottom_toTopOf="@+id/editGenero"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/editNombreUsuario" />
 
     <EditText
@@ -84,7 +84,7 @@
         app:layout_constraintBottom_toTopOf="@+id/registrarse"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/editFechaNacimiento" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

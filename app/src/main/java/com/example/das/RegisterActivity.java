@@ -22,7 +22,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,9 +48,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -61,7 +57,6 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText fechaNacimiento;
     private EditText genero;
     private Button registro;
-
     private String id;
 
     //Firebase
@@ -88,6 +83,17 @@ public class RegisterActivity extends AppCompatActivity {
         if (extras!=null){
             id=extras.getString("id");
 
+        }
+
+        //En caso de haber girado la pantalla se añaden los valores escritos previamente
+        if(savedInstanceState!=null){
+            nombre.setText(savedInstanceState.getString("nombre"));
+            fechaNacimiento.setText(savedInstanceState.getString("fechaNacimiento"));
+            genero.setText(savedInstanceState.getString("genero"));
+
+//            Bitmap b = BitmapFactory.decodeByteArray(
+//                    getIntent().getByteArrayExtra("imagen"),0,getIntent().getByteArrayExtra("byteArray").length);
+//           imagen.setImageBitmap(b);
         }
 
         //Añadir listeners a los campos
@@ -334,7 +340,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                                     preferencias.edit().putString("id",id).apply();
 
-                                    Intent i = new Intent(getApplicationContext(), ChatsActivity.class);
+                                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
                                     startActivity(i);
                                     finish();
 
@@ -400,6 +406,22 @@ public class RegisterActivity extends AppCompatActivity {
     return valido;
     }
 
+    @Override
+    protected void onSaveInstanceState (Bundle savedInstanceState) {
+
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("nombre",nombre.getText().toString());
+        savedInstanceState.putString("fechaNacimiento",fechaNacimiento.getText().toString());
+        savedInstanceState.putString("genero",genero.getText().toString());
+        imagen.buildDrawingCache();
+        Bitmap bitmap = imagen.getDrawingCache();
+
+        //BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
+        ByteArrayOutputStream bs = new ByteArrayOutputStream();
+       // Bitmap bitmap = drawable.getBitmap();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 50, bs);
+        savedInstanceState.putByteArray("imagen",bs.toByteArray());
+    }
 
     private void guardarImagen() {
         //Método que almacena la imagen en Firebase storage
