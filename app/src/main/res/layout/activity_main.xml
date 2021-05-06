@@ -38,14 +38,13 @@
                     android:orientation="vertical">
 
                     <!--Text View for applying the text to the tab-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="270dp"
-                        android:text="This is Tab 1"
-                        android:textColor="#000"
-                        android:textSize="32sp" />
+                    <fragment
+                        android:id="@+id/fragmentChats"
+                        android:name="com.example.das.ChatsFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+
                 </LinearLayout>
 
                 <!--for tab 2-->
@@ -57,14 +56,11 @@
                     android:orientation="vertical">
 
                     <!--Text View for applying the text to the tab-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="270dp"
-                        android:text="This is Tab 2"
-                        android:textColor="#000"
-                        android:textSize="32sp" />
+                    <fragment
+                        android:id="@+id/fragmentMapa"
+                        android:name="com.example.das.MapaFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
                 <!--for tab 3-->
@@ -76,14 +72,11 @@
                     android:orientation="vertical">
 
                     <!--Text View for applying the text to the tab-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="270dp"
-                        android:text="This is Tab 3"
-                        android:textColor="#000"
-                        android:textSize="32sp" />
+                    <fragment
+                        android:id="@+id/fragmentPerfil"
+                        android:name="com.example.das.PerfilFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
             </FrameLayout>
