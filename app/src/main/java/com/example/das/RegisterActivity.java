@@ -35,9 +35,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -58,7 +62,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText genero;
     private Button registro;
     private String id;
-
+    private  FirebaseAuth firebaseAuth;
+    private  String id_FCM;
     //Firebase
     private FirebaseStorage storage;
     private StorageReference storageReference;
@@ -84,6 +89,9 @@ public class RegisterActivity extends AppCompatActivity {
             id=extras.getString("id");
 
         }
+
+        //id=  firebaseAuth.getInstance().getCurrentUser().getUid();
+        Log.i("MYAPP","El id del usuario es "+id);
 
         //En caso de haber girado la pantalla se añaden los valores escritos previamente
         if(savedInstanceState!=null){
@@ -155,6 +163,26 @@ public class RegisterActivity extends AppCompatActivity {
                 builder.show();
             }
         });
+
+        //Se obtiene el nuevo id de FCM del dispositivo
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        //En caso de error se imprime
+                        if (!task.isSuccessful()) {
+                            Log.i("MYAPP", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        id_FCM=token;
+                        Log.i("id_FCM: ",token);
+
+
+                    }
+                });
 
         registro.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -303,6 +331,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void añadirUsuario(String nombre, String fecha, String genero) {
         //Método que añade el usuario a la BD remota haciendo una solicitud a un Worker
@@ -315,7 +344,7 @@ public class RegisterActivity extends AppCompatActivity {
 //        } else {
             Data datos = new Data.Builder()
                     .putString("fichero", "DAS_users.php")
-                    .putString("parametros", "funcion=insertarUsuario&nombreUsuario=" + nombre + "&fechaNacimiento=" + fecha + "&genero=" + genero+"&id="+id)
+                    .putString("parametros", "funcion=insertarUsuario&nombreUsuario=" + nombre + "&fechaNacimiento=" + fecha + "&genero=" + genero+"&id="+id+"&id_FCM="+id_FCM)
                     .build();
             OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario").build();
             WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
@@ -340,7 +369,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                                     preferencias.edit().putString("id",id).apply();
 
-                                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                                    Intent i = new Intent(getApplicationContext(), InteresesActivity.class);
                                     startActivity(i);
                                     finish();
 

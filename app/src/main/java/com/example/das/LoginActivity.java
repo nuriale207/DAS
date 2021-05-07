@@ -26,9 +26,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -68,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                //Se comprueba si el usuario existe, en caso de que exista se inicia sesión
 
 
-                //if not created create user
+                //Si no existe un usuario se crea
                 firebaseAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -77,7 +79,6 @@ public class LoginActivity extends AppCompatActivity {
 
                                     if(task.getException().getMessage().contains("email address is already in use")){
                                         //Hacer login con ese email y password
-
                                         firebaseAuth.signInWithEmailAndPassword(email, password)
                                                 .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                                     @Override
@@ -109,6 +110,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                     }
                                 } else {
+                                    //Se crea un usuario nuevo
                                     FirebaseUser user =  firebaseAuth.getCurrentUser();
                                     loginUsuario(user.getUid());
                                     Log.i("MY", "firebase: "+user.getUid(), task.getException());
@@ -120,6 +122,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //En caso de pulsar el botón iniciar sesión con google se lleva a cabo el proceso con Google
         botonRegistroGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,22 +142,44 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("MYAPP", "signInWithCredential:success");
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            //updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("MYAPP", "signInWithCredential:failure", task.getException());
+                            //updateUI(null);
+                        }
+                    }
+                });
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        // Resultado de lanzar el intent desde GoogleSignInApi.getSignInIntent(...);
         if (requestCode == 1) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign In was successful, authenticate with Firebase
+                // El inicio de sesión se completó correctamente, autenticación con firebase with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Log.i("MY", "firebaseAuthWithGoogle:" + account.getId());
-                loginUsuario(account.getId());
+                Log.i("MY", "firebaseAuthWithGoogle:" + account.getId()+ "  :"+account.getIdToken());
+                firebaseAuthWithGoogle(account.getIdToken());
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                loginUsuario(user.getUid());
 
 
-                //firebaseAuthWithGoogle(account.getIdToken());
+                //En caso de error se muestra el error
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.i("MY", "Google sign in failed", e);
