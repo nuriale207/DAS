@@ -56,11 +56,20 @@
                     android:orientation="vertical">
 
                     <!--Text View for applying the text to the tab-->
-                    <fragment
+                    <!--<fragment
                         android:id="@+id/fragmentMapa"
                         android:name="com.example.das.MapaFragment"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content" />-->
+                    <fragment
+                        android:id="@+id/fragmentoMapa"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
                 </LinearLayout>
 
                 <!--for tab 3-->
