@@ -15,9 +15,9 @@
         android:text="Siguiente"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.776"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editGenero" />
+        app:layout_constraintTop_toBottomOf="@+id/editUbicacion" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -81,10 +81,25 @@
         android:focusable="false"
         android:hint="Género"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/registrarse"
+        app:layout_constraintBottom_toTopOf="@+id/editUbicacion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editFechaNacimiento" />
+
+    <EditText
+        android:id="@+id/editUbicacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:ems="10"
+        android:focusable="false"
+        android:hint="Ubicación"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/registrarse"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editGenero" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

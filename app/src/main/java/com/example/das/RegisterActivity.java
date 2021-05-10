@@ -22,6 +22,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +38,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -49,10 +54,13 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class RegisterActivity extends AppCompatActivity {
     private ImageView imagen;
@@ -60,41 +68,47 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText nombre;
     private EditText fechaNacimiento;
     private EditText genero;
+    private EditText ubicacion;
     private Button registro;
     private String id;
-    private  FirebaseAuth firebaseAuth;
-    private  String id_FCM;
+    private FirebaseAuth firebaseAuth;
+    private String id_FCM;
     //Firebase
     private FirebaseStorage storage;
     private StorageReference storageReference;
+
+    private double latitud;
+    private double longitud;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
         String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.i("MY",currentuser);
+        Log.i("MY", currentuser);
 
         //Cargar elementos del layout
-        imagen=findViewById(R.id.imageView);
-        botonImagen=findViewById(R.id.añadirImagen);
-        nombre=findViewById(R.id.editNombreUsuario);
-        fechaNacimiento=findViewById(R.id.editFechaNacimiento);
-        genero=findViewById(R.id.editGenero);
-        registro=findViewById(R.id.registrarse);
+        imagen = findViewById(R.id.imageView);
+        botonImagen = findViewById(R.id.añadirImagen);
+        nombre = findViewById(R.id.editNombreUsuario);
+        fechaNacimiento = findViewById(R.id.editFechaNacimiento);
+        genero = findViewById(R.id.editGenero);
+        registro = findViewById(R.id.registrarse);
+        ubicacion = findViewById(R.id.editUbicacion);
 
         //Se obtiene el id de los extras
-        Bundle extras=getIntent().getExtras();
-        if (extras!=null){
-            id=extras.getString("id");
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            id = extras.getString("id");
 
         }
 
         //id=  firebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.i("MYAPP","El id del usuario es "+id);
+        Log.i("MYAPP", "El id del usuario es " + id);
 
         //En caso de haber girado la pantalla se añaden los valores escritos previamente
-        if(savedInstanceState!=null){
+        if (savedInstanceState != null) {
             nombre.setText(savedInstanceState.getString("nombre"));
             fechaNacimiento.setText(savedInstanceState.getString("fechaNacimiento"));
             genero.setText(savedInstanceState.getString("genero"));
@@ -152,10 +166,9 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // the user clicked on colors[which]
-                        if(which==0){
+                        if (which == 0) {
                             solicitarPermisoCamara();
-                        }
-                        else{
+                        } else {
                             solicitarPermisoGaleria();
                         }
                     }
@@ -177,23 +190,110 @@ public class RegisterActivity extends AppCompatActivity {
 
                         // Get new FCM registration token
                         String token = task.getResult();
-                        id_FCM=token;
-                        Log.i("id_FCM: ",token);
+                        id_FCM = token;
+                        Log.i("id_FCM: ", token);
 
 
                     }
                 });
 
+        //al hacer click sobre registro se almacenan los datos en la BD y se pasa al siguiente paso
         registro.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                añadirUsuario(nombre.getText().toString(),fechaNacimiento.getText().toString(),genero.getText().toString());
+                añadirUsuario(nombre.getText().toString(), fechaNacimiento.getText().toString(), genero.getText().toString(),ubicacion.getText().toString());
+
+            }
+        });
+
+        ubicacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("MYAPP","Obteniendo ubicacion...");
+                obtenerUbicacion();
 
             }
         });
 
     }
+
+    private void solicitarPermisoUbicacion() {
+        //En caso de que el permiso esté denegado se solicita
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    3);
+
+        }
+    }
+
+    private void obtenerUbicacion() {
+        //Se obtiene la posición del usuario
+        FusedLocationProviderClient proveedordelocalizacion =
+                LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            Toast toast = Toast.makeText(getApplicationContext(), "Es necesario aceptar el permiso de ubicación para usar la aplicación", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+            toast.show();
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    3);
+        }
+        else{
+            proveedordelocalizacion.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                Log.i("MYAPP","Latitud: " + location.getLatitude());
+                                Log.i("MYAPP","Longitud: " + location.getLongitude());
+                                longitud=location.getLongitude();
+                                latitud=location.getLatitude();
+                                Geocoder gcd = new Geocoder(getApplicationContext(),Locale.getDefault());
+                                try {
+                                    List<Address> addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                                    if(addresses.size()>=1){
+                                        ubicacion.setText(addresses.get(0).getLocality());
+
+                                    }
+                                    else{
+                                        ubicacion.setText("Población desconocida");
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+
+                            } else {
+                                Log.i("MYAPP","Latitud: (desconocida)");
+                                Log.i("MYAPP","Longitud: (desconocida)");
+                                Toast toast = Toast.makeText(getApplicationContext(), "Error al obtener la ubicación intentalo de nuevo más tarde", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+                                toast.show();
+                            }
+                        }
+                    })
+                    .addOnFailureListener(this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.i("MYAPP","Error al obtener la posición");
+                            Toast toast = Toast.makeText(getApplicationContext(), "Error al obtener la ubicación intentalo de nuevo más tarde", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+                            toast.show();
+                        }
+                    });
+        }
+
+    }
+
     /***
      * Código obtenido de: https://programacionymas.com/blog/como-pedir-fecha-android-usando-date-picker
      */
@@ -304,9 +404,15 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
+            case 3:{
+                obtenerUbicacion();
+            }
+
 
         }
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -333,9 +439,9 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void añadirUsuario(String nombre, String fecha, String genero) {
+    private void añadirUsuario(String nombre, String fecha, String genero,String ubicacion) {
         //Método que añade el usuario a la BD remota haciendo una solicitud a un Worker
-        boolean valido= comprobarFormulario(nombre, fecha, genero);
+        boolean valido= comprobarFormulario(nombre, fecha, genero,ubicacion);
         if (valido) {
 
 //            Toast toast = Toast.makeText(getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG);
@@ -344,7 +450,7 @@ public class RegisterActivity extends AppCompatActivity {
 //        } else {
             Data datos = new Data.Builder()
                     .putString("fichero", "DAS_users.php")
-                    .putString("parametros", "funcion=insertarUsuario&nombreUsuario=" + nombre + "&fechaNacimiento=" + fecha + "&genero=" + genero+"&id="+id+"&id_FCM="+id_FCM)
+                    .putString("parametros", "funcion=insertarUsuario&nombreUsuario=" + nombre + "&fechaNacimiento=" + fecha + "&genero=" + genero+"&id="+id+"&id_FCM="+id_FCM+"&longitud="+longitud+"&latitud="+latitud)
                     .build();
             OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario").build();
             WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
@@ -386,7 +492,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private boolean comprobarFormulario(String nombre, String fechaNacimiento, String genero) {
+    private boolean comprobarFormulario(String nombre, String fechaNacimiento, String genero,String ubicacion) {
         boolean valido = true;
 
         //Se calcula la edad del usuario
@@ -431,6 +537,12 @@ public class RegisterActivity extends AppCompatActivity {
             toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
             toast.show();
         }
+       else if (ubicacion.length() == 0) {
+        valido = false;
+        Toast toast = Toast.makeText(getApplicationContext(), "Es necesario indicar la ubicación para usar la aplicación", Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+        toast.show();
+    }
 
     return valido;
     }

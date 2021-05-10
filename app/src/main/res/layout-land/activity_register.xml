@@ -7,6 +7,21 @@
     android:background="@drawable/background_login"
     tools:context=".RegisterActivity">
 
+    <EditText
+        android:id="@+id/editUbicacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:ems="10"
+        android:focusable="false"
+        android:hint="Ubicación"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/registrarse"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.755"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editGenero" />
+
     <Button
         android:id="@+id/registrarse"
         android:layout_width="wrap_content"
@@ -17,7 +32,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/añadirImagen"
-        app:layout_constraintTop_toBottomOf="@+id/editGenero" />
+        app:layout_constraintTop_toBottomOf="@+id/editUbicacion" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -81,7 +96,7 @@
         android:focusable="false"
         android:hint="Género"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/registrarse"
+        app:layout_constraintBottom_toTopOf="@+id/editUbicacion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imageView"
