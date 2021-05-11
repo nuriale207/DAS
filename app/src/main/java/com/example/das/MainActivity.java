@@ -14,13 +14,16 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -34,6 +37,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -44,16 +49,22 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private FirebaseAuth firebaseAuth;
     private String id;
+    private JSONArray usuarios;
+    private LatLng coordenadasActuales;
+    private double distanciaMax=18;
 
+    private GoogleMap miMapa;
 
     FusedLocationProviderClient proveedordelocalizacion;
     LocationCallback actualizador;
@@ -87,15 +98,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //Se comprueba si hay un usuario logeado. En caso de no haberlo se abre la actividad de login
         SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
-        id=preferencias.getString("id",null);
+        id = preferencias.getString("id", null);
 
-        if(id==null){
+        if (id == null) {
             // En caso de no haber un usuario loggeado se abre la actividad de login
-            Intent i=new Intent(this, LoginActivity.class);
+            Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             finish();
-        }
-        else{
+        } else {
             //Se comprueba si el usuario ha completado el proceso de registro
             usuarioRegistrado(id);
         }
@@ -142,11 +152,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     //Comprueba si el usuario ha sido registrado
-    public void usuarioRegistrado(String id){
+    public void usuarioRegistrado(String id) {
 
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
-                .putString("parametros", "funcion=datosUsuario&id=" +id)
+                .putString("parametros", "funcion=datosUsuario&id=" + id)
                 .build();
         OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario1").build();
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
@@ -163,9 +173,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             try {
                                 jsonObject = new JSONObject(resultado);
                                 String nombre = jsonObject.getString("nombre");
-                                if (nombre.equals("null")){
-                                    Intent i=new Intent(MainActivity.this, RegisterActivity.class);
-                                    i.putExtra("id",id);
+                                if (nombre.equals("null")) {
+                                    Intent i = new Intent(MainActivity.this, RegisterActivity.class);
+                                    i.putExtra("id", id);
                                     startActivity(i);
                                     finish();
 
@@ -175,13 +185,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             }
 
 
-
                         }
                     }
                 });
         //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario1", ExistingWorkPolicy.REPLACE, requesContrasena);
-
 
 
     }
@@ -194,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             startActivity(i);
             finish();
         }
+        miMapa=googleMap;
         //Se crea el proveedor de localización
         proveedordelocalizacion =
                 LocationServices.getFusedLocationProviderClient(this);
@@ -205,25 +214,40 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if (location != null) {
                             //Se almacenan las coordenadas actuales
                             LatLng nuevascoordenadas = new LatLng(location.getLatitude(), location.getLongitude());
-
+                            coordenadasActuales=nuevascoordenadas;
                             //Se le pone el estilo al mapa para que parezca Marte
                             //Web para mapas editados: https://mapstyle.withgoogle.com/
                             googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.this, R.raw.estilo_mapa));
 
                             //Se establece un listener para que no salgan etiquetas al pulsar en los marcadores
-                            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                                @Override
-                                public boolean onMarkerClick(Marker marker) {
-                                    return true;
-                                }
-                            });
+//                            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//                                @Override
+//                                public boolean onMarkerClick(Marker marker) {
+//                                    return true;
+//                                }
+//                            });
+                            Circle circle= googleMap.addCircle(new CircleOptions()
+                                    .center(new LatLng(location.getLatitude(), location.getLongitude()))
+                                    .radius(distanciaMax*1000)
+                                    .strokeColor(Color.RED)
+                                    .strokeWidth(5));
+                            circle.isVisible();
+                            //circle.setVisible(false);
+                            float currentZoomLevel = getZoomLevel(circle);
+                            float animateZomm = currentZoomLevel + 5;
 
-                            CameraPosition Poscam = new CameraPosition.Builder()
-                                    .target(nuevascoordenadas)
-                                    .zoom(18)
-                                    .tilt(80)
-                                    .build();
-                            CameraUpdate otravista = CameraUpdateFactory.newCameraPosition(Poscam);
+                            //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadasActuales, animateZomm));
+
+                            //googleMap.animateCamera(CameraUpdateFactory.zoomTo(currentZoomLevel), 2000, null);
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                                    circle.getCenter(), getZoomLevel(circle)));
+
+
+//                            CameraPosition Poscam = new CameraPosition.Builder()
+//                                    .zoom(currentZoomLevel)
+//                                    .tilt(80)
+//                                    .build();
+//                            CameraUpdate otravista = CameraUpdateFactory.newCameraPosition(Poscam);
 
                             //Se añade en el mapa un marcador en la ubicación actual del jugador, para representarlo.
                             jugador = googleMap.addMarker(new MarkerOptions()
@@ -231,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marcador))
                                     .title("Yo"));
 
-                            googleMap.moveCamera(otravista);
+                            //googleMap.moveCamera(otravista);
                         } else {
                             return;
                         }
@@ -253,7 +277,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (locationResult != null) {
                     LatLng pos = new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
                     CameraUpdate actualizar = CameraUpdateFactory.newLatLng(pos);
-                    if (seguir){googleMap.animateCamera(actualizar);}
+                    if (seguir) {
+                        googleMap.animateCamera(actualizar);
+                    }
                     //Se elimina el antiguo marcador y se pone uno nuevo.
                     jugador.remove();
                     jugador = googleMap.addMarker(new MarkerOptions()
@@ -267,6 +293,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
 
+        //Se cargan los marcadores de los usuarios que se encuentran cerca
+        cargarCoordenadasUsuarios();
+
+
         LocationRequest peticion = LocationRequest.create();
         peticion.setInterval(3000);
         peticion.setFastestInterval(1000);
@@ -274,5 +304,114 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         proveedordelocalizacion.requestLocationUpdates(peticion, actualizador, null);
 
+       miMapa.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                String idClicado = (String) (marker.getTag());
+                Log.i("MYAPP","Usuario clicado: "+idClicado);
+                //Using position get Value from arraylist
+                return false;
+            }
+        });
+
+
+
+    }
+    public float getZoomLevel(Circle circle) {
+        float zoomLevel=0;
+        if (circle != null){
+            double radius = circle.getRadius();
+            double scale = radius / 500;
+            zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
+        }
+        return zoomLevel +.5f;
+    }
+    private void cargarUsuariosCercanos() {
+
+        for(int i=0;i<usuarios.length();i++){
+            try {
+                JSONObject infoUsuario=usuarios.getJSONObject(i);
+                double longitud=infoUsuario.getDouble("longitud");
+                double latitud=infoUsuario.getDouble("latitud");
+                LatLng locVecino=new LatLng(latitud,longitud);
+                String idUsuario=infoUsuario.getString("id");
+                String nombre=infoUsuario.getString("nombre");
+                if (!idUsuario.equals(id)){
+                    double distancia=calcularDistancia(locVecino,coordenadasActuales);
+                    Log.i("MYAPP","Distancia a: "+infoUsuario.getString("id")+" "+distancia);
+
+                    if (distancia<distanciaMax){
+                        Marker marker=miMapa.addMarker(new MarkerOptions()
+                                .position(locVecino)
+                                .title(nombre));
+                        marker.setTag(idUsuario);
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+
+    private double calcularDistancia(LatLng loc1,LatLng loc2) {
+        int Radius = 6371;// radio de la tierra en  kilómetros
+        double lat1 = loc2.latitude;
+        double lat2 = loc1.latitude;
+        double lon1 = loc2.longitude;
+        double lon2 = loc1.longitude;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double valueResult = Radius * c;
+        double km = valueResult / 1;
+        DecimalFormat newFormat = new DecimalFormat("####");
+        int kmInDec = Integer.valueOf(newFormat.format(km));
+        double meter = valueResult % 1000;
+        int meterInDec = Integer.valueOf(newFormat.format(meter));
+        Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
+                + " Meter   " + meterInDec);
+
+        return Radius * c;
+
+    }
+
+    private void cargarCoordenadasUsuarios() {
+        Data datos = new Data.Builder()
+                .putString("fichero", "DAS_users.php")
+                .putString("parametros", "funcion=" + "obtenerCoordenadasUsuarios")
+                .build();
+        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("cargarCoordenadas").build();
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
+                .observe(this, new Observer<WorkInfo>() {
+                    @Override
+                    public void onChanged(WorkInfo workInfo) {
+                        if (workInfo != null && workInfo.getState().isFinished()) {
+                            String resultado = workInfo.getOutputData().getString("resultado");
+                            Log.i("MYAPP", "inicio realizado");
+
+                            Log.i("MYAPP", resultado);
+
+                            try {
+                                JSONArray jsonArray = new JSONArray(resultado);
+                                usuarios=jsonArray;
+                                cargarUsuariosCercanos();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+                    }
+                });
+        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
+        WorkManager.getInstance(getApplication()).enqueueUniqueWork("cargarCoordenadas", ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 }

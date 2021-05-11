@@ -116,9 +116,7 @@ public class PerfilFragment extends Fragment {
         SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         id = preferencias.getString("id", null);
         String nombre = preferencias.getString("nombre", "null");
-        cargarPerfil();
-        obtenerIntereses(true);
-        cargarImagen();
+
         if (nombre.equals("null")) {
             cargarPerfil();
             obtenerIntereses(true);
