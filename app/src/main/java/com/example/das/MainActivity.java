@@ -219,13 +219,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             //Web para mapas editados: https://mapstyle.withgoogle.com/
                             googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.this, R.raw.estilo_mapa));
 
-                            //Se establece un listener para que no salgan etiquetas al pulsar en los marcadores
-//                            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-//                                @Override
-//                                public boolean onMarkerClick(Marker marker) {
-//                                    return true;
-//                                }
-//                            });
+
                             Circle circle= googleMap.addCircle(new CircleOptions()
                                     .center(new LatLng(location.getLatitude(), location.getLongitude()))
                                     .radius(distanciaMax*1000)
@@ -310,6 +304,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String idClicado = (String) (marker.getTag());
                 Log.i("MYAPP","Usuario clicado: "+idClicado);
                 //Using position get Value from arraylist
+                Intent i=new Intent(getApplicationContext(),InfoUserActivity.class);
+                i.putExtra("idUsuario",idClicado);
+                startActivity(i);
+
                 return false;
             }
         });
