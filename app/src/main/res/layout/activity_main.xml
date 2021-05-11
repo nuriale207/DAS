@@ -34,7 +34,7 @@
                     android:id="@+id/tab1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#FFC0CB"
+                    android:background="@color/azulFondo"
                     android:orientation="vertical">
 
                     <!--Text View for applying the text to the tab-->

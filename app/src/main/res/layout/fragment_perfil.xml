@@ -24,8 +24,8 @@
 
         <LinearLayout
             android:id="@+id/linearLayout"
-            android:layout_width="378dp"
-            android:layout_height="258dp"
+            android:layout_width="372dp"
+            android:layout_height="312dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -43,11 +43,13 @@
                     android:layout_width="61dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Nombre" />
+                    android:text="Nombre"
+                    android:textAllCaps="true"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/editTextNombre"
-                    android:layout_width="wrap_content"
+                    android:layout_width="135dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
@@ -58,9 +60,10 @@
 
                 <Button
                     android:id="@+id/button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="102dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:drawableLeft="@android:drawable/ic_menu_edit"
                     android:text="Editar" />
             </LinearLayout>
 
@@ -74,11 +77,13 @@
                     android:layout_width="58dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Edad" />
+                    android:text="Edad"
+                    android:textAllCaps="true"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/editTextEdad"
-                    android:layout_width="wrap_content"
+                    android:layout_width="138dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
@@ -89,9 +94,10 @@
 
                 <Button
                     android:id="@+id/button2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="102dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:drawableLeft="@android:drawable/ic_menu_edit"
                     android:text="Editar" />
             </LinearLayout>
 
@@ -105,11 +111,13 @@
                     android:layout_width="65dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Género" />
+                    android:text="Género"
+                    android:textAllCaps="true"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/editTextGenero"
-                    android:layout_width="wrap_content"
+                    android:layout_width="131dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
 
@@ -122,7 +130,9 @@
                     android:id="@+id/button3"
                     android:layout_width="102dp"
                     android:layout_height="match_parent"
+
                     android:layout_weight="1"
+                    android:drawableLeft="@android:drawable/ic_menu_edit"
                     android:text="Editar" />
             </LinearLayout>
 
@@ -133,14 +143,16 @@
 
                 <TextView
                     android:id="@+id/textViewUbicacion"
-                    android:layout_width="wrap_content"
+                    android:layout_width="82dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Ubicacion" />
+                    android:text="Ubicación"
+                    android:textAllCaps="true"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/editTextUbicacion"
-                    android:layout_width="180dp"
+                    android:layout_width="123dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:ems="10"
@@ -153,27 +165,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:drawableLeft="@android:drawable/stat_notify_sync"
                     android:text="Actualizar" />
             </LinearLayout>
 
-            <LinearLayout
+            <Button
+                android:id="@+id/button5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:drawableLeft="@android:drawable/ic_menu_compass"
+                android:text="Sobre mí" />
 
-                <Button
-                    android:id="@+id/button5"
-                    android:layout_width="190dp"
-                    android:layout_height="wrap_content"
-                    android:text="Sobre mí" />
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@android:drawable/btn_star"
+                android:text="Intereses" />
 
-                <Button
-                    android:id="@+id/button6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Intereses" />
-            </LinearLayout>
         </LinearLayout>
 
         <Button
