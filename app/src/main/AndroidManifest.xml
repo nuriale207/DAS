@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Design.NoActionBar">
-        <activity android:name=".ChatActivity"></activity>
+        <activity android:name=".ChatActivity" />
         <activity android:name=".InteresesActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />

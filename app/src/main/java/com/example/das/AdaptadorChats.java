@@ -38,7 +38,6 @@ public class AdaptadorChats extends ArrayAdapter {
                 Intent i = new Intent(context, ChatActivity.class);
                 i.putExtra("persona", nombres[position]);
                 context.startActivity(i);
-                context.finish();
             }
         });
         return  fila;
