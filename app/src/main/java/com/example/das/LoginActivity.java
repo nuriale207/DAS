@@ -32,6 +32,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
@@ -193,7 +196,7 @@ public class LoginActivity extends AppCompatActivity {
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=datosUsuario&id=" +id)
                 .build();
-        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario").build();
+        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario3").build();
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
                 .observe(this, new Observer<WorkInfo>() {
                     @Override
@@ -203,25 +206,36 @@ public class LoginActivity extends AppCompatActivity {
                             Log.i("MYAPP", "inicio realizado");
 
                             Log.i("MYAPP", resultado);
-                            if (resultado.contains("error")|| resultado.contains("null")){
-                                Intent i=new Intent(LoginActivity.this, RegisterActivity.class);
-                                i.putExtra("id",id);
-                                startActivity(i);
 
-                            }
-                            else{
-                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
 
-                                SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                                preferencias.edit().putString("id",id).apply();
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(resultado);
+                                String nombre = jsonObject.getString("nombre");
+                                if (nombre.equals("null")){
+                                    Intent i=new Intent(LoginActivity.this, RegisterActivity.class);
+                                    i.putExtra("id",id);
+                                    startActivity(i);
+
+                                }
+                                else{
+                                    SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                    preferencias.edit().putString("id",id).apply();
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                    finish();
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
+
 
 
                         }
                     }
                 });
         //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
-        WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario", ExistingWorkPolicy.REPLACE, requesContrasena);
+        WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario3", ExistingWorkPolicy.REPLACE, requesContrasena);
 
 
 

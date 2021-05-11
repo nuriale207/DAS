@@ -44,6 +44,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
@@ -90,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             // En caso de no haber un usuario loggeado se abre la actividad de login
             Intent i=new Intent(this, LoginActivity.class);
             startActivity(i);
+            finish();
         }
         else{
             //Se comprueba si el usuario ha completado el proceso de registro
@@ -144,30 +148,39 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=datosUsuario&id=" +id)
                 .build();
-        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario").build();
+        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario1").build();
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
                 .observe(this, new Observer<WorkInfo>() {
                     @Override
                     public void onChanged(WorkInfo workInfo) {
+
                         if (workInfo != null && workInfo.getState().isFinished()) {
                             String resultado = workInfo.getOutputData().getString("resultado");
                             Log.i("MYAPP", "inicio realizado");
 
                             Log.i("MYAPP", resultado);
-                            if (resultado.contains("error")|| resultado.contains("null")){
-                                Intent i=new Intent(MainActivity.this, RegisterActivity.class);
-                                i.putExtra("id",id);
-                                startActivity(i);
-                                finish();
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(resultado);
+                                String nombre = jsonObject.getString("nombre");
+                                if (nombre.equals("null")){
+                                    Intent i=new Intent(MainActivity.this, RegisterActivity.class);
+                                    i.putExtra("id",id);
+                                    startActivity(i);
+                                    finish();
 
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
+
 
 
                         }
                     }
                 });
         //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
-        WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario", ExistingWorkPolicy.REPLACE, requesContrasena);
+        WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario1", ExistingWorkPolicy.REPLACE, requesContrasena);
 
 
 
