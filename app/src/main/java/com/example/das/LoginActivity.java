@@ -210,10 +210,11 @@ public class LoginActivity extends AppCompatActivity {
 
                             }
                             else{
-                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-
                                 SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                                 preferencias.edit().putString("id",id).apply();
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                finish();
+
                             }
 
 

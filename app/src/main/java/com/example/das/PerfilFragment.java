@@ -115,8 +115,11 @@ public class PerfilFragment extends Fragment {
         imagen = getView().findViewById(R.id.imageView3);
         SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         id = preferencias.getString("id", null);
-        String nombre = preferencias.getString("nombre", null);
-        if (nombre == null) {
+        String nombre = preferencias.getString("nombre", "null");
+        cargarPerfil();
+        obtenerIntereses(true);
+        cargarImagen();
+        if (nombre.equals("null")) {
             cargarPerfil();
             obtenerIntereses(true);
             cargarImagen();
@@ -421,7 +424,7 @@ public class PerfilFragment extends Fragment {
                     .build();
         }
 
-        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("getDatosUsuario").build();
+        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("getDatosIntereses").build();
         WorkManager.getInstance(this.getActivity()).getWorkInfoByIdLiveData(requesContrasena.getId())
                 .observe(this, new Observer<WorkInfo>() {
                     @Override
@@ -471,7 +474,7 @@ public class PerfilFragment extends Fragment {
                     }
                 });
         //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
-        WorkManager.getInstance(getActivity()).enqueueUniqueWork("getDatosUsuario", ExistingWorkPolicy.REPLACE, requesContrasena);
+        WorkManager.getInstance(getActivity()).enqueueUniqueWork("getDatosIntereses", ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 
     private void obtenerUbicacion() {
