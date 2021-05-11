@@ -5,6 +5,7 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/azulFondo"
     tools:context=".InteresesActivity">
 
     <EditText
@@ -12,9 +13,9 @@
         android:layout_width="300dp"
         android:layout_height="245dp"
         android:ems="10"
-        android:maxLength="200"
         android:gravity="start|top"
         android:inputType="textMultiLine"
+        android:maxLength="200"
         app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
