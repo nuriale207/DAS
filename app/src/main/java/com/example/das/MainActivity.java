@@ -197,31 +197,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             //Web para mapas editados: https://mapstyle.withgoogle.com/
                             googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.this, R.raw.estilo_mapa));
 
-                            //Se le asignan varios listeners para decidir si la cámara tiene que seguir al jugador o no, de modo que
-                            //cuando se pulsa el botón para centrar la cámara siga al jugador, pero tras interactuar con el mapa, deje de seguir al jugador.
-                            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                                @Override
-                                public void onMapClick(LatLng latLng) {
-                                    seguir = false;
-                                }
-                            });
-
-                            googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-                                @Override
-                                public void onMapLongClick(LatLng latLng) {
-                                    seguir = false;
-                                }
-                            });
-
-                            googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
-                                @Override
-                                public void onCameraMoveStarted(int reason) {
-                                    if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                                        seguir = false;
-                                    }
-                                }
-                            });
-
                             //Se establece un listener para que no salgan etiquetas al pulsar en los marcadores
                             googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                                 @Override
@@ -230,12 +205,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 }
                             });
 
-                            //Se restringe el movimiento del usuario en el mapa, para que no pueda hacer demasiado zoom-out, y no pueda cambiar el tilt.
-                            googleMap.getUiSettings().setTiltGesturesEnabled(false);
-                            googleMap.setMinZoomPreference(17);
-                            googleMap.setMaxZoomPreference(19);
-                            googleMap.getUiSettings().setScrollGesturesEnabledDuringRotateOrZoom(false);
-                            googleMap.getUiSettings().setZoomControlsEnabled(true);
                             CameraPosition Poscam = new CameraPosition.Builder()
                                     .target(nuevascoordenadas)
                                     .zoom(18)
@@ -243,36 +212,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     .build();
                             CameraUpdate otravista = CameraUpdateFactory.newCameraPosition(Poscam);
 
-                            //Se establece el botón de centrar, que al pulsarlo mueve la cámara a la localización actual del jugador.
-                            /*ImageView botonCentrar = findViewById(R.id.botonCentrar);
-                            botonCentrar.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    LocationServices.getFusedLocationProviderClient(MainActivity.this);
-                                    seguir = true;
-                                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MapaActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                        return;
-                                    }
-                                    proveedordelocalizacion.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                                        @Override
-                                        public void onSuccess(Location location) {
-                                            LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
-                                            CameraUpdate actualizar = CameraUpdateFactory.newLatLng(pos);
-                                            googleMap.animateCamera(actualizar);
-                                        }
-                                    });
-                                }
-                            });*/
-
                             //Se añade en el mapa un marcador en la ubicación actual del jugador, para representarlo.
                             jugador = googleMap.addMarker(new MarkerOptions()
                                     .position(nuevascoordenadas)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marcador))
                                     .title("Yo"));
-
-                            //Se inicializan los marcadores de brote en posiciones aleatorias
-                            //iniciarMarcadores(googleMap);
-                            //actualizarMarcadores(googleMap);
 
                             googleMap.moveCamera(otravista);
                         } else {

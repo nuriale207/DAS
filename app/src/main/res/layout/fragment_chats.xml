@@ -5,10 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".ChatsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ListView
+        android:id="@+id/listaChats"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Aquí se mostrarán los chats" />
-
+        android:layout_height="match_parent" />
 </FrameLayout>
