@@ -24,19 +24,20 @@
         android:layout_height="61dp"
         android:layout_row="0"
         android:layout_column="1"
-        android:layout_columnWeight="100"
         android:layout_gravity="center"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="0dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="0dp"
+        android:fontFamily="@font/pragati_narrow"
+        android:gravity="center_vertical"
         android:shadowColor="#000000"
         android:textAlignment="textStart"
         android:textColor="#000000"
         android:textColorHighlight="#000000"
         android:textColorHint="#000000"
         android:textColorLink="#000000"
-        android:textSize="15sp"
+        android:textSize="24sp"
         tools:ignore="RtlCompat" />
 
 </GridLayout>
