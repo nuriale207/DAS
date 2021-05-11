@@ -624,6 +624,7 @@ public class PerfilFragment extends Fragment {
 
                             Log.i("MYAPP", resultado);
                             try {
+
                                 JSONObject jsonObject = new JSONObject(resultado);
                                 String nombre = jsonObject.getString("nombre");
                                 String edad = jsonObject.getString("edad");
