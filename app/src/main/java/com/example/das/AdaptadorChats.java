@@ -13,12 +13,16 @@ import android.widget.TextView;
 
 public class AdaptadorChats extends ArrayAdapter {
     private Activity context;
+    private String[] ids;
     private String[] nombres;
+    private String[] tokens;
 
-    public AdaptadorChats(Activity context, String[] nombres) {
+    public AdaptadorChats(Activity context, String[] ids,String[] nombres,String[] tokens) {
         super(context, R.layout.fila_chat, nombres);
         this.context = context;
+        this.ids = ids;
         this.nombres = nombres;
+        this.tokens = tokens;
     }
 
 
@@ -36,7 +40,9 @@ public class AdaptadorChats extends ArrayAdapter {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context, ChatActivity.class);
-                i.putExtra("persona", nombres[position]);
+                i.putExtra("id", ids[position]);
+                i.putExtra("nombre", nombres[position]);
+                i.putExtra("token", tokens[position]);
                 context.startActivity(i);
             }
         });
