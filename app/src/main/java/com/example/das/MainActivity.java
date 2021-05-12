@@ -306,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.i("MYAPP","Usuario clicado: "+idClicado);
                 //Using position get Value from arraylist
                 Intent i=new Intent(getApplicationContext(),InfoUserActivity.class);
-                i.putExtra("idUsuario",idClicado);
+                i.putExtra("id",idClicado);
                 startActivity(i);
 
                 return false;
@@ -401,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             try {
                                 JSONArray jsonArray = new JSONArray(resultado);
                                 usuarios=jsonArray;
-                                //cargarUsuariosCercanos();
+                                cargarUsuariosCercanos();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
