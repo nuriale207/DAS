@@ -250,6 +250,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     .title("Yo"));
 
                             //googleMap.moveCamera(otravista);
+                            //Se cargan los marcadores de los usuarios que se encuentran cerca
+                            cargarCoordenadasUsuarios();
                         } else {
                             return;
                         }
@@ -287,8 +289,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
 
-        //Se cargan los marcadores de los usuarios que se encuentran cerca
-        cargarCoordenadasUsuarios();
+
 
 
         LocationRequest peticion = LocationRequest.create();
@@ -305,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.i("MYAPP","Usuario clicado: "+idClicado);
                 //Using position get Value from arraylist
                 Intent i=new Intent(getApplicationContext(),InfoUserActivity.class);
-                i.putExtra("idUsuario",idClicado);
+                i.putExtra("id",idClicado);
                 startActivity(i);
 
                 return false;
@@ -400,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             try {
                                 JSONArray jsonArray = new JSONArray(resultado);
                                 usuarios=jsonArray;
-                                //cargarUsuariosCercanos();
+                                cargarUsuariosCercanos();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

@@ -11,14 +11,14 @@
         android:layout_width="299dp"
         android:layout_height="224dp"
         android:src="@android:drawable/ic_menu_gallery"
-        app:layout_constraintBottom_toTopOf="@+id/button8"
+        app:layout_constraintBottom_toTopOf="@+id/buttonEnviarMensaje"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewNombreEdad" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/textViewNombreEdad"
         android:layout_width="133dp"
         android:layout_height="34dp"
         android:text="NOMBRE + EDAD"
@@ -28,69 +28,75 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="341dp"
+    <ScrollView
+        android:id="@+id/scrollView3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/button9"
+        app:layout_constraintBottom_toTopOf="@+id/buttonVolver"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button8">
+        app:layout_constraintTop_toBottomOf="@+id/buttonEnviarMensaje">
 
-        <TextView
-            android:id="@+id/textView9"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Género" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Género" />
 
-        <TextView
-            android:id="@+id/textViewAcercaDe"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Acerca de nombre" />
+            <TextView
+                android:id="@+id/textViewGenero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
 
-        <TextView
-            android:id="@+id/textViewDescripcion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Soy ...." />
+            <TextView
+                android:id="@+id/textViewAcercaDe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Acerca de" />
 
-        <TextView
-            android:id="@+id/textViewInteresesDe"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Intereses de nombre" />
+            <TextView
+                android:id="@+id/textViewDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Soy ...." />
 
-        <TextView
-            android:id="@+id/textViewIntereses"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="#cine" />
+            <TextView
+                android:id="@+id/textViewInteresesDe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Intereses " />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textViewIntereses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="#cine" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <Button
-        android:id="@+id/button8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/buttonEnviarMensaje"
+        android:layout_width="197dp"
+        android:layout_height="55dp"
         android:drawableLeft="@android:drawable/ic_dialog_email"
         android:text="Enviar mensaje"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <Button
-        android:id="@+id/button9"
+        android:id="@+id/buttonVolver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Volver"
@@ -98,5 +104,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/scrollView3" />
 </androidx.constraintlayout.widget.ConstraintLayout>
