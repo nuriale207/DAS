@@ -39,6 +39,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -82,6 +84,10 @@ public class PerfilFragment extends Fragment {
     private Button verDescripcion;
     private Button verIntereses;
     private Button cambiarImagen;
+    private Button cerrarSesion;
+
+    private SeekBar barraDistancia;
+    private TextView textoBarraDistancia;
 
     private ImageView imagen;
 
@@ -110,8 +116,9 @@ public class PerfilFragment extends Fragment {
         cambiarImagen=getView().findViewById(R.id.button7);
         verDescripcion=getView().findViewById(R.id.button5);
         verIntereses=getView().findViewById(R.id.button6);
-
-
+        cerrarSesion=getView().findViewById(R.id.button10);
+        barraDistancia=getView().findViewById(R.id.seekBar);
+        textoBarraDistancia=getView().findViewById(R.id.seekBarText);
         imagen = getView().findViewById(R.id.imageView3);
         SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         id = preferencias.getString("id", null);
@@ -316,7 +323,32 @@ public class PerfilFragment extends Fragment {
                 builder.show();
             }
         });
+        cerrarSesion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CerrarSesionDialog dialogoIniciarSesion=new CerrarSesionDialog();
+                dialogoIniciarSesion.show(getActivity().getSupportFragmentManager(), "etiqueta");
 
+            }
+        });
+
+        barraDistancia.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textoBarraDistancia.setText(String.valueOf(progress)+"Km");
+                preferencias.edit().putInt("distancia",progress).apply();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
     private void solicitarPermisoGaleria() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) !=
@@ -761,4 +793,20 @@ public class PerfilFragment extends Fragment {
         byte[] data = baos.toByteArray();
         return data;
     }
+
+//    @Override
+//    public void alpulsarCerrarSesion() {
+//        SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//        SharedPreferences.Editor editor = preferencias.edit();
+//        editor.remove("id");
+//        editor.remove("nombre");
+//        editor.remove("edad");
+//        editor.remove("genero");
+//        editor.remove("ubicacion");
+//        editor.remove("descripcion");
+//        editor.remove("intereses");
+//
+//        editor.apply();
+//
+//    }
 }

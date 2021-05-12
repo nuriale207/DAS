@@ -22,11 +22,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
+        <ScrollView
+            android:id="@+id/scrollView2"
             android:layout_width="match_parent"
-            android:layout_height="312dp"
-            android:orientation="vertical"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -34,163 +33,196 @@
             app:layout_constraintTop_toBottomOf="@+id/button7">
 
             <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textViewNombre"
-                    android:layout_width="61dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Nombre"
-                    android:textAllCaps="true"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/editTextNombre"
-                    android:layout_width="135dp"
+                    <TextView
+                        android:id="@+id/textViewNombre"
+                        android:layout_width="61dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Nombre"
+                        android:textAllCaps="true"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextNombre"
+                        android:layout_width="135dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:text="Prueba" />
+
+                    <Button
+                        android:id="@+id/button"
+                        android:layout_width="102dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableLeft="@android:drawable/ic_menu_edit"
+                        android:text="Editar" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
+                    android:orientation="horizontal">
 
-                    android:focusable="false"
-                    android:inputType="none"
-                    android:text="Prueba" />
+                    <TextView
+                        android:id="@+id/textViewEdad"
+                        android:layout_width="58dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Edad"
+                        android:textAllCaps="true"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextEdad"
+                        android:layout_width="138dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:text="Name" />
+
+                    <Button
+                        android:id="@+id/button2"
+                        android:layout_width="102dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableLeft="@android:drawable/ic_menu_edit"
+                        android:text="Editar" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textViewGenero"
+                        android:layout_width="65dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Género"
+                        android:textAllCaps="true"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextGenero"
+                        android:layout_width="131dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:ems="10"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:text="Name" />
+
+                    <Button
+                        android:id="@+id/button3"
+                        android:layout_width="102dp"
+                        android:layout_height="match_parent"
+
+                        android:layout_weight="1"
+                        android:drawableLeft="@android:drawable/ic_menu_edit"
+                        android:text="Editar" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textViewUbicacion"
+                        android:layout_width="82dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Ubicación"
+                        android:textAllCaps="true"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTextUbicacion"
+                        android:layout_width="123dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:ems="10"
+
+                        android:focusable="false"
+                        android:inputType="none" />
+
+                    <Button
+                        android:id="@+id/button4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableLeft="@android:drawable/stat_notify_sync"
+                        android:text="Actualizar" />
+                </LinearLayout>
 
                 <Button
-                    android:id="@+id/button"
-                    android:layout_width="102dp"
+                    android:id="@+id/button5"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableLeft="@android:drawable/ic_menu_edit"
-                    android:text="Editar" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textViewEdad"
-                    android:layout_width="58dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Edad"
-                    android:textAllCaps="true"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/editTextEdad"
-                    android:layout_width="138dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-
-                    android:focusable="false"
-                    android:inputType="none"
-                    android:text="Name" />
+                    android:drawableLeft="@android:drawable/ic_menu_compass"
+                    android:text="Sobre mí" />
 
                 <Button
-                    android:id="@+id/button2"
-                    android:layout_width="102dp"
+                    android:id="@+id/button6"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableLeft="@android:drawable/ic_menu_edit"
-                    android:text="Editar" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    android:drawableLeft="@android:drawable/btn_star"
+                    android:text="Intereses" />
 
                 <TextView
-                    android:id="@+id/textViewGenero"
-                    android:layout_width="65dp"
+                    android:id="@+id/textView6"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Género"
-                    android:textAllCaps="true"
-                    android:textStyle="bold" />
+                    android:text="Distancia máxima de los perfiles" />
 
-                <EditText
-                    android:id="@+id/editTextGenero"
-                    android:layout_width="131dp"
+                <SeekBar
+                    android:id="@+id/seekBar"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-
-                    android:ems="10"
-                    android:focusable="false"
-                    android:inputType="none"
-                    android:text="Name" />
-
-                <Button
-                    android:id="@+id/button3"
-                    android:layout_width="102dp"
-                    android:layout_height="match_parent"
-
-                    android:layout_weight="1"
-                    android:drawableLeft="@android:drawable/ic_menu_edit"
-                    android:text="Editar" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    android:max="100"
+                    android:progress="20" />
 
                 <TextView
-                    android:id="@+id/textViewUbicacion"
-                    android:layout_width="82dp"
+                    android:id="@+id/seekBarText"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Ubicación"
-                    android:textAllCaps="true"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/editTextUbicacion"
-                    android:layout_width="123dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:ems="10"
-
-                    android:focusable="false"
-                    android:inputType="none" />
+                    android:text="20km"
+                    android:textAlignment="center" />
 
                 <Button
-                    android:id="@+id/button4"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/button10"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableLeft="@android:drawable/stat_notify_sync"
-                    android:text="Actualizar" />
+                    android:text="Cerrar sesión" />
+
             </LinearLayout>
-
-            <Button
-                android:id="@+id/button5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@android:drawable/ic_menu_compass"
-                android:text="Sobre mí" />
-
-            <Button
-                android:id="@+id/button6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@android:drawable/btn_star"
-                android:text="Intereses" />
-
-        </LinearLayout>
+        </ScrollView>
 
         <Button
             android:id="@+id/button7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cambiar foto"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintBottom_toTopOf="@+id/scrollView2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"

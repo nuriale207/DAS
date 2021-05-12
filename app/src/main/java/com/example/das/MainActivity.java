@@ -250,6 +250,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     .title("Yo"));
 
                             //googleMap.moveCamera(otravista);
+                            //Se cargan los marcadores de los usuarios que se encuentran cerca
+                            cargarCoordenadasUsuarios();
                         } else {
                             return;
                         }
@@ -287,8 +289,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
 
-        //Se cargan los marcadores de los usuarios que se encuentran cerca
-        cargarCoordenadasUsuarios();
+
 
 
         LocationRequest peticion = LocationRequest.create();
