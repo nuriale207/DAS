@@ -99,6 +99,7 @@ public class PerfilFragment extends Fragment {
     private String descripcion;
     private String interesesUsuario;
     private ArrayList<String> listaIntereses;
+    private int distancia;
 
 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -128,6 +129,8 @@ public class PerfilFragment extends Fragment {
             cargarPerfil();
             obtenerIntereses(true);
             cargarImagen();
+            distancia=preferencias.getInt("distancia",20);
+
         } else {
             editNombre.setText(preferencias.getString("nombre", ""));
             editEdad.setText(preferencias.getString("edad", ""));
@@ -135,7 +138,7 @@ public class PerfilFragment extends Fragment {
             editUbicacion.setText(preferencias.getString("ubicacion", ""));
             descripcion = preferencias.getString("descripcion", "");
             interesesUsuario=preferencias.getString("intereses", "");
-            obtenerIntereses(true);
+            distancia=preferencias.getInt("distancia",20);
             cargarImagen();
 
         }
@@ -331,6 +334,8 @@ public class PerfilFragment extends Fragment {
 
             }
         });
+        barraDistancia.setProgress(distancia);
+        textoBarraDistancia.setText(distancia+"Km");
 
         barraDistancia.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

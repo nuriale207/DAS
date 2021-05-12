@@ -1,6 +1,7 @@
 package com.example.das;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
@@ -14,8 +15,11 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -25,6 +29,9 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -48,6 +55,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,10 +78,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     FusedLocationProviderClient proveedordelocalizacion;
     LocationCallback actualizador;
     Marker jugador;
-    Boolean seguir = true;
     ArrayList<Marker> listaMarkers = new ArrayList<>(5);
     ArrayList<GroundOverlay> listaCirculos = new ArrayList<>(5);
-
+    SharedPreferences preferencias;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,9 +105,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         //Se comprueba si hay un usuario logeado. En caso de no haberlo se abre la actividad de login
-        SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
+        preferencias = PreferenceManager.getDefaultSharedPreferences(this);
         id = preferencias.getString("id", null);
-
+        int distancia=preferencias.getInt("distancia",0);
         if (id == null) {
             // En caso de no haber un usuario loggeado se abre la actividad de login
             Intent i = new Intent(this, LoginActivity.class);
@@ -109,6 +117,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //Se comprueba si el usuario ha completado el proceso de registro
             usuarioRegistrado(id);
         }
+
+        if(distancia!=0){
+            distanciaMax= distancia;
+        }
+        else{
+            distanciaMax=20;
+        }
+
 
         // initiating the tabhost
         TabHost tabhost = (TabHost) findViewById(R.id.tabhost);
@@ -215,17 +231,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             //Se almacenan las coordenadas actuales
                             LatLng nuevascoordenadas = new LatLng(location.getLatitude(), location.getLongitude());
                             coordenadasActuales=nuevascoordenadas;
-                            //Se le pone el estilo al mapa para que parezca Marte
+                            //Se le pone el estilo al mapa para que sea blanco
                             //Web para mapas editados: https://mapstyle.withgoogle.com/
                             googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.this, R.raw.estilo_mapa));
 
-
+                            //Se crea un círculo con la distancia actual o 20km por defecto
                             Circle circle= googleMap.addCircle(new CircleOptions()
                                     .center(new LatLng(location.getLatitude(), location.getLongitude()))
                                     .radius(distanciaMax*1000)
                                     .strokeColor(Color.RED)
                                     .strokeWidth(5));
                             circle.isVisible();
+                            circle.setVisible(false);
                             //circle.setVisible(false);
                             float currentZoomLevel = getZoomLevel(circle);
                             float animateZomm = currentZoomLevel + 5;
@@ -244,10 +261,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                            CameraUpdate otravista = CameraUpdateFactory.newCameraPosition(Poscam);
 
                             //Se añade en el mapa un marcador en la ubicación actual del jugador, para representarlo.
-                            jugador = googleMap.addMarker(new MarkerOptions()
-                                    .position(nuevascoordenadas)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marcador))
-                                    .title("Yo"));
+
 
                             //googleMap.moveCamera(otravista);
                             //Se cargan los marcadores de los usuarios que se encuentran cerca
@@ -271,16 +285,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 if (locationResult != null) {
+                    distanciaMax=preferencias.getInt("distancia",20);
                     LatLng pos = new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
-                    CameraUpdate actualizar = CameraUpdateFactory.newLatLng(pos);
-                    if (seguir) {
-                        googleMap.animateCamera(actualizar);
-                    }
-                    //Se elimina el antiguo marcador y se pone uno nuevo.
-                    //jugador.remove();
-                    jugador = googleMap.addMarker(new MarkerOptions()
-                            .position(pos)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.marcador)));
+                    coordenadasActuales=pos;
+                    //Se crea un círculo con la distancia actual o 20km por defecto
+                    Circle circle= googleMap.addCircle(new CircleOptions()
+                            .center(pos)
+                            .radius(distanciaMax*1000)
+                            .strokeColor(Color.RED)
+                            .strokeWidth(5));
+                    circle.setVisible(false);
+                    //circle.setVisible(false);
+                    float currentZoomLevel = getZoomLevel(circle);
+                    float animateZomm = currentZoomLevel + 5;
+
+                    //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadasActuales, animateZomm));
+
+                    //googleMap.animateCamera(CameraUpdateFactory.zoomTo(currentZoomLevel), 2000, null);
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                            circle.getCenter(), getZoomLevel(circle)));
+
+
+
                     //Se actualizan los marcadores de brote.
                     //actualizarMarcadores(googleMap);
                 } else {
@@ -340,6 +366,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Log.i("MYAPP","Distancia a: "+infoUsuario.getString("id")+" "+distancia);
 
                     if (distancia<distanciaMax){
+                        generarMarcador(idUsuario,nombre,locVecino);
                         Marker marker=miMapa.addMarker(new MarkerOptions()
                                 .position(locVecino)
                                 .title(nombre));
@@ -352,6 +379,39 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
         }
+
+    }
+
+    private void generarMarcador(String idUsuario, String nombre, LatLng locVecino) {
+        //Metodo que carga la imagen de Firebase Storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference pathReference = storageRef.child("images/" + idUsuario + ".jpg");
+        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+
+                Glide.with(getApplicationContext())
+                        .asBitmap()
+                        .load(uri)
+                        .into(new CustomTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                Bitmap resized = Bitmap.createScaledBitmap(resource, 150, 150, true);
+                                Marker marker=miMapa.addMarker(new MarkerOptions()
+                                        .position(locVecino)
+                                        .title(nombre)
+                                        .icon(BitmapDescriptorFactory.fromBitmap(resized))
+                                        .anchor(0.5f, 1));
+                                marker.setTag(idUsuario);
+                            }
+
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                            }
+                        });
+            }
+        });
 
     }
 
