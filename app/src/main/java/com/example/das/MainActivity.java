@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         googleMap.animateCamera(actualizar);
                     }
                     //Se elimina el antiguo marcador y se pone uno nuevo.
-                    jugador.remove();
+                    //jugador.remove();
                     jugador = googleMap.addMarker(new MarkerOptions()
                             .position(pos)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.marcador)));
@@ -400,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             try {
                                 JSONArray jsonArray = new JSONArray(resultado);
                                 usuarios=jsonArray;
-                                cargarUsuariosCercanos();
+                                //cargarUsuariosCercanos();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

@@ -13,13 +13,15 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.GroundOverlay;
 
+import java.util.ArrayList;
+
 
 public class AdaptadorMensajes extends ArrayAdapter {
     private Activity context;
-    private String[] mensajes;
-    private boolean[] mios;
+    private ArrayList<String> mensajes;
+    private ArrayList<Boolean> mios;
 
-    public AdaptadorMensajes(Activity context, String[] mensajes, boolean[] mios) {
+    public AdaptadorMensajes(Activity context, ArrayList<String> mensajes, ArrayList<Boolean> mios) {
         super(context, R.layout.fila_mensaje, mensajes);
         this.context = context;
         this.mensajes = mensajes;
@@ -33,9 +35,9 @@ public class AdaptadorMensajes extends ArrayAdapter {
         LayoutInflater inflater = context.getLayoutInflater();
         fila = inflater.inflate(R.layout.fila_mensaje, null, true);
         TextView mensaje = (TextView) fila.findViewById(R.id.textoMensaje);
-        mensaje.setText(mensajes[position]);
+        mensaje.setText(mensajes.get(position));
         mensaje.setTextColor(Color.WHITE);
-        if (mios[position]){
+        if (!mios.get(position)){
             mensaje.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
             mensaje.setGravity(Gravity.LEFT);
             parent.setForegroundGravity(Gravity.LEFT);
