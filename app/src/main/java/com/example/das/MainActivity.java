@@ -367,10 +367,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     if (distancia<distanciaMax){
                         generarMarcador(idUsuario,nombre,locVecino);
-                        Marker marker=miMapa.addMarker(new MarkerOptions()
-                                .position(locVecino)
-                                .title(nombre));
-                        marker.setTag(idUsuario);
+//                        Marker marker=miMapa.addMarker(new MarkerOptions()
+//                                .position(locVecino)
+//                                .title(nombre));
+//                        marker.setTag(idUsuario);
                     }
                 }
 
@@ -397,7 +397,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .into(new CustomTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+
                                 Bitmap resized = Bitmap.createScaledBitmap(resource, 150, 150, true);
+
                                 Marker marker=miMapa.addMarker(new MarkerOptions()
                                         .position(locVecino)
                                         .title(nombre)
