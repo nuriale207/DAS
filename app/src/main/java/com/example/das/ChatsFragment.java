@@ -15,6 +15,7 @@ public class ChatsFragment extends Fragment {
     String[] ids = {};
     String[] nombres = {};
     String[] tokens = {};
+    byte[][] imagenes = {};
     public ChatsFragment() {
         // Required empty public constructor
     }
@@ -25,7 +26,7 @@ public class ChatsFragment extends Fragment {
         rellenarListas();
 
         ListView lista=getView().findViewById(R.id.listaChats);
-        AdaptadorChats adaptador = new AdaptadorChats(getActivity(), ids,nombres,tokens);
+        AdaptadorChats adaptador = new AdaptadorChats(getActivity(), ids,nombres,tokens, imagenes);
         lista.setAdapter(adaptador);
     }
 
@@ -39,7 +40,7 @@ public class ChatsFragment extends Fragment {
         BDLocal gestorDB = new BDLocal (getContext(), "DAS", null, 1);
         SQLiteDatabase bd = gestorDB.getWritableDatabase();
 
-        String[] campos = new String[] {"Id", "Nombre", "Token"};
+        String[] campos = new String[] {"Id", "Nombre", "Token", "Imagen"};
         Cursor cu = bd.query("Usuarios",campos,null,null,null,null,null);
 
         if(cu.getCount() != 0){
@@ -48,6 +49,7 @@ public class ChatsFragment extends Fragment {
                 ids[ids.length] = cu.getString(0);
                 nombres[nombres.length] = cu.getString(1);
                 tokens[tokens.length] = cu.getString(2);
+                imagenes[imagenes.length] = cu.getBlob(3);
                 cu.moveToNext();
             }
         }
