@@ -545,7 +545,8 @@ public class PerfilFragment extends Fragment {
                                     List<Address> addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                                     if (addresses.size() >= 1) {
                                         String ubicacion = addresses.get(0).getLocality();
-                                        actualizar("editUbicacion", "longitud=" + longitud + "&latitud=" + latitud);
+                                        editUbicacion.setText(ubicacion);
+                                        actualizar("editarUbicacion", "longitud=" + longitud + "&latitud=" + latitud);
 
                                     }
 

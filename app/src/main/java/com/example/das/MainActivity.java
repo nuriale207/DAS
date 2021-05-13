@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     FusedLocationProviderClient proveedordelocalizacion;
     LocationCallback actualizador;
-    Marker jugador;
+    Marker usuario;
     ArrayList<Marker> listaMarkers = new ArrayList<>(5);
     ArrayList<GroundOverlay> listaCirculos = new ArrayList<>(5);
     SharedPreferences preferencias;
@@ -253,6 +253,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                                     circle.getCenter(), getZoomLevel(circle)));
 
+                            usuario=googleMap.addMarker(new MarkerOptions()
+                                    .position(nuevascoordenadas)
+                                    .title("Yo"));
+
 
 //                            CameraPosition Poscam = new CameraPosition.Builder()
 //                                    .zoom(currentZoomLevel)
@@ -288,22 +292,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     distanciaMax=preferencias.getInt("distancia",20);
                     LatLng pos = new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
                     coordenadasActuales=pos;
+                    usuario=googleMap.addMarker(new MarkerOptions()
+                            .position(pos)
+                            .title("Yo"));
                     //Se crea un círculo con la distancia actual o 20km por defecto
-                    Circle circle= googleMap.addCircle(new CircleOptions()
-                            .center(pos)
-                            .radius(distanciaMax*1000)
-                            .strokeColor(Color.RED)
-                            .strokeWidth(5));
-                    circle.setVisible(false);
-                    //circle.setVisible(false);
-                    float currentZoomLevel = getZoomLevel(circle);
-                    float animateZomm = currentZoomLevel + 5;
+//                    Circle circle= googleMap.addCircle(new CircleOptions()
+//                            .center(pos)
+//                            .radius(distanciaMax*1000)
+//                            .strokeColor(Color.RED)
+//                            .strokeWidth(5));
+//                    circle.setVisible(false);
+//                    //circle.setVisible(false);
+//                    float currentZoomLevel = getZoomLevel(circle);
+//                    float animateZomm = currentZoomLevel + 5;
 
                     //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadasActuales, animateZomm));
 
                     //googleMap.animateCamera(CameraUpdateFactory.zoomTo(currentZoomLevel), 2000, null);
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                            circle.getCenter(), getZoomLevel(circle)));
+//                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+//                            circle.getCenter(), getZoomLevel(circle)));
 
 
 
@@ -329,11 +336,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public boolean onMarkerClick(Marker marker) {
                 String idClicado = (String) (marker.getTag());
-                Log.i("MYAPP","Usuario clicado: "+idClicado);
-                //Using position get Value from arraylist
-                Intent i=new Intent(getApplicationContext(),InfoUserActivity.class);
-                i.putExtra("id",idClicado);
-                startActivity(i);
+                if (idClicado!=null){
+                    Log.i("MYAPP","Usuario clicado: "+idClicado);
+                    //Using position get Value from arraylist
+                    Intent i=new Intent(getApplicationContext(),InfoUserActivity.class);
+                    i.putExtra("id",idClicado);
+                    startActivity(i);
+                }
+
 
                 return false;
             }

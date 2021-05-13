@@ -184,7 +184,7 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
         };
 
         LocationRequest peticion = LocationRequest.create();
-        peticion.setInterval(3000);
+        peticion.setInterval(60000);
         peticion.setFastestInterval(1000);
         peticion.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
