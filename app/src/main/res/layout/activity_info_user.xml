@@ -50,11 +50,13 @@
                 android:layout_height="wrap_content"
                 android:text="Género" />
 
-            <TextView
+            <EditText
                 android:id="@+id/textViewGenero"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:clickable="false"
+                android:ems="10"
+                android:inputType="textPersonName" />
 
             <TextView
                 android:id="@+id/textViewAcercaDe"
@@ -62,11 +64,14 @@
                 android:layout_height="wrap_content"
                 android:text="Acerca de" />
 
-            <TextView
+            <EditText
                 android:id="@+id/textViewDescripcion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Soy ...." />
+                android:clickable="false"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine" />
 
             <TextView
                 android:id="@+id/textViewInteresesDe"
@@ -74,11 +79,12 @@
                 android:layout_height="wrap_content"
                 android:text="Intereses " />
 
-            <TextView
+            <EditText
                 android:id="@+id/textViewIntereses"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="#cine" />
+                android:ems="10"
+                android:inputType="textPersonName" />
 
         </LinearLayout>
     </ScrollView>
