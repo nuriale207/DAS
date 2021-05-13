@@ -43,7 +43,7 @@ public class InfoUserActivity extends AppCompatActivity {
     private String descripcion;
     private String nombre;
     private String intereses;
-
+    private String id_FCM;
 
     private EditText viewGenero;
     private TextView viewNombreEdad;
@@ -184,10 +184,12 @@ public class InfoUserActivity extends AppCompatActivity {
                                 edad = jsonObject.getString("edad");
                                 genero = jsonObject.getString("genero");
                                 descripcion = jsonObject.getString("descripcion");
+                                id_FCM=jsonObject.getString("id_FCM");
 
                                 viewNombreEdad.setText(nombre.toUpperCase()+", "+edad);
                                 viewGenero.setText(genero);
                                 viewDescripcion.setText(descripcion);
+                                Log.i("MYAPP",id_FCM);
 
 
 
