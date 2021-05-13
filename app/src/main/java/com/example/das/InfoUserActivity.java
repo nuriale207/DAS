@@ -17,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,10 +45,10 @@ public class InfoUserActivity extends AppCompatActivity {
     private String intereses;
 
 
-    private TextView viewGenero;
+    private EditText viewGenero;
     private TextView viewNombreEdad;
-    private TextView viewDescripcion;
-    private TextView viewIntereses;
+    private EditText viewDescripcion;
+    private EditText viewIntereses;
 
     private ImageView imagen;
 
