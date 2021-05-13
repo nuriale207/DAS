@@ -8,7 +8,13 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
+import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -30,6 +36,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +101,32 @@ public class InfoUserActivity extends AppCompatActivity {
         botonEnviarMensaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Llamar a la actividad de chat con este usuario
+                Intent i=new Intent(InfoUserActivity.this,ChatActivity.class);
+                i.putExtra("id", idUser);
+                i.putExtra("nombre",nombre);
+                i.putExtra("token", id_FCM);
+
+                //https://stackoverflow.com/questions/9042932/getting-image-from-imageview
+                Drawable drawable = imagen.getDrawable();
+                BitmapDrawable bitmapDrawable = ((BitmapDrawable) drawable);
+                Bitmap bitmap = bitmapDrawable .getBitmap();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] imageInByte = stream.toByteArray();
+
+                i.putExtra("imagen", imageInByte);
+
+                BDLocal gestorDB = new BDLocal (InfoUserActivity.this, "DAS", null, 1);
+                SQLiteDatabase bd = gestorDB.getWritableDatabase();
+                ContentValues nuevo = new ContentValues();
+                nuevo.put("Id", idUser);
+                nuevo.put("Nombre", nombre);
+                nuevo.put("Token", id_FCM);
+                nuevo.put("Imagen", imageInByte);
+                bd.insert("Usuarios", null, nuevo);
+
+
+                startActivity(i);
             }
         });
 

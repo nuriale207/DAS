@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +23,7 @@ public class ChatActivity extends AppCompatActivity {
     private String idOtro;
     private String nombreOtro;
     private String tokenOtro;
+    private byte[] imagenOtro;
     private AdaptadorMensajes adaptador;
     ArrayList<String> mensajes = new ArrayList<>();
     ArrayList<Boolean> mios = new ArrayList<>();
@@ -32,6 +36,7 @@ public class ChatActivity extends AppCompatActivity {
             idOtro = extras.getString("id");
             nombreOtro = extras.getString("nombre");
             tokenOtro = extras.getString("token");
+            imagenOtro = extras.getByteArray("imagen");
         }
         super.onCreate(savedInstanceState);
         obtenerMensajesChat();
@@ -39,6 +44,17 @@ public class ChatActivity extends AppCompatActivity {
         ListView lista=findViewById(R.id.mensajes);
         adaptador = new AdaptadorMensajes(this, mensajes,mios);
         lista.setAdapter(adaptador);
+
+        TextView nombreOtroChat = findViewById(R.id.nombreOtroChat);
+        ImageView imagenOtroChat = findViewById(R.id.imagenOtroChat);
+
+        nombreOtroChat.setText(nombreOtro);
+
+        //https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
+        Bitmap bmp = BitmapFactory.decodeByteArray(imagenOtro, 0, imagenOtro.length);
+        imagenOtroChat.setImageBitmap(Bitmap.createScaledBitmap(bmp, imagenOtroChat.getWidth(), imagenOtroChat.getHeight(), false));
+
+
         EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
         TextView.OnEditorActionListener listenerTeclado = new TextView.OnEditorActionListener() {
             @Override

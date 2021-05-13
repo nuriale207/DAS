@@ -2,6 +2,8 @@ package com.example.das;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +18,15 @@ public class AdaptadorChats extends ArrayAdapter {
     private String[] ids;
     private String[] nombres;
     private String[] tokens;
+    private byte[][] imagenes;
 
-    public AdaptadorChats(Activity context, String[] ids,String[] nombres,String[] tokens) {
+    public AdaptadorChats(Activity context, String[] ids,String[] nombres,String[] tokens, byte[][] imagenes) {
         super(context, R.layout.fila_chat, nombres);
         this.context = context;
         this.ids = ids;
         this.nombres = nombres;
         this.tokens = tokens;
+        this.imagenes = imagenes;
     }
 
 
@@ -33,7 +37,11 @@ public class AdaptadorChats extends ArrayAdapter {
         fila = inflater.inflate(R.layout.fila_chat, null, true);
         ImageView foto = (ImageView) fila.findViewById(R.id.fotoChat);
         TextView nombre = (TextView) fila.findViewById(R.id.nombreChat);
-        foto.setImageResource(R.drawable.logo_google);
+
+        //https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
+        Bitmap bmp = BitmapFactory.decodeByteArray(imagenes[position], 0, imagenes[position].length);
+        foto.setImageBitmap(Bitmap.createScaledBitmap(bmp, foto.getWidth(), foto.getHeight(), false));
+
         nombre.setText(nombres[position]);
         nombre.setTextColor(Color.BLACK);
         fila.setOnClickListener(new View.OnClickListener() {
@@ -43,6 +51,7 @@ public class AdaptadorChats extends ArrayAdapter {
                 i.putExtra("id", ids[position]);
                 i.putExtra("nombre", nombres[position]);
                 i.putExtra("token", tokens[position]);
+                i.putExtra("imagen", imagenes[position]);
                 context.startActivity(i);
             }
         });

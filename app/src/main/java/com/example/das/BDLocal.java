@@ -25,7 +25,8 @@ public class BDLocal extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE Usuarios (" +
                 "'Id' VARCHAR(10000) PRIMARY KEY NOT NULL, " +
                 "'Nombre' VARCHAR(10000) NOT NULL, " +
-                "'Token' VARCHAR(10000) NOT NULL)");
+                "'Token' VARCHAR(10000) NOT NULL," +
+                "'Imagen' BLOB(10000))");
     }
 
     @Override

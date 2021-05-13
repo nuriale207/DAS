@@ -23,7 +23,7 @@
         app:layout_constraintVertical_bias="0.0">
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/imagenOtroChat"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="2dp"
@@ -33,7 +33,7 @@
             app:srcCompat="@drawable/marcador" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/nombreOtroChat"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/pragati_narrow"
