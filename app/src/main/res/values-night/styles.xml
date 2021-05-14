@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <style name="BotonColor" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/rojo</item>
+        <item name="android:textColor">@color/azulFondo</item>
+    </style>
+
+    <style name="BotonTransparente" parent="Widget.AppCompat.Button">
+        <item name="android:background">@color/azulFondo</item>
+        <item name="android:strokeColor">@color/rojo</item>
+        <item name="android:textColor">@color/rojo</item>
+    </style>
+
+
+
+</resources>

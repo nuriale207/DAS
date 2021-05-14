@@ -4,102 +4,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_login"
+    android:background="@color/azulFondo"
     tools:context=".RegisterActivity">
 
-    <EditText
-        android:id="@+id/editUbicacion"
+    <ScrollView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:ems="10"
-        android:focusable="false"
-        android:hint="Ubicación"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/registrarse"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.755"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editGenero" />
-
-    <Button
-        android:id="@+id/registrarse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#F91111"
-        android:text="Registrarse"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/añadirImagen"
-        app:layout_constraintTop_toBottomOf="@+id/editUbicacion" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="153dp"
-        android:layout_height="168dp"
-        app:layout_constraintBottom_toTopOf="@+id/añadirImagen"
-        app:layout_constraintEnd_toStartOf="@+id/editNombreUsuario"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_gallery" />
+        android:scrollbars="none"
+        >
 
-    <Button
-        android:id="@+id/añadirImagen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#FB7979"
-        android:backgroundTint="#FDA4A4"
-        android:text="Añadir Imagen"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/registrarse"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/editNombreUsuario"
-        android:layout_width="204dp"
-        android:layout_height="41dp"
-        android:ems="10"
-        android:hint="Nombre"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/editFechaNacimiento"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="153dp"
+                android:layout_height="168dp"
+                app:srcCompat="@android:drawable/ic_menu_gallery" />
 
-    <EditText
-        android:id="@+id/editFechaNacimiento"
-        android:layout_width="204dp"
-        android:layout_height="41dp"
-        android:clickable="true"
-        android:ems="10"
-        android:focusable="false"
-        android:hint="Fecha de nacimiento"
-        android:inputType="date"
-        android:maxLines="1"
-        app:layout_constraintBottom_toTopOf="@+id/editGenero"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/editNombreUsuario" />
+            <Button
+                android:id="@+id/añadirImagen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#FB7979"
+                android:backgroundTint="#FDA4A4"
+                android:text="Añadir Imagen" />
 
-    <EditText
-        android:id="@+id/editGenero"
-        android:layout_width="204dp"
-        android:layout_height="41dp"
+            <EditText
+                android:id="@+id/editNombreUsuario"
+                android:layout_width="204dp"
+                android:layout_height="41dp"
+                android:ems="10"
+                android:hint="Nombre"
+                android:inputType="textPersonName" />
 
-        android:ems="10"
-        android:focusable="false"
-        android:hint="Género"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/editUbicacion"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/editFechaNacimiento" />
+            <EditText
+                android:id="@+id/editFechaNacimiento"
+                android:layout_width="204dp"
+                android:layout_height="41dp"
+                android:clickable="true"
+                android:ems="10"
+                android:focusable="false"
+                android:hint="Fecha de nacimiento"
+                android:inputType="date"
+                android:maxLines="1" />
+
+            <EditText
+                android:id="@+id/editGenero"
+                android:layout_width="204dp"
+                android:layout_height="41dp"
+
+                android:ems="10"
+                android:focusable="false"
+                android:hint="Género"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/editUbicacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:ems="10"
+                android:focusable="false"
+                android:hint="Ubicación"
+                android:inputType="textPersonName" />
+
+            <Button
+                android:id="@+id/registrarse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#F91111"
+                android:text="Siguiente" />
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
