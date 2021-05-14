@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (!task.isSuccessful()) {
-
+                                    //Si el email está en uso se intenta iniciar sesión con ese email y contraseña
                                     if(task.getException().getMessage().contains("email address is already in use")){
                                         //Hacer login con ese email y password
                                         firebaseAuth.signInWithEmailAndPassword(email, password)
@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                                                         } else {
                                                             // Error al iniciar sesión
                                                             Log.i("MY", "signInWithEmail:failure", task.getException());
-                                                            Toast.makeText(LoginActivity.this, "Authentication failed."+ task.getException().getMessage(),
+                                                            Toast.makeText(LoginActivity.this, "Ha habido un error al iniciar sesión."+ task.getException().getMessage(),
                                                                     Toast.LENGTH_SHORT).show();
                                                         }
                                                     }
@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                     }
                                     else{
-                                        Toast.makeText(LoginActivity.this, "Authentication failed." + task.getException().getMessage(),
+                                        Toast.makeText(LoginActivity.this, "Ha habido un error al iniciar sesión." + task.getException().getMessage(),
                                                 Toast.LENGTH_SHORT).show();
 
                                     }

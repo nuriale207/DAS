@@ -186,7 +186,7 @@ public class PerfilFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 EditText editTextField = new EditText(v.getContext());
-                editTextField.setText(nombre);
+                editTextField.setText(editNombre.getText().toString());
                 AlertDialog dialog = new AlertDialog.Builder(v.getContext())
                         .setTitle("Cambiar nombre")
                         .setMessage("Escribe el nuevo nombre")
@@ -666,6 +666,9 @@ public class PerfilFragment extends Fragment {
                                 String edad = jsonObject.getString("edad");
                                 String genero = jsonObject.getString("genero");
                                 String descripcionStr = jsonObject.getString("descripcion");
+                                if(descripcionStr.equals("null")){
+                                    descripcionStr="";
+                                }
                                 descripcion = descripcionStr;
                                 Log.i("MYAPP", descripcionStr);
                                 editNombre.setText(nombre);

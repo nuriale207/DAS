@@ -469,7 +469,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                                 else{
                                     guardarImagen();
-                                    Toast toast=Toast.makeText(getApplicationContext(),"Usuario registrado", Toast.LENGTH_LONG);
+                                    Toast toast=Toast.makeText(getApplicationContext(),nombre+ " bienvenido a Das", Toast.LENGTH_LONG);
                                     toast.setGravity(Gravity.BOTTOM| Gravity.CENTER, 0, 0);
                                     toast.show();
                                     SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

@@ -39,11 +39,13 @@ public class CerrarSesionDialog extends DialogFragment {
                 editor.remove("ubicacion");
                 editor.remove("descripcion");
                 editor.remove("intereses");
+                editor.remove("distancia");
 
                 editor.apply();
                 Intent i=new Intent(getActivity(),LoginActivity.class);
-                startActivity(i);
                 getActivity().finish();
+
+                startActivity(i);
             }
         });
 
