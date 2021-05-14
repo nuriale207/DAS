@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/azulFondo"
     tools:context=".InfoUserActivity">
 
     <ImageView
@@ -22,6 +23,7 @@
         android:layout_width="133dp"
         android:layout_height="34dp"
         android:text="NOMBRE + EDAD"
+        android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/imageView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -56,7 +58,8 @@
                 android:layout_height="wrap_content"
                 android:clickable="false"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:focusable="false"
+                android:inputType="none" />
 
             <TextView
                 android:id="@+id/textViewAcercaDe"
@@ -70,8 +73,9 @@
                 android:layout_height="wrap_content"
                 android:clickable="false"
                 android:ems="10"
+                android:focusable="false"
                 android:gravity="start|top"
-                android:inputType="textMultiLine" />
+                android:inputType="none" />
 
             <TextView
                 android:id="@+id/textViewInteresesDe"
@@ -84,7 +88,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:focusable="false"
+                android:inputType="none" />
 
         </LinearLayout>
     </ScrollView>

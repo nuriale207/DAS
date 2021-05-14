@@ -4,23 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:textAlignment="center"
     tools:context=".PerfilFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="match_parent"
-            android:layout_height="263dp"
-            android:src="@android:drawable/ic_menu_gallery"
-            app:layout_constraintBottom_toTopOf="@+id/button7"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <ScrollView
             android:id="@+id/scrollView2"
@@ -38,6 +28,22 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="263dp"
+                    android:src="@android:drawable/ic_menu_gallery" />
+
+                <Button
+                    android:id="@+id/button7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+
+                    android:gravity="center"
+                    android:text="Cambiar foto" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -48,7 +54,7 @@
                         android:layout_width="61dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Nombre"
+                        android:text=" Nombre"
                         android:textAllCaps="true"
                         android:textStyle="bold" />
 
@@ -82,7 +88,7 @@
                         android:layout_width="58dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Edad"
+                        android:text=" Edad"
                         android:textAllCaps="true"
                         android:textStyle="bold" />
 
@@ -116,7 +122,7 @@
                         android:layout_width="65dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Género"
+                        android:text=" Género"
                         android:textAllCaps="true"
                         android:textStyle="bold" />
 
@@ -151,7 +157,7 @@
                         android:layout_width="82dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Ubicación"
+                        android:text=" Ubicación"
                         android:textAllCaps="true"
                         android:textStyle="bold" />
 
@@ -192,7 +198,9 @@
                     android:id="@+id/textView6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Distancia máxima de los perfiles" />
+                    android:layout_gravity="center"
+                    android:text="Distancia máxima de los perfiles"
+                    android:textAlignment="center" />
 
                 <SeekBar
                     android:id="@+id/seekBar"
@@ -217,16 +225,12 @@
             </LinearLayout>
         </ScrollView>
 
-        <Button
-            android:id="@+id/button7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cambiar foto"
-            app:layout_constraintBottom_toTopOf="@+id/scrollView2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

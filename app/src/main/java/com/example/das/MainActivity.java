@@ -25,6 +25,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.Toast;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double distanciaMax=18;
 
     private GoogleMap miMapa;
+    private Button boton;
 
     FusedLocationProviderClient proveedordelocalizacion;
     LocationCallback actualizador;
@@ -87,23 +89,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Obtener la instancia de autenticación de Firebase
-        //FirebaseAuth.getInstance ().signOut ();
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        if (user == null) {
-//            // En caso de no haber un usuario loggeado se abre la actividad de login
-//            Intent i=new Intent(this, LoginActivity.class);
-//            startActivity(i);
-//        }
-//        else{
-//
-//            //Se comprueba si el usuario ha completado el proceso de registro
-//            id=user.getUid();
-//            usuarioRegistrado(id);
-//
-//        }
-
-
         //Se comprueba si hay un usuario logeado. En caso de no haberlo se abre la actividad de login
         preferencias = PreferenceManager.getDefaultSharedPreferences(this);
         id = preferencias.getString("id", null);
@@ -113,10 +98,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             finish();
-        } else {
-            //Se comprueba si el usuario ha completado el proceso de registro
-            usuarioRegistrado(id);
         }
+//        else {
+//            //Se comprueba si el usuario ha completado el proceso de registro
+//            usuarioRegistrado(id);
+//        }
+
+
 
         if(distancia!=0){
             distanciaMax= distancia;
@@ -163,8 +151,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             SupportMapFragment elfragmento = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentoMapa);
             elfragmento.getMapAsync(this);
         }
+        boton=findViewById(R.id.botonCentrar);
+
+        boton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarCoordenadasUsuarios();
+                centrar();
+            }
+        });
 
 
+    }
+
+    private void centrar() {
+        //Se crea un círculo con la distancia actual o 20km por defecto
+        Circle circle=miMapa.addCircle(new CircleOptions()
+                .center(coordenadasActuales)
+                .radius(distanciaMax*1000)
+                .strokeColor(Color.RED)
+                .strokeWidth(5));
+        circle.isVisible();
+        circle.setVisible(false);
+        //circle.setVisible(false);
+        float currentZoomLevel = getZoomLevel(circle);
+        float animateZomm = currentZoomLevel + 5;
     }
 
     //Comprueba si el usuario ha sido registrado
@@ -209,6 +220,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
