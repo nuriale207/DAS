@@ -342,6 +342,8 @@ public class PerfilFragment extends Fragment {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 textoBarraDistancia.setText(String.valueOf(progress)+"Km");
                 preferencias.edit().putInt("distancia",progress).apply();
+                ((MainActivity)getActivity()).centrar();
+
             }
 
             @Override

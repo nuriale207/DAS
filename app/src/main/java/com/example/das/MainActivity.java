@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    private void centrar() {
+    public void centrar() {
         //Se crea un círculo con la distancia actual o 20km por defecto
         Circle circle=miMapa.addCircle(new CircleOptions()
                 .center(coordenadasActuales)
@@ -175,7 +175,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         circle.setVisible(false);
         //circle.setVisible(false);
         float currentZoomLevel = getZoomLevel(circle);
-        float animateZomm = currentZoomLevel + 5;
+        miMapa.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                circle.getCenter(), currentZoomLevel));
+
+        miMapa.clear();
+        miMapa.addMarker(new MarkerOptions()
+                .position(coordenadasActuales)
+                .title("Yo"));
+        cargarCoordenadasUsuarios();
     }
 
     //Comprueba si el usuario ha sido registrado
