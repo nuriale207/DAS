@@ -179,7 +179,8 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i("MY", "firebaseAuthWithGoogle:" + account.getId()+ "  :"+account.getIdToken());
                 firebaseAuthWithGoogle(account.getIdToken());
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                loginUsuario(user.getUid());
+                String userID=user.getUid();
+                loginUsuario(userID);
 
 
                 //En caso de error se muestra el error
@@ -196,7 +197,7 @@ public class LoginActivity extends AppCompatActivity {
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=datosUsuario&id=" +id)
                 .build();
-        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario3").build();
+        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario"+id).build();
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
                 .observe(this, new Observer<WorkInfo>() {
                     @Override
@@ -235,7 +236,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
         //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
-        WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario3", ExistingWorkPolicy.REPLACE, requesContrasena);
+        WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario"+id, ExistingWorkPolicy.REPLACE, requesContrasena);
 
 
 

@@ -170,8 +170,6 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
                 super.onLocationResult(locationResult);
                 if (locationResult != null) {
                     LatLng pos = new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
-                    CameraUpdate actualizar = CameraUpdateFactory.newLatLng(pos);
-                    if (seguir){googleMap.animateCamera(actualizar);}
                     //Se elimina el antiguo marcador y se pone uno nuevo.
                     jugador.remove();
                     jugador = googleMap.addMarker(new MarkerOptions()

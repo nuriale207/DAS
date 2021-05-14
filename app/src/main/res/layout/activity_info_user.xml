@@ -20,10 +20,11 @@
 
     <TextView
         android:id="@+id/textViewNombreEdad"
-        android:layout_width="133dp"
+        android:layout_width="214dp"
         android:layout_height="34dp"
         android:text="NOMBRE + EDAD"
         android:textAlignment="center"
+        android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/imageView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

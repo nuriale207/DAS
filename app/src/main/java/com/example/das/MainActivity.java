@@ -12,10 +12,12 @@ import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -63,6 +65,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
@@ -161,6 +165,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 24 && resultCode == Activity.RESULT_OK) {
+            //Código de:https://stackoverflow.com/questions/5991319/capture-image-from-camera-and-display-in-activity
+            SupportMapFragment elfragmento = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentoMapa);
+            elfragmento.getMapAsync(this);
+        }
 
     }
 
@@ -311,30 +325,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     distanciaMax=preferencias.getInt("distancia",20);
                     LatLng pos = new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
                     coordenadasActuales=pos;
+                    usuario.remove();
+
                     usuario=googleMap.addMarker(new MarkerOptions()
                             .position(pos)
                             .title("Yo"));
-                    //Se crea un círculo con la distancia actual o 20km por defecto
-//                    Circle circle= googleMap.addCircle(new CircleOptions()
-//                            .center(pos)
-//                            .radius(distanciaMax*1000)
-//                            .strokeColor(Color.RED)
-//                            .strokeWidth(5));
-//                    circle.setVisible(false);
-//                    //circle.setVisible(false);
-//                    float currentZoomLevel = getZoomLevel(circle);
-//                    float animateZomm = currentZoomLevel + 5;
-
-                    //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadasActuales, animateZomm));
-
-                    //googleMap.animateCamera(CameraUpdateFactory.zoomTo(currentZoomLevel), 2000, null);
-//                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-//                            circle.getCenter(), getZoomLevel(circle)));
-
-
-
-                    //Se actualizan los marcadores de brote.
-                    //actualizarMarcadores(googleMap);
                 } else {
                     return;
                 }
