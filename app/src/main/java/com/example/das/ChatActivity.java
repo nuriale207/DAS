@@ -2,6 +2,7 @@ package com.example.das;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -52,7 +53,7 @@ public class ChatActivity extends AppCompatActivity {
 
         //https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
         Bitmap bmp = BitmapFactory.decodeByteArray(imagenOtro, 0, imagenOtro.length);
-        imagenOtroChat.setImageBitmap(Bitmap.createScaledBitmap(bmp, imagenOtroChat.getWidth(), imagenOtroChat.getHeight(), false));
+        imagenOtroChat.setImageBitmap(Bitmap.createScaledBitmap(bmp, 150, 150, false));
 
 
         EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
@@ -81,13 +82,13 @@ public class ChatActivity extends AppCompatActivity {
         mensajes.add(mensajeEscrito.getText().toString());
         mios.add(true);
         adaptador.notifyDataSetChanged();
-        mensajeEscrito.setText("");
 
         String miId = "0"; //RELLENAR ESTO CON MI ID, QUE ESTARÁ EN ALGUN SITIO (PREFERENCIAS, BD LOCAL...)
 
         BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
         gestorDB.guardarMensaje(idOtro,mensajeEscrito.getText().toString(), 1);
         Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,miId);
+        mensajeEscrito.setText("");
     }
 
 
@@ -114,5 +115,11 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i=new Intent(ChatActivity.this, MainActivity.class);
+        startActivity(i);
+        finish();
+    }
 }

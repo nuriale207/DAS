@@ -1,6 +1,7 @@
 package com.example.das;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.work.Data;
 import androidx.work.ExistingWorkPolicy;
@@ -11,6 +12,7 @@ import androidx.work.WorkManager;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -118,15 +120,25 @@ public class InfoUserActivity extends AppCompatActivity {
 
                 BDLocal gestorDB = new BDLocal (InfoUserActivity.this, "DAS", null, 1);
                 SQLiteDatabase bd = gestorDB.getWritableDatabase();
-                ContentValues nuevo = new ContentValues();
-                nuevo.put("Id", idUser);
-                nuevo.put("Nombre", nombre);
-                nuevo.put("Token", id_FCM);
-                nuevo.put("Imagen", imageInByte);
-                bd.insert("Usuarios", null, nuevo);
 
+                String[] campos = new String[] {"Id"};
+                String[] argumentos = new String[] {idUser};
+                Cursor cu = bd.query("Usuarios",campos,"Id=?",argumentos,null,null,null);
+                if (cu.getCount() == 0){
+                    ContentValues nuevo = new ContentValues();
+                    nuevo.put("Id", idUser);
+                    nuevo.put("Nombre", nombre);
+                    nuevo.put("Token", id_FCM);
+                    nuevo.put("Imagen", imageInByte);
+                    bd.insert("Usuarios", null, nuevo);
 
+                    ChatsFragment chats = (ChatsFragment)getSupportFragmentManager().getFragment(null, "fragmentChats");
+                    chats.rellenarListas();
+
+                    GestorChats.getGestorListas().actualizarChats();
+                }
                 startActivity(i);
+                finish();
             }
         });
 

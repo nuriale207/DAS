@@ -40,7 +40,7 @@ public class AdaptadorChats extends ArrayAdapter {
 
         //https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
         Bitmap bmp = BitmapFactory.decodeByteArray(imagenes[position], 0, imagenes[position].length);
-        foto.setImageBitmap(Bitmap.createScaledBitmap(bmp, foto.getWidth(), foto.getHeight(), false));
+        foto.setImageBitmap(Bitmap.createScaledBitmap(bmp, 150, 150, false));
 
         nombre.setText(nombres[position]);
         nombre.setTextColor(Color.BLACK);
@@ -53,6 +53,7 @@ public class AdaptadorChats extends ArrayAdapter {
                 i.putExtra("token", tokens[position]);
                 i.putExtra("imagen", imagenes[position]);
                 context.startActivity(i);
+                context.finish();
             }
         });
         return  fila;
