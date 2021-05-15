@@ -51,9 +51,15 @@ public class ChatActivity extends AppCompatActivity {
 
         nombreOtroChat.setText(nombreOtro);
 
-        //https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
-        Bitmap bmp = BitmapFactory.decodeByteArray(imagenOtro, 0, imagenOtro.length);
-        imagenOtroChat.setImageBitmap(Bitmap.createScaledBitmap(bmp, 150, 150, false));
+        if(imagenOtro==null){
+
+        }
+        else{
+            //https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
+            Bitmap bmp = BitmapFactory.decodeByteArray(imagenOtro, 0, imagenOtro.length);
+            imagenOtroChat.setImageBitmap(Bitmap.createScaledBitmap(bmp, 150, 150, false));
+        }
+
 
 
         EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
