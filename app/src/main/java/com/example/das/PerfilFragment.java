@@ -356,6 +356,11 @@ public class PerfilFragment extends Fragment {
 
             }
         });
+
+
+        actualizar("editarToken", "token=" + Firebase.getToken(getContext()));
+
+
     }
     private void solicitarPermisoGaleria() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) !=
@@ -703,9 +708,11 @@ public class PerfilFragment extends Fragment {
                                 editor.putString("genero", genero);
                                 editor.putString("ubicacion", ubicacion);
                                 editor.putString("descripcion", descripcionStr);
-
+                                editor.putString("token", Firebase.getToken(getContext()));
 
                                 editor.apply();
+
+
 
                             } catch (JSONException e) {
                                 e.printStackTrace();

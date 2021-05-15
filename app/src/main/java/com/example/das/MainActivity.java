@@ -13,26 +13,23 @@ import androidx.work.WorkManager;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TabHost;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -42,13 +39,11 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.GroundOverlay;
@@ -61,7 +56,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -70,14 +64,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private FirebaseAuth firebaseAuth;
@@ -156,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         spec.setIndicator("Perfil");
         tabhost.addTab(spec);
 
+        actualizarPerfiles();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 24);
@@ -191,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -526,23 +515,47 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         WorkManager.getInstance(getApplication()).enqueueUniqueWork("cargarCoordenadas", ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 
-    private void cargarImagen(String id) {
+    private void actualizarImagen(String idUsuario) {
         //Metodo que carga la imagen de Firebase Storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference pathReference = storageRef.child("images/" + id + ".jpg");
+        StorageReference pathReference = storageRef.child("images/" + idUsuario + ".jpg");
         pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                //Glide.with(this).load(uri).into(imagen);
+                Glide.with(getApplicationContext()).asBitmap().load(uri).into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        resource.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        byte[] imageInByte = stream.toByteArray();
+
+                        ContentValues valores = new ContentValues();
+                        valores.put("Imagen", imageInByte);
+
+                        String[] argumentos = new String[] {idUsuario};
+
+                        BDLocal gestorDB = new BDLocal (MainActivity.this, "DAS", null, 1);
+                        SQLiteDatabase bd = gestorDB.getWritableDatabase();
+                        bd.update("Usuarios", valores, "Id=?", argumentos);
+
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
             }
         });
     }
-    private void cargarPerfil(String id) {
+
+
+    private void actualizarPerfil(String idUsuario) {
 
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
-                .putString("parametros", "funcion=datosUsuario&id=" + id)
+                .putString("parametros", "funcion=datosUsuario&id=" + idUsuario)
                 .build();
         OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("getDatosUsuario"+id).build();
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
@@ -560,6 +573,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 String nombre = jsonObject.getString("nombre");
                                 String token = jsonObject.getString("id_FCM");
 
+                                ContentValues valores = new ContentValues();
+                                valores.put("Nombre", nombre);
+                                valores.put("Token", token);
+
+                                String[] argumentos = new String[] {idUsuario};
+
+                                BDLocal gestorDB = new BDLocal (MainActivity.this, "DAS", null, 1);
+                                SQLiteDatabase bd = gestorDB.getWritableDatabase();
+                                bd.update("Usuarios", valores, "Id=?", argumentos);
+                                actualizarImagen(idUsuario);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -571,5 +594,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
         //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(this).enqueueUniqueWork("getDatosUsuario"+id, ExistingWorkPolicy.REPLACE, requesContrasena);
+    }
+
+    private void actualizarPerfiles(){
+        BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
+        SQLiteDatabase bd = gestorDB.getWritableDatabase();
+
+        String[] campos = new String[] {"Id"};
+        Cursor cu = bd.query("Usuarios",campos,null,null,null,null,null);
+
+        if(cu.getCount() != 0){
+            cu.moveToFirst();
+            for(int i = 0; i < cu.getCount(); i++){
+                String idUsuario = cu.getString(0);
+                actualizarPerfil(idUsuario);
+                cu.moveToNext();
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
@@ -40,6 +41,12 @@ public class CerrarSesionDialog extends DialogFragment {
                 editor.remove("descripcion");
                 editor.remove("intereses");
                 editor.remove("distancia");
+
+                BDLocal gestorDB = new BDLocal (getActivity(), "DAS", null, 1);
+                SQLiteDatabase bd = gestorDB.getWritableDatabase();
+
+                bd.delete("Usuarios",null,null);
+                bd.delete("Mensajes",null,null);
 
                 editor.apply();
                 Intent i=new Intent(getActivity(),LoginActivity.class);

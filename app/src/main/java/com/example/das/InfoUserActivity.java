@@ -132,8 +132,8 @@ public class InfoUserActivity extends AppCompatActivity {
                     nuevo.put("Imagen", imageInByte);
                     bd.insert("Usuarios", null, nuevo);
 
-                    ChatsFragment chats = (ChatsFragment)getSupportFragmentManager().getFragment(null, "fragmentChats");
-                    chats.rellenarListas();
+                    //ChatsFragment chats = (ChatsFragment)getSupportFragmentManager().getFragment(null, "fragmentChats");
+                    //chats.rellenarListas();
 
                     GestorChats.getGestorListas().actualizarChats();
                 }
