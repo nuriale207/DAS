@@ -1,13 +1,17 @@
 package com.example.das;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -17,6 +21,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
@@ -88,14 +96,50 @@ public class ChatActivity extends AppCompatActivity {
         mensajes.add(mensajeEscrito.getText().toString());
         mios.add(true);
         adaptador.notifyDataSetChanged();
+        SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
 
-        String miId = "0"; //RELLENAR ESTO CON MI ID, QUE ESTARÁ EN ALGUN SITIO (PREFERENCIAS, BD LOCAL...)
+        String nombreEmisor = preferencias.getString("nombre", "null");
+        String idRemitente=preferencias.getString("id", "null");
+        final String[] tokenRemitente = {""};
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.i("MYAPP", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        tokenRemitente[0] = task.getResult();
+
+                       }
+                });
+
+        //String miId = "0"; //RELLENAR ESTO CON MI ID, QUE ESTARÁ EN ALGUN SITIO (PREFERENCIAS, BD LOCAL...)
 
         BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
         gestorDB.guardarMensaje(idOtro,mensajeEscrito.getText().toString(), 1);
-        Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,miId);
+        //Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,miId);
+        Firebase.enviarMensajeFCM(this,nombreEmisor,mensajeEscrito.getText().toString(),idRemitente,tokenRemitente[0],tokenOtro);
         mensajeEscrito.setText("");
     }
+//    private void enviarMensaje() {
+//        EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
+//        mensajes.add(mensajeEscrito.getText().toString());
+//        mios.add(true);
+//        adaptador.notifyDataSetChanged();
+//
+//
+//        String miId = "0"; //RELLENAR ESTO CON MI ID, QUE ESTARÁ EN ALGUN SITIO (PREFERENCIAS, BD LOCAL...)
+//
+//        BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
+//        gestorDB.guardarMensaje(idOtro,mensajeEscrito.getText().toString(), 1);
+//        Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,miId);
+//
+//        mensajeEscrito.setText("");
+//    }
 
 
     public void obtenerMensajesChat(){

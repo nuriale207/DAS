@@ -131,18 +131,55 @@ public class Firebase extends FirebaseMessagingService {
         return  context.getSharedPreferences("_", MODE_PRIVATE).getString("fb", "empty");
     }
 
-    public static void enviarMensajeFCM(Context context, String mensaje, String idFCMDestinatario, String idAppRemitente){
+//    public static void enviarMensajeFCM(Context context, String mensaje, String idFCMDestinatario, String idAppRemitente){
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Uri.Builder builder = new Uri.Builder()
+//                            .appendQueryParameter("tokenDestinatario", idFCMDestinatario)
+//                            .appendQueryParameter("idRemitente", idAppRemitente)
+//                            .appendQueryParameter("mensaje", mensaje);
+//                    String parametros = builder.build().getEncodedQuery();
+//
+//                    String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/fcm.php";
+//                    HttpURLConnection urlConnection = null;
+//                    URL destino = new URL(direccion);
+//                    urlConnection = (HttpURLConnection) destino.openConnection();
+//                    urlConnection.setConnectTimeout(5000);
+//                    urlConnection.setReadTimeout(5000);
+//
+//                    urlConnection.setRequestMethod("POST");
+//                    urlConnection.setDoOutput(true);
+//                    urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+//
+//                    PrintWriter out = new PrintWriter(urlConnection.getOutputStream());
+//                    out.print(parametros);
+//                    out.close();
+//
+//                    int statusCode = urlConnection.getResponseCode();
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+//
+//
+//    }
+    public static void enviarMensajeFCM(Context context, String nombreEmisor, String mensaje, String idRemitente,String tokenRemitente,String tokenDestinatario){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     Uri.Builder builder = new Uri.Builder()
-                            .appendQueryParameter("tokenDestinatario", idFCMDestinatario)
-                            .appendQueryParameter("idRemitente", idAppRemitente)
-                            .appendQueryParameter("mensaje", mensaje);
+                            .appendQueryParameter("nombreEmisor", nombreEmisor)
+                            .appendQueryParameter("mensaje", mensaje)
+                            .appendQueryParameter("idRemitente", idRemitente)
+                            .appendQueryParameter("tokenRemitente", tokenRemitente)
+                            .appendQueryParameter("tokenDestinatario", tokenDestinatario);
                     String parametros = builder.build().getEncodedQuery();
 
-                    String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/fcm.php";
+                    String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/enviarMensaje.php";
                     HttpURLConnection urlConnection = null;
                     URL destino = new URL(direccion);
                     urlConnection = (HttpURLConnection) destino.openConnection();
