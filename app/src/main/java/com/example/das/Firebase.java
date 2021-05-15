@@ -33,8 +33,51 @@ public class Firebase extends FirebaseMessagingService {
     }
 
 
-    public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.i("notificacion", "Llega aqui");
+//    public void onMessageReceived(RemoteMessage remoteMessage) {
+//        Log.i("notificacion", "Llega aqui");
+//
+////        String idOtro = remoteMessage.toIntent().getExtras().getString("idOtro");
+////        String mensaje = remoteMessage.toIntent().getExtras().getString("mensaje");
+////
+////        BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
+////        gestorDB.guardarMensaje(idOtro,mensaje, 0);
+//
+//
+//
+//        //Los mensajes recibidos desde un php se gestionan distinto a las notificaciones recibidas desde la consola
+//        if(remoteMessage.getNotification()==null) {
+//            String nombreEmisor;
+//            String mensaje;
+//            String id_remitente;
+//            String token_remitente;
+//            Log.i("MYAPP","El mensaje es nulo");
+//
+//            nombreEmisor=remoteMessage.getData().get("nombreEmisor");
+//            mensaje=remoteMessage.getData().get("mensaje");
+//            id_remitente=remoteMessage.getData().get("idRemitente");
+//            token_remitente=remoteMessage.getData().get("tokenRemitente");
+//            Log.i("FIREBASE",  nombreEmisor+mensaje+id_remitente);
+//            BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
+//            gestorDB.guardarMensaje(id_remitente,mensaje, 0);
+//
+//            recibirMensajeFCM(nombreEmisor,mensaje,id_remitente,token_remitente);
+//
+//            Log.i("FIREBASE",  remoteMessage.getData().toString());
+//        }
+//        else{
+//            //En caso contrario se puede obtener directamente la información
+//            String titulo=remoteMessage.getNotification().getTitle();
+//
+//
+//            String body=remoteMessage.getNotification().getBody();
+//            Log.i("FIREBASE", body);
+//
+//            sendNotification(titulo,body);
+//        }
+//
+//    }
+public void onMessageReceived(RemoteMessage remoteMessage) {
+    Log.i("notificacion", "Llega aqui");
 
 //        String idOtro = remoteMessage.toIntent().getExtras().getString("idOtro");
 //        String mensaje = remoteMessage.toIntent().getExtras().getString("mensaje");
@@ -44,38 +87,37 @@ public class Firebase extends FirebaseMessagingService {
 
 
 
-        //Los mensajes recibidos desde un php se gestionan distinto a las notificaciones recibidas desde la consola
-        if(remoteMessage.getNotification()==null) {
-            String nombreEmisor;
-            String mensaje;
-            String id_remitente;
-            String token_remitente;
-            Log.i("MYAPP","El mensaje es nulo");
+    //Los mensajes recibidos desde un php se gestionan distinto a las notificaciones recibidas desde la consola
+//    if(remoteMessage.getNotification()==null) {
+//
+//        String mensaje;
+//        String id_remitente;
+//        Log.i("MYAPP","El mensaje es nulo");
+//
+//        nombreEmisor=remoteMessage.getData().get("nombreEmisor");
+//        mensaje=remoteMessage.getData().get("mensaje");
+//        id_remitente=remoteMessage.getData().get("idRemitente");
+//        token_remitente=remoteMessage.getData().get("tokenRemitente");
+//        Log.i("FIREBASE",  nombreEmisor+mensaje+id_remitente);
+//        BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
+//        gestorDB.guardarMensaje(id_remitente,mensaje, 0);
+//
+//        recibirMensajeFCM(nombreEmisor,mensaje,id_remitente,token_remitente);
+//
+//        Log.i("FIREBASE",  remoteMessage.getData().toString());
+//    }
+//    else{
+//        //En caso contrario se puede obtener directamente la información
+//        String titulo=remoteMessage.getNotification().getTitle();
+//
+//
+//        String body=remoteMessage.getNotification().getBody();
+//        Log.i("FIREBASE", body);
+//
+//        sendNotification(titulo,body);
+//    }
 
-            nombreEmisor=remoteMessage.getData().get("nombreEmisor");
-            mensaje=remoteMessage.getData().get("mensaje");
-            id_remitente=remoteMessage.getData().get("idRemitente");
-            token_remitente=remoteMessage.getData().get("tokenRemitente");
-            Log.i("FIREBASE",  nombreEmisor+mensaje+id_remitente);
-            BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
-            gestorDB.guardarMensaje(id_remitente,mensaje, 0);
-
-            recibirMensajeFCM(nombreEmisor,mensaje,id_remitente,token_remitente);
-
-            Log.i("FIREBASE",  remoteMessage.getData().toString());
-        }
-        else{
-            //En caso contrario se puede obtener directamente la información
-            String titulo=remoteMessage.getNotification().getTitle();
-
-
-            String body=remoteMessage.getNotification().getBody();
-            Log.i("FIREBASE", body);
-
-            sendNotification(titulo,body);
-        }
-
-    }
+}
     //Metodo que gestiona el recibir un mensaje
     private void recibirMensajeFCM(String nombreEmisor,String mensaje, String id_remitente,String token_remitente){
 

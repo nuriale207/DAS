@@ -20,6 +20,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -69,9 +71,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -519,5 +524,52 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
         //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(getApplication()).enqueueUniqueWork("cargarCoordenadas", ExistingWorkPolicy.REPLACE, requesContrasena);
+    }
+
+    private void cargarImagen(String id) {
+        //Metodo que carga la imagen de Firebase Storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference pathReference = storageRef.child("images/" + id + ".jpg");
+        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                //Glide.with(this).load(uri).into(imagen);
+            }
+        });
+    }
+    private void cargarPerfil(String id) {
+
+        Data datos = new Data.Builder()
+                .putString("fichero", "DAS_users.php")
+                .putString("parametros", "funcion=datosUsuario&id=" + id)
+                .build();
+        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("getDatosUsuario"+id).build();
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
+                .observe(this, new Observer<WorkInfo>() {
+                    @Override
+                    public void onChanged(WorkInfo workInfo) {
+                        if (workInfo != null && workInfo.getState().isFinished()) {
+                            String resultado = workInfo.getOutputData().getString("resultado");
+                            Log.i("MYAPP", "inicio realizado");
+
+                            Log.i("MYAPP", resultado);
+                            try {
+
+                                JSONObject jsonObject = new JSONObject(resultado);
+                                String nombre = jsonObject.getString("nombre");
+                                String token = jsonObject.getString("id_FCM");
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+                    }
+                });
+        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
+        WorkManager.getInstance(this).enqueueUniqueWork("getDatosUsuario"+id, ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 }
