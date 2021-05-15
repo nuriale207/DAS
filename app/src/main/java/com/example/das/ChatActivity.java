@@ -1,14 +1,26 @@
 package com.example.das;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -22,10 +34,22 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.nio.BufferUnderflowException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class ChatActivity extends AppCompatActivity {
@@ -37,36 +61,46 @@ public class ChatActivity extends AppCompatActivity {
     ArrayList<String> mensajes = new ArrayList<>();
     ArrayList<Boolean> mios = new ArrayList<>();
 
-
+    private ImageView imagenOtroChat;
+    private Boolean mostrarImagen;
+    TextView nombreOtroChat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chat);
+
         Bundle extras = getIntent().getExtras();
+        imagenOtroChat = findViewById(R.id.imagenOtroChat);
+        nombreOtroChat = findViewById(R.id.nombreOtroChat);
         if (extras != null) {
             idOtro = extras.getString("id");
             nombreOtro = extras.getString("nombre");
-            tokenOtro = extras.getString("token");
-            imagenOtro = extras.getByteArray("imagen");
+            if(nombreOtro==null){
+                String mensaje = extras.getString("mensaje");
+                anadirUsuarioABDLocal(idOtro,mensaje);
+            }
+            else{
+                tokenOtro = extras.getString("token");
+                imagenOtro = extras.getByteArray("imagen");
+                //https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
+                Bitmap bmp = BitmapFactory.decodeByteArray(imagenOtro, 0, imagenOtro.length);
+                imagenOtroChat.setImageBitmap(Bitmap.createScaledBitmap(bmp, 150, 150, false));
+
+            }
+
         }
-        super.onCreate(savedInstanceState);
         obtenerMensajesChat();
-        setContentView(R.layout.activity_chat);
         ListView lista=findViewById(R.id.mensajes);
         adaptador = new AdaptadorMensajes(this, mensajes,mios);
         lista.setAdapter(adaptador);
 
-        TextView nombreOtroChat = findViewById(R.id.nombreOtroChat);
-        ImageView imagenOtroChat = findViewById(R.id.imagenOtroChat);
+
+
+
 
         nombreOtroChat.setText(nombreOtro);
 
-        if(imagenOtro==null){
 
-        }
-        else{
-            //https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
-            Bitmap bmp = BitmapFactory.decodeByteArray(imagenOtro, 0, imagenOtro.length);
-            imagenOtroChat.setImageBitmap(Bitmap.createScaledBitmap(bmp, 150, 150, false));
-        }
 
 
 
@@ -90,56 +124,137 @@ public class ChatActivity extends AppCompatActivity {
         });
 
     }
-
-    private void enviarMensaje() {
-        EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
-        mensajes.add(mensajeEscrito.getText().toString());
-        mios.add(true);
-        adaptador.notifyDataSetChanged();
-        SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
-
-        String nombreEmisor = preferencias.getString("nombre", "null");
-        String idRemitente=preferencias.getString("id", "null");
-        final String[] tokenRemitente = {""};
-
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.i("MYAPP", "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
-
-                        // Get new FCM registration token
-                        tokenRemitente[0] = task.getResult();
-
-                       }
-                });
-
-        //String miId = "0"; //RELLENAR ESTO CON MI ID, QUE ESTARÁ EN ALGUN SITIO (PREFERENCIAS, BD LOCAL...)
-
-        BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
-        gestorDB.guardarMensaje(idOtro,mensajeEscrito.getText().toString(), 1);
-        //Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,miId);
-        Firebase.enviarMensajeFCM(this,nombreEmisor,mensajeEscrito.getText().toString(),idRemitente,tokenRemitente[0],tokenOtro);
-        mensajeEscrito.setText("");
+    private void anadirUsuarioABDLocal(String id_remitente,String mensaje) {
+        //Metodo que carga la imagen de Firebase Storage
+        //Metodo que carga la imagen de Firebase Storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference pathReference = storageRef.child("images/" + id_remitente + ".jpg");
+        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(getApplicationContext()).load(uri).into(imagenOtroChat);
+                anadirUsuarioABDLocal2(id_remitente,mensaje);
+            }
+        });
     }
+
+
+    private void anadirUsuarioABDLocal2(String id_remitente,String mensaje) {
+
+        Data datos = new Data.Builder()
+                .putString("fichero", "DAS_users.php")
+                .putString("parametros", "funcion=datosUsuario&id=" + id_remitente)
+                .build();
+        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("getDatosUsuario"+id_remitente).build();
+        WorkManager.getInstance(this.getBaseContext()).getWorkInfoByIdLiveData(requesContrasena.getId())
+                .observe(this, new Observer<WorkInfo>() {
+                    @Override
+                    public void onChanged(WorkInfo workInfo) {
+                        if (workInfo != null && workInfo.getState().isFinished()) {
+                            String resultado = workInfo.getOutputData().getString("resultado");
+                            Log.i("MYAPP", "inicio realizado");
+
+                            Log.i("MYAPP", resultado);
+                            try {
+
+                                JSONObject jsonObject = new JSONObject(resultado);
+                                String nombre = jsonObject.getString("nombre");
+                                String token = jsonObject.getString("id_FCM");
+
+                                Drawable drawable = imagenOtroChat.getDrawable();
+                                BitmapDrawable bitmapDrawable = ((BitmapDrawable) drawable);
+                                Bitmap bitmap = bitmapDrawable .getBitmap();
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                                byte[] imageInByte = stream.toByteArray();
+
+                                BDLocal gestorDB = new BDLocal (getBaseContext(), "DAS", null, 1);
+                                SQLiteDatabase bd = gestorDB.getWritableDatabase();
+                                ContentValues nuevo = new ContentValues();
+                                nuevo.put("Id", id_remitente);
+                                nuevo.put("Nombre", nombre);
+                                nuevo.put("Token", token);
+                                nuevo.put("Imagen", imageInByte);
+                                bd.insert("Usuarios", null, nuevo);
+                                gestorDB.guardarMensaje(id_remitente,mensaje, 0);
+
+                                nombreOtro=nombre;
+                                tokenOtro=token;
+                                nombreOtroChat.setText(nombre);
+
+
+
+                                //https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
+//                                Bitmap bmp = BitmapFactory.decodeByteArray(imagenOtro, 0, imagenOtro.length);
+//                                imagenOtroChat.setImageBitmap(Bitmap.createScaledBitmap(bmp, 150, 150, false));
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+                    }
+                });
+        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
+        WorkManager.getInstance(this).enqueueUniqueWork("getDatosUsuario"+id_remitente, ExistingWorkPolicy.REPLACE, requesContrasena);
+    }
+
+
 //    private void enviarMensaje() {
 //        EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
 //        mensajes.add(mensajeEscrito.getText().toString());
 //        mios.add(true);
 //        adaptador.notifyDataSetChanged();
+//        SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
 //
+//        String nombreEmisor = preferencias.getString("nombre", "null");
+//        String idRemitente=preferencias.getString("id", "null");
+//        final String[] tokenRemitente = {""};
 //
-//        String miId = "0"; //RELLENAR ESTO CON MI ID, QUE ESTARÁ EN ALGUN SITIO (PREFERENCIAS, BD LOCAL...)
+//        FirebaseMessaging.getInstance().getToken()
+//                .addOnCompleteListener(new OnCompleteListener<String>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<String> task) {
+//                        if (!task.isSuccessful()) {
+//                            Log.i("MYAPP", "Fetching FCM registration token failed", task.getException());
+//                            return;
+//                        }
+//
+//                        // Get new FCM registration token
+//                        tokenRemitente[0] = task.getResult();
+//
+//                       }
+//                });
+//
+//        //String miId = "0"; //RELLENAR ESTO CON MI ID, QUE ESTARÁ EN ALGUN SITIO (PREFERENCIAS, BD LOCAL...)
 //
 //        BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
 //        gestorDB.guardarMensaje(idOtro,mensajeEscrito.getText().toString(), 1);
-//        Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,miId);
-//
+//        //Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,miId);
+//        Firebase.enviarMensajeFCM(this,nombreEmisor,mensajeEscrito.getText().toString(),idRemitente,tokenRemitente[0],tokenOtro);
 //        mensajeEscrito.setText("");
 //    }
+    private void enviarMensaje() {
+        EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
+        mensajes.add(mensajeEscrito.getText().toString());
+        mios.add(true);
+        adaptador.notifyDataSetChanged();
+
+
+        String miId = "0"; //RELLENAR ESTO CON MI ID, QUE ESTARÁ EN ALGUN SITIO (PREFERENCIAS, BD LOCAL...)
+
+        BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
+        gestorDB.guardarMensaje(idOtro,mensajeEscrito.getText().toString(), 1);
+         SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String idRemitente=preferencias.getString("id", "null");
+        Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,idRemitente);
+
+        mensajeEscrito.setText("");
+    }
 
 
     public void obtenerMensajesChat(){
