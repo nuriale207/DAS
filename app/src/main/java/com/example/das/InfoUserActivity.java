@@ -233,6 +233,9 @@ public class InfoUserActivity extends AppCompatActivity {
 
                                 viewNombreEdad.setText(nombre.toUpperCase()+", "+edad);
                                 viewGenero.setText(genero);
+                                if(descripcion.equals("null")){
+                                    descripcion="";
+                                }
                                 viewDescripcion.setText(descripcion);
                                 Log.i("MYAPP",id_FCM);
 
