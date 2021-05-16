@@ -41,6 +41,9 @@ import com.google.firebase.storage.StorageReference;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -171,6 +174,8 @@ public void onMessageReceived(RemoteMessage remoteMessage) {
             token_remitente=token;
             imagenRemitente=imagen;
             gestorDB.guardarMensaje(id_remitente,mensaje, 0);
+
+            GestorChats.getGestorListas().activarNuevoMensaje();
             recibirMensajeFCM(mensaje,id_remitente,nombreRemitente,token_remitente,imagenRemitente);
 
         }
@@ -388,6 +393,7 @@ public void onMessageReceived(RemoteMessage remoteMessage) {
                             .appendQueryParameter("mensaje", mensaje);
                     String parametros = builder.build().getEncodedQuery();
 
+                    //String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/igarcia353/WEB/fcmDAS.php";
                     String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/fcm.php";
                     HttpURLConnection urlConnection = null;
                     URL destino = new URL(direccion);
@@ -404,6 +410,15 @@ public void onMessageReceived(RemoteMessage remoteMessage) {
                     out.close();
 
                     int statusCode = urlConnection.getResponseCode();
+
+                    BufferedInputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                    BufferedReader bufferedReader = new BufferedReader (new InputStreamReader(inputStream, "UTF-8"));
+                    String line, result="";
+                    while ((line = bufferedReader.readLine()) != null){
+                        result += line;
+                    }
+                    inputStream.close();
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }

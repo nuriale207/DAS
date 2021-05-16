@@ -22,6 +22,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -53,6 +54,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class ChatActivity extends AppCompatActivity {
+    private String miId;
     private String idOtro;
     private String nombreOtro;
     private String tokenOtro;
@@ -60,6 +62,7 @@ public class ChatActivity extends AppCompatActivity {
     private AdaptadorMensajes adaptador;
     ArrayList<String> mensajes = new ArrayList<>();
     ArrayList<Boolean> mios = new ArrayList<>();
+    private Handler handler;
 
     private ImageView imagenOtroChat;
     private Boolean mostrarImagen;
@@ -94,15 +97,9 @@ public class ChatActivity extends AppCompatActivity {
         adaptador = new AdaptadorMensajes(this, mensajes,mios);
         lista.setAdapter(adaptador);
 
-
-
-
+        lista.setSelection(adaptador.getCount() - 1);
 
         nombreOtroChat.setText(nombreOtro);
-
-
-
-
 
         EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
         TextView.OnEditorActionListener listenerTeclado = new TextView.OnEditorActionListener() {
@@ -123,7 +120,20 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        handler = new Handler();
+        Runnable actualizadorChat = new Runnable() {
+            @Override
+            public void run() {
+                if(GestorChats.getGestorListas().comprobarNuevoMensaje()){
+                    actualizarListaMensajes();
+                }
+                handler.postDelayed(this,200);
+            }
+        };
+        handler.postDelayed(actualizadorChat, 200);
     }
+
+
     private void anadirUsuarioABDLocal(String id_remitente,String mensaje) {
         //Metodo que carga la imagen de Firebase Storage
         //Metodo que carga la imagen de Firebase Storage
@@ -236,6 +246,8 @@ public class ChatActivity extends AppCompatActivity {
 //        //Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,miId);
 //        Firebase.enviarMensajeFCM(this,nombreEmisor,mensajeEscrito.getText().toString(),idRemitente,tokenRemitente[0],tokenOtro);
 //        mensajeEscrito.setText("");
+//        ListView lista=findViewById(R.id.mensajes);
+//        lista.setSelection(adaptador.getCount() - 1);
 //    }
     private void enviarMensaje() {
         EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
@@ -244,20 +256,22 @@ public class ChatActivity extends AppCompatActivity {
         adaptador.notifyDataSetChanged();
 
 
-        String miId = "0"; //RELLENAR ESTO CON MI ID, QUE ESTARÁ EN ALGUN SITIO (PREFERENCIAS, BD LOCAL...)
-
         BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
         gestorDB.guardarMensaje(idOtro,mensajeEscrito.getText().toString(), 1);
-         SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
 
         String idRemitente=preferencias.getString("id", "null");
         Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,idRemitente);
 
         mensajeEscrito.setText("");
+        ListView lista=findViewById(R.id.mensajes);
+        lista.setSelection(adaptador.getCount() - 1);
     }
 
 
     public void obtenerMensajesChat(){
+        mensajes = new ArrayList<>();
+        mios = new ArrayList<>();
         BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
         SQLiteDatabase bd = gestorDB.getWritableDatabase();
 
@@ -286,5 +300,13 @@ public class ChatActivity extends AppCompatActivity {
         Intent i=new Intent(ChatActivity.this, MainActivity.class);
         startActivity(i);
         finish();
+    }
+
+    public void actualizarListaMensajes(){
+        obtenerMensajesChat();
+        ListView lista=findViewById(R.id.mensajes);
+        adaptador = new AdaptadorMensajes(this, mensajes,mios);
+        lista.setAdapter(adaptador);
+        lista.setSelection(adaptador.getCount() - 1);
     }
 }

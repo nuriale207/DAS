@@ -27,9 +27,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -146,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         tabhost.addTab(spec);
 
         actualizarPerfiles();
+        actualizar("editarToken", "token=" + Firebase.getToken(this));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 24);
@@ -340,7 +343,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     distanciaMax=preferencias.getInt("distancia",20);
                     LatLng pos = new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
                     coordenadasActuales=pos;
-                    usuario.remove();
+                    if(usuario != null){
+                        usuario.remove();
+                    }
 
                     usuario=googleMap.addMarker(new MarkerOptions()
                             .position(pos)
@@ -611,5 +616,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 cu.moveToNext();
             }
         }
+    }
+
+
+    private void actualizar(String funcion, String campo) {
+        Data datos = new Data.Builder()
+                .putString("fichero", "DAS_users.php")
+                .putString("parametros", "funcion=" + funcion + "&id=" + id + "&" + campo)
+                .build();
+        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("actualizar" + funcion).build();
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
+                .observe(this, new Observer<WorkInfo>() {
+                    @Override
+                    public void onChanged(WorkInfo workInfo) {
+                        if (workInfo != null && workInfo.getState().isFinished()) {
+                            String resultado = workInfo.getOutputData().getString("resultado");
+                            Log.i("MYAPP", "inicio realizado");
+
+                            Log.i("MYAPP", resultado);
+
+                            if (resultado.contains("error")) {
+                                Toast toast = Toast.makeText(MainActivity.this, "Ha ocurrido un error al actualizar el campo", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+                                toast.show();
+                            }
+
+                        }
+                    }
+                });
+        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
+        WorkManager.getInstance(MainActivity.this).enqueueUniqueWork("actualizar" + funcion, ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 }
