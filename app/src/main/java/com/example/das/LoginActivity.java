@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +32,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -222,8 +224,8 @@ public class LoginActivity extends AppCompatActivity {
                                 else{
                                     SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                                     preferencias.edit().putString("id",id).apply();
-                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                    finish();
+                                    actualizarTokenFCM(id);
+
 
                                 }
                             } catch (JSONException e) {
@@ -241,6 +243,63 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
+    private void actualizarTokenFCM(String idUsuario){
+        //Se obtiene el nuevo id de FCM del dispositivo
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        //En caso de error se imprime
+                        if (!task.isSuccessful()) {
+                            Log.i("MYAPP", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        Log.i("Nuevo token",token);
+                        actualizarTokenFCM(idUsuario,token);
+
+
+                    }
+                });
+    }
+
+    private void actualizarTokenFCM(String id,String token) {
+
+        Data datos = new Data.Builder()
+                .putString("fichero", "DAS_users.php")
+                .putString("parametros", "funcion=" + "editarToken" + "&id=" + id + "&" + "token="+token)
+                .build();
+        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("actualizar" + id).build();
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
+                .observe(this, new Observer<WorkInfo>() {
+                    @Override
+                    public void onChanged(WorkInfo workInfo) {
+                        if (workInfo != null && workInfo.getState().isFinished()) {
+                            String resultado = workInfo.getOutputData().getString("resultado");
+                            Log.i("MYAPP", "inicio realizado");
+
+                            Log.i("MYAPP", resultado);
+
+
+                            if (resultado.contains("error")) {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Ha ocurrido un error interno", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+                                toast.show();
+                            } else {
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                finish();
+                            }
+
+                        }
+                    }
+                });
+        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
+        WorkManager.getInstance(this).enqueueUniqueWork("actualizar" + id, ExistingWorkPolicy.REPLACE, requesContrasena);
+    }
+
     //En caso de que la aplicación se detenga se almacenan los nombres escritos hasta el momento
     @Override
     protected void onSaveInstanceState (Bundle savedInstanceState) {
