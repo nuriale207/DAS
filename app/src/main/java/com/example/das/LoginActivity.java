@@ -270,7 +270,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
-                .putString("parametros", "funcion=" + "editarToken" + "&id=" + id + "&" + "token="+token)
+                .putString("parametros", "funcion=" + "editarToken" + "&id=" + id + "&" + "token="+token+"&sesion=1")
                 .build();
         OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("actualizar" + id).build();
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())

@@ -86,7 +86,7 @@ public class CerrarSesionDialog extends DialogFragment {
 
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
-                .putString("parametros", "funcion=" + "editarToken" + "&id=" + id + "&" + "token="+"logged out")
+                .putString("parametros", "funcion=" + "editarToken" + "&id=" + id + "&" + "token="+"logged out&sesion=0")
                 .build();
         OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("eliminarToken" + id).build();
         WorkManager.getInstance(getActivity()).getWorkInfoByIdLiveData(requesContrasena.getId())
