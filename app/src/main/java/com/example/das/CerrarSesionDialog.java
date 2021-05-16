@@ -60,10 +60,10 @@ public class CerrarSesionDialog extends DialogFragment {
 
                 editor.apply();
                 eliminarTokenFCM();
-//                Intent i=new Intent(getActivity(),LoginActivity.class);
-//                getActivity().finish();
-//
-//                startActivity(i);
+                Intent i=new Intent(getActivity(),LoginActivity.class);
+                getActivity().finish();
+
+                startActivity(i);
             }
         });
 
@@ -88,8 +88,8 @@ public class CerrarSesionDialog extends DialogFragment {
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=" + "editarToken" + "&id=" + id + "&" + "token="+"logged out")
                 .build();
-        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("actualizar" + id).build();
-        WorkManager.getInstance(this.getActivity()).getWorkInfoByIdLiveData(requesContrasena.getId())
+        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("eliminarToken" + id).build();
+        WorkManager.getInstance(getActivity()).getWorkInfoByIdLiveData(requesContrasena.getId())
                 .observe(this, new Observer<WorkInfo>() {
                     @Override
                     public void onChanged(WorkInfo workInfo) {
@@ -115,7 +115,7 @@ public class CerrarSesionDialog extends DialogFragment {
                     }
                 });
         //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
-        WorkManager.getInstance(getActivity()).enqueueUniqueWork("actualizar" + id, ExistingWorkPolicy.REPLACE, requesContrasena);
+        WorkManager.getInstance(getActivity()).enqueueUniqueWork("eliminarToken" + id, ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 
 }
