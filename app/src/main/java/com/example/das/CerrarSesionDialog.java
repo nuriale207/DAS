@@ -59,7 +59,7 @@ public class CerrarSesionDialog extends DialogFragment {
                 bd.delete("Mensajes",null,null);
 
                 editor.apply();
-                //eliminarTokenFCM();
+                eliminarTokenFCM();
                 Intent i=new Intent(getActivity(),LoginActivity.class);
                 getActivity().finish();
 
@@ -86,10 +86,10 @@ public class CerrarSesionDialog extends DialogFragment {
 
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
-                .putString("parametros", "funcion=" + "editarToken" + "&id=" + id + "&" + "token="+"")
+                .putString("parametros", "funcion=" + "editarToken" + "&id=" + id + "&" + "token="+"logged out&sesion=0")
                 .build();
-        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("actualizar" + id).build();
-        WorkManager.getInstance(this.getActivity()).getWorkInfoByIdLiveData(requesContrasena.getId())
+        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("eliminarToken" + id).build();
+        WorkManager.getInstance(getActivity()).getWorkInfoByIdLiveData(requesContrasena.getId())
                 .observe(this, new Observer<WorkInfo>() {
                     @Override
                     public void onChanged(WorkInfo workInfo) {
@@ -105,15 +105,17 @@ public class CerrarSesionDialog extends DialogFragment {
                                 toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                                 toast.show();
                             } else {
-                                startActivity(new Intent(getActivity(), LoginActivity.class));
+                                Intent i=new Intent(getActivity(),LoginActivity.class);
                                 getActivity().finish();
+
+                                startActivity(i);
                             }
 
                         }
                     }
                 });
         //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
-        WorkManager.getInstance(getActivity()).enqueueUniqueWork("actualizar" + id, ExistingWorkPolicy.REPLACE, requesContrasena);
+        WorkManager.getInstance(getActivity()).enqueueUniqueWork("eliminarToken" + id, ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 
 }

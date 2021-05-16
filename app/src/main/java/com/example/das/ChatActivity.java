@@ -11,6 +11,7 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -91,17 +92,18 @@ public class ChatActivity extends AppCompatActivity {
                 //https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
                 Bitmap bmp = BitmapFactory.decodeByteArray(imagenOtro, 0, imagenOtro.length);
                 imagenOtroChat.setImageBitmap(Bitmap.createScaledBitmap(bmp, 150, 150, false));
+                obtenerMensajesChat();
+                ListView lista=findViewById(R.id.mensajes);
+                adaptador = new AdaptadorMensajes(this, mensajes,mios);
+                lista.setAdapter(adaptador);
+
+                lista.setSelection(adaptador.getCount() - 1);
+
+                nombreOtroChat.setText(nombreOtro);
 
             }
         }
-        obtenerMensajesChat();
-        ListView lista=findViewById(R.id.mensajes);
-        adaptador = new AdaptadorMensajes(this, mensajes,mios);
-        lista.setAdapter(adaptador);
 
-        lista.setSelection(adaptador.getCount() - 1);
-
-        nombreOtroChat.setText(nombreOtro);
 
         /*EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
         TextView.OnEditorActionListener listenerTeclado = new TextView.OnEditorActionListener() {
@@ -193,7 +195,17 @@ public class ChatActivity extends AppCompatActivity {
 
                                 nombreOtro=nombre;
                                 tokenOtro=token;
-                                nombreOtroChat.setText(nombre);
+                                nombreOtroChat.setText(nombreOtro);
+
+                                ListView lista=findViewById(R.id.mensajes);
+
+                                actualizarListaMensajes();
+                              /*  adaptador = new AdaptadorMensajes((Activity) getBaseContext(), mensajes,mios);
+                                lista.setAdapter(adaptador);
+
+                                lista.setSelection(adaptador.getCount() - 1);
+
+                                actualizarListaMensajes();*/
 
 
 
