@@ -4,47 +4,95 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azulFondo"
+    android:background="@color/black"
     tools:context=".InfoUserActivity">
+
+    <Button
+        android:id="@+id/buttonEnviarMensaje"
+        android:layout_width="139dp"
+        android:layout_height="56dp"
+        android:drawableLeft="@android:drawable/ic_dialog_email"
+        android:text="Hablar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.941"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView3"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/buttonVolver"
+        android:layout_width="139dp"
+        android:layout_height="55dp"
+        android:drawableRight="@android:drawable/ic_menu_revert"
+        android:text="Volver"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.058"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView3"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="299dp"
-        android:layout_height="224dp"
+        android:layout_width="389dp"
+        android:layout_height="370dp"
+        android:background="#000000"
+        android:baselineAlignBottom="false"
+        android:foregroundGravity="center"
         android:src="@android:drawable/ic_menu_gallery"
-        app:layout_constraintBottom_toTopOf="@+id/buttonEnviarMensaje"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewNombreEdad" />
-
-    <TextView
-        android:id="@+id/textViewNombreEdad"
-        android:layout_width="214dp"
-        android:layout_height="34dp"
-        android:text="NOMBRE + EDAD"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/imageView3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ScrollView
         android:id="@+id/scrollView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/buttonVolver"
+        android:layout_width="409dp"
+        android:layout_height="573dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonEnviarMensaje">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <androidx.constraintlayout.utils.widget.MockView
+                android:id="@+id/mockView"
+                android:layout_width="match_parent"
+                android:layout_height="387dp"
+                android:layout_gravity="center"
+                android:foregroundGravity="center"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/textViewNombreEdad"
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:text="NOMBRE + EDAD"
+                android:textAlignment="viewStart"
+                android:textColor="#FFFFFF"
+                android:textColorHighlight="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:textColorLink="#FFFFFF"
+                android:textSize="24sp" />
+
+            <androidx.constraintlayout.utils.widget.MockView
+                android:id="@+id/mockView2"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/textView9"
@@ -60,6 +108,12 @@
                 android:ems="10"
                 android:focusable="false"
                 android:inputType="none" />
+
+            <androidx.constraintlayout.utils.widget.MockView
+                android:id="@+id/mockView3"
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/textViewAcercaDe"
@@ -83,9 +137,15 @@
                 android:layout_height="wrap_content"
                 android:text="Intereses " />
 
+            <androidx.constraintlayout.utils.widget.MockView
+                android:id="@+id/mockView4"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:visibility="invisible" />
+
             <EditText
                 android:id="@+id/textViewIntereses"
-                android:layout_width="274dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:focusable="false"
@@ -94,26 +154,4 @@
         </LinearLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/buttonEnviarMensaje"
-        android:layout_width="197dp"
-        android:layout_height="55dp"
-        android:drawableLeft="@android:drawable/ic_dialog_email"
-        android:text="Enviar mensaje"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
-
-    <Button
-        android:id="@+id/buttonVolver"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Volver"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

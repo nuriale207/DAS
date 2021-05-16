@@ -172,6 +172,7 @@ public class Firebase extends FirebaseMessagingService {
             gestorDB.guardarMensaje(id_remitente, mensaje, 0);
 
             GestorChats.getGestorListas().activarNuevoMensaje();
+            GestorChats.getGestorListas().activarNuevoChat();
             recibirMensajeFCM(mensaje, id_remitente, nombreRemitente, token_remitente, imagenRemitente);
 
         } else {

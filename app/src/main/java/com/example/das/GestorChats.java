@@ -7,6 +7,7 @@ public class GestorChats {
     private static GestorChats gestorChats;
     private AdaptadorChats adaptadorChats;
     private Boolean flagNuevoMensaje = false;
+    private Boolean getFlagNuevoChat =  false;
 
     public static GestorChats getGestorListas() {
         if (gestorChats == null) {
@@ -32,6 +33,19 @@ public class GestorChats {
         if(flagNuevoMensaje){
             res = true;
             flagNuevoMensaje = false;
+        }
+        return res;
+    }
+
+    public void activarNuevoChat(){
+        getFlagNuevoChat = true;
+    }
+
+    public Boolean comprobarNuevoChat(){
+        Boolean res = false;
+        if(getFlagNuevoChat){
+            res = true;
+            getFlagNuevoChat = false;
         }
         return res;
     }

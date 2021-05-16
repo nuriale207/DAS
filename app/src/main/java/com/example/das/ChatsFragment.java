@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ public class ChatsFragment extends Fragment {
     String[] nombres = {};
     String[] tokens = {};
     byte[][] imagenes = {};
+    Handler handler;
+    AdaptadorChats adaptador;
     public ChatsFragment() {
         // Required empty public constructor
     }
@@ -28,9 +31,28 @@ public class ChatsFragment extends Fragment {
         rellenarListas();
 
         ListView lista=getView().findViewById(R.id.listaChats);
-        AdaptadorChats adaptador = new AdaptadorChats(getActivity(), ids,nombres,tokens, imagenes);
+        adaptador = new AdaptadorChats(getActivity(), ids,nombres,tokens, imagenes);
         lista.setAdapter(adaptador);
         GestorChats.getGestorListas().asignarAdaptadorChats(adaptador);
+        handler = new Handler();
+        Runnable actualizadorChat = new Runnable() {
+            @Override
+            public void run() {
+                if(GestorChats.getGestorListas().comprobarNuevoChat()){
+                    actualizarListaChats();
+                }
+                handler.postDelayed(this,2000);
+            }
+        };
+        handler.postDelayed(actualizadorChat, 2000);
+    }
+
+    public void actualizarListaChats(){
+        rellenarListas();
+        ListView lista=getView().findViewById(R.id.listaChats);
+        adaptador = new AdaptadorChats(getActivity(), ids,nombres,tokens, imagenes);
+        lista.setAdapter(adaptador);
+        lista.setSelection(0);
     }
 
     @Override

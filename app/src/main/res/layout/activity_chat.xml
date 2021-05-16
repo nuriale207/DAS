@@ -73,8 +73,7 @@
             android:ems="10"
             android:hint="Escribe tu mensaje..."
             android:paddingStart="20dp"
-            android:inputType="textCapSentences"
-            android:imeOptions="actionSend"/>
+            android:inputType="textCapSentences"/>
 
         <ImageButton
             android:id="@+id/botonEnviarMensaje"

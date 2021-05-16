@@ -93,7 +93,6 @@ public class ChatActivity extends AppCompatActivity {
                 imagenOtroChat.setImageBitmap(Bitmap.createScaledBitmap(bmp, 150, 150, false));
 
             }
-
         }
         obtenerMensajesChat();
         ListView lista=findViewById(R.id.mensajes);
@@ -104,7 +103,7 @@ public class ChatActivity extends AppCompatActivity {
 
         nombreOtroChat.setText(nombreOtro);
 
-        EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
+        /*EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
         TextView.OnEditorActionListener listenerTeclado = new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -113,7 +112,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
                 return false;
             }
-        };
+        };*/
 
         ImageButton enviarMensaje = findViewById(R.id.botonEnviarMensaje);
         enviarMensaje.setOnClickListener(new View.OnClickListener() {
