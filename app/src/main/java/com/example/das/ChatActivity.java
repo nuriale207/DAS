@@ -66,6 +66,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private ImageView imagenOtroChat;
     private Boolean mostrarImagen;
+    public static boolean running;
+    public static String idChat;
     TextView nombreOtroChat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,7 @@ public class ChatActivity extends AppCompatActivity {
         nombreOtroChat = findViewById(R.id.nombreOtroChat);
         if (extras != null) {
             idOtro = extras.getString("id");
+
             nombreOtro = extras.getString("nombre");
             if(nombreOtro==null){
                 String mensaje = extras.getString("mensaje");
@@ -127,10 +130,10 @@ public class ChatActivity extends AppCompatActivity {
                 if(GestorChats.getGestorListas().comprobarNuevoMensaje()){
                     actualizarListaMensajes();
                 }
-                handler.postDelayed(this,200);
+                handler.postDelayed(this,2000);
             }
         };
-        handler.postDelayed(actualizadorChat, 200);
+        handler.postDelayed(actualizadorChat, 2000);
     }
 
 
@@ -210,6 +213,20 @@ public class ChatActivity extends AppCompatActivity {
                 });
         //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(this).enqueueUniqueWork("getDatosUsuario"+id_remitente, ExistingWorkPolicy.REPLACE, requesContrasena);
+    }
+
+    //https://stackoverflow.com/questions/5446565/android-how-do-i-check-if-activity-is-running
+    @Override
+    public void onStart() {
+        super.onStart();
+        running = true;
+        idChat=idOtro;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        running = false;
     }
 
 

@@ -54,6 +54,7 @@ public class Firebase extends FirebaseMessagingService {
     private String nombreRemitente;
     private String token_remitente;
     private byte[] imagenRemitente;
+
     public Firebase() {
 
     }
@@ -67,7 +68,7 @@ public class Firebase extends FirebaseMessagingService {
     }
 
 
-//    public void onMessageReceived(RemoteMessage remoteMessage) {
+    //    public void onMessageReceived(RemoteMessage remoteMessage) {
 //        Log.i("notificacion", "Llega aqui");
 //
 ////        String idOtro = remoteMessage.toIntent().getExtras().getString("idOtro");
@@ -110,15 +111,15 @@ public class Firebase extends FirebaseMessagingService {
 //        }
 //
 //    }
-public void onMessageReceived(RemoteMessage remoteMessage) {
-    Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
-    Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
-    Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
-    Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
-    Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
-    Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
-    Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
-    Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
+    public void onMessageReceived(RemoteMessage remoteMessage) {
+        Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
+        Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
+        Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
+        Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
+        Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
+        Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
+        Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
+        Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
 
 //        String idOtro = remoteMessage.toIntent().getExtras().getString("idOtro");
 //        String mensaje = remoteMessage.toIntent().getExtras().getString("mensaje");
@@ -127,62 +128,56 @@ public void onMessageReceived(RemoteMessage remoteMessage) {
 //        gestorDB.guardarMensaje(idOtro,mensaje, 0);
 
 
+        //Los mensajes recibidos desde un php se gestionan distinto a las notificaciones recibidas desde la consola
+        if (remoteMessage.getNotification() == null) {
 
-    //Los mensajes recibidos desde un php se gestionan distinto a las notificaciones recibidas desde la consola
-    if(remoteMessage.getNotification()==null) {
+            String mensaje;
+            String id_remitente;
+            Log.i("MYAPP", "El mensaje es nulo");
 
-        String mensaje;
-        String id_remitente;
-        Log.i("MYAPP","El mensaje es nulo");
+            mensaje = remoteMessage.getData().get("mensaje");
+            id_remitente = remoteMessage.getData().get("idRemitente");
 
-        mensaje=remoteMessage.getData().get("mensaje");
-        id_remitente=remoteMessage.getData().get("idRemitente");
+            obtenerInfoRemitente(id_remitente, mensaje);
 
-        BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
-
-
-        obtenerInfoRemitente(id_remitente,mensaje);
-
-        Log.i("FIREBASE",  remoteMessage.getData().toString());
-    }
-    else{
-        //En caso contrario se puede obtener directamente la información
-        String titulo=remoteMessage.getNotification().getTitle();
+            Log.i("FIREBASE", remoteMessage.getData().toString());
+        } else {
+            //En caso contrario se puede obtener directamente la información
+            String titulo = remoteMessage.getNotification().getTitle();
 
 
-        String body=remoteMessage.getNotification().getBody();
-        Log.i("FIREBASE", body);
+            String body = remoteMessage.getNotification().getBody();
+            Log.i("FIREBASE", body);
 
-        sendNotification(titulo,body);
+            sendNotification(titulo, body);
+        }
+
     }
 
-}
-
-    private void obtenerInfoRemitente(String id_remitente,String mensaje) {
-        BDLocal gestorDB = new BDLocal (getBaseContext(), "DAS", null, 1);
+    private void obtenerInfoRemitente(String id_remitente, String mensaje) {
+        BDLocal gestorDB = new BDLocal(getBaseContext(), "DAS", null, 1);
         SQLiteDatabase bd = gestorDB.getWritableDatabase();
-        String[] campos = new String[] {"Nombre","Token","Imagen"};
-        String[] argumentos = new String[] {id_remitente};
-        Cursor cu = bd.query("Usuarios",campos,"Id=?",argumentos,null,null,null);
-        if (cu.getCount() != 0){
+        String[] campos = new String[]{"Nombre", "Token", "Imagen"};
+        String[] argumentos = new String[]{id_remitente};
+        Cursor cu = bd.query("Usuarios", campos, "Id=?", argumentos, null, null, null);
+        if (cu.getCount() != 0) {
             cu.moveToFirst();
-            String nombre=cu.getString(0);
-            String token=cu.getString(1);
-            byte[] imagen=cu.getBlob(2);
+            String nombre = cu.getString(0);
+            String token = cu.getString(1);
+            byte[] imagen = cu.getBlob(2);
 
-            nombreRemitente=nombre;
-            token_remitente=token;
-            imagenRemitente=imagen;
-            gestorDB.guardarMensaje(id_remitente,mensaje, 0);
+            nombreRemitente = nombre;
+            token_remitente = token;
+            imagenRemitente = imagen;
+            gestorDB.guardarMensaje(id_remitente, mensaje, 0);
 
             GestorChats.getGestorListas().activarNuevoMensaje();
-            recibirMensajeFCM(mensaje,id_remitente,nombreRemitente,token_remitente,imagenRemitente);
+            recibirMensajeFCM(mensaje, id_remitente, nombreRemitente, token_remitente, imagenRemitente);
 
-        }
-        else{
+        } else {
 
             //anadirUsuarioABDLocal(id_remitente,mensaje);
-            recibirMensajeFCM(mensaje,id_remitente);
+            recibirMensajeFCM(mensaje, id_remitente);
 
         }
 
@@ -191,141 +186,166 @@ public void onMessageReceived(RemoteMessage remoteMessage) {
     private void recibirMensajeFCM(String mensaje, String id_remitente, String nombreRemitente, String token_remitente, byte[] imagenRemitente) {
         //obtenerInfoRemitente(id_remitente,mensaje);
         //Muestro una notificación con los datos del mensaje y creo en ella un intent al chat
-        NotificationManager elManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(getApplicationContext(), "IdCanal");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel elCanal = new NotificationChannel("IdCanal", "NombreCanal",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            Intent i = new Intent(getApplicationContext(),ChatActivity.class);
-            i.putExtra("id",id_remitente);
-            i.putExtra("nombre",nombreRemitente);
-            i.putExtra("token",token_remitente);
-            i.putExtra("imagen",imagenRemitente);
-            PendingIntent intentEnNot = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
-            elManager.createNotificationChannel(elCanal);
-            elBuilder.setSmallIcon(R.drawable.logo_das)
-                    .setContentTitle(nombreRemitente)
-                    .setContentText(mensaje)
-                    .setSubText(mensaje)
-                    .setVibrate(new long[]{0, 1000, 500, 1000})
-                    .setAutoCancel(true).setContentIntent(intentEnNot);
-            elManager.notify(1, elBuilder.build());
+        boolean mostrarNotificacion = true;
+        boolean running = ChatActivity.running;
+        if (running) {
+            String idChat = ChatActivity.idChat;
+            if (idChat.equals(id_remitente)) {
+                mostrarNotificacion = false;
+            }
+
         }
+        if (mostrarNotificacion) {
+            NotificationManager elManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(getApplicationContext(), "IdCanal");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel elCanal = new NotificationChannel("IdCanal", "NombreCanal",
+                        NotificationManager.IMPORTANCE_DEFAULT);
+                Intent i = new Intent(getApplicationContext(), ChatActivity.class);
+                i.putExtra("id", id_remitente);
+                i.putExtra("nombre", nombreRemitente);
+                i.putExtra("token", token_remitente);
+                i.putExtra("imagen", imagenRemitente);
+                PendingIntent intentEnNot = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
+                elManager.createNotificationChannel(elCanal);
+                elBuilder.setSmallIcon(R.drawable.logo_das)
+                        .setContentTitle(nombreRemitente)
+                        .setContentText(mensaje)
+                        .setSubText(mensaje)
+                        .setVibrate(new long[]{0, 1000, 500, 1000})
+                        .setAutoCancel(true).setContentIntent(intentEnNot);
+                elManager.notify(1, elBuilder.build());
+            }
+        }
+
     }
+
     private void recibirMensajeFCM(String mensaje, String id_remitente) {
+
         //obtenerInfoRemitente(id_remitente,mensaje);
         //Muestro una notificación con los datos del mensaje y creo en ella un intent al chat
-        NotificationManager elManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(getApplicationContext(), "IdCanal");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel elCanal = new NotificationChannel("IdCanal", "NombreCanal",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            Intent i = new Intent(getApplicationContext(),ChatActivity.class);
-            i.putExtra("id",id_remitente);
-            i.putExtra("mensaje",mensaje);
-            PendingIntent intentEnNot = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
-            elManager.createNotificationChannel(elCanal);
-            elBuilder.setSmallIcon(R.drawable.logo_das)
-                    .setContentTitle(nombreRemitente)
-                    .setContentText(mensaje)
-                    .setSubText(mensaje)
-                    .setVibrate(new long[]{0, 1000, 500, 1000})
-                    .setAutoCancel(true).setContentIntent(intentEnNot);
-            elManager.notify(1, elBuilder.build());
+        boolean mostrarNotificacion = true;
+        boolean running = ChatActivity.running;
+        if (running) {
+            String idChat = ChatActivity.idChat;
+            if (idChat.equals(id_remitente)) {
+                mostrarNotificacion = false;
+            }
+
+        }
+        if (mostrarNotificacion) {
+            NotificationManager elManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(getApplicationContext(), "IdCanal");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel elCanal = new NotificationChannel("IdCanal", "NombreCanal",
+                        NotificationManager.IMPORTANCE_DEFAULT);
+                Intent i = new Intent(getApplicationContext(), ChatActivity.class);
+                i.putExtra("id", id_remitente);
+                i.putExtra("mensaje", mensaje);
+                PendingIntent intentEnNot = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
+                elManager.createNotificationChannel(elCanal);
+                elBuilder.setSmallIcon(R.drawable.logo_das)
+                        .setContentTitle(nombreRemitente)
+                        .setContentText(mensaje)
+                        .setSubText(mensaje)
+                        .setVibrate(new long[]{0, 1000, 500, 1000})
+                        .setAutoCancel(true).setContentIntent(intentEnNot);
+                elManager.notify(1, elBuilder.build());
+            }
         }
     }
 
-    private void anadirUsuarioABDLocal(String id_remitente,String mensaje) {
-        //Metodo que carga la imagen de Firebase Storage
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        StorageReference pathReference = storageRef.child("images/" + id_remitente + ".jpg");
-        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-
-                Glide.with(getApplicationContext())
-                        .asBitmap()
-                        .load(uri)
-                        .into(new CustomTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(@NonNull Bitmap bmp, @Nullable Transition<? super Bitmap> transition) {
-
-
-                                int size     = bmp.getRowBytes() * bmp.getHeight();
-                                ByteBuffer b = ByteBuffer.allocate(size);
-
-                                bmp.copyPixelsToBuffer(b);
-
-                                byte[] bytes = new byte[size];
-
-                                try {
-                                    b.get(bytes, 0, bytes.length);
-                                } catch (BufferUnderflowException e) {
-                                    // always happens
-                                }
-                                anadirUsuarioABDLocal(id_remitente,bytes,mensaje);
-                            }
-
-                            @Override
-                            public void onLoadCleared(@Nullable Drawable placeholder) {
-                            }
-                        });
-            }
-        });
-    }
-
-
-    private void anadirUsuarioABDLocal(String id_remitente,byte[] imagen,String mensaje) {
-
-        Data datos = new Data.Builder()
-                .putString("fichero", "DAS_users.php")
-                .putString("parametros", "funcion=datosUsuario&id=" + id_remitente)
-                .build();
-        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("getDatosUsuario"+id_remitente).build();
-        WorkManager.getInstance(this.getBaseContext()).getWorkInfoByIdLiveData(requesContrasena.getId())
-                .observe((LifecycleOwner) getApplicationContext(), new Observer<WorkInfo>() {
-                    @Override
-                    public void onChanged(WorkInfo workInfo) {
-                        if (workInfo != null && workInfo.getState().isFinished()) {
-                            String resultado = workInfo.getOutputData().getString("resultado");
-                            Log.i("MYAPP", "inicio realizado");
-
-                            Log.i("MYAPP", resultado);
-                            try {
-
-                                JSONObject jsonObject = new JSONObject(resultado);
-                                String nombre = jsonObject.getString("nombre");
-                                String token = jsonObject.getString("id_FCM");
-
-
-                                BDLocal gestorDB = new BDLocal (getBaseContext(), "DAS", null, 1);
-                                SQLiteDatabase bd = gestorDB.getWritableDatabase();
-                                ContentValues nuevo = new ContentValues();
-                                nuevo.put("Id", id_remitente);
-                                nuevo.put("Nombre", nombre);
-                                nuevo.put("Token", token);
-                                nuevo.put("Imagen", imagen);
-                                bd.insert("Usuarios", null, nuevo);
-                                gestorDB.guardarMensaje(id_remitente,mensaje, 0);
-
-                                nombreRemitente=nombre;
-                                token_remitente=token;
-                                imagenRemitente=imagen;
-                                recibirMensajeFCM(mensaje,id_remitente,nombreRemitente,token_remitente,imagenRemitente);
-
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-
-                        }
-                    }
-                });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
-        WorkManager.getInstance(this).enqueueUniqueWork("getDatosUsuario"+id_remitente, ExistingWorkPolicy.REPLACE, requesContrasena);
-    }
+//    private void anadirUsuarioABDLocal(String id_remitente,String mensaje) {
+//        //Metodo que carga la imagen de Firebase Storage
+//        FirebaseStorage storage = FirebaseStorage.getInstance();
+//        StorageReference storageRef = storage.getReference();
+//        StorageReference pathReference = storageRef.child("images/" + id_remitente + ".jpg");
+//        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//
+//                Glide.with(getApplicationContext())
+//                        .asBitmap()
+//                        .load(uri)
+//                        .into(new CustomTarget<Bitmap>() {
+//                            @Override
+//                            public void onResourceReady(@NonNull Bitmap bmp, @Nullable Transition<? super Bitmap> transition) {
+//
+//
+//                                int size     = bmp.getRowBytes() * bmp.getHeight();
+//                                ByteBuffer b = ByteBuffer.allocate(size);
+//
+//                                bmp.copyPixelsToBuffer(b);
+//
+//                                byte[] bytes = new byte[size];
+//
+//                                try {
+//                                    b.get(bytes, 0, bytes.length);
+//                                } catch (BufferUnderflowException e) {
+//                                    // always happens
+//                                }
+//                                anadirUsuarioABDLocal(id_remitente,bytes,mensaje);
+//                            }
+//
+//                            @Override
+//                            public void onLoadCleared(@Nullable Drawable placeholder) {
+//                            }
+//                        });
+//            }
+//        });
+//    }
+//
+//
+//    private void anadirUsuarioABDLocal(String id_remitente,byte[] imagen,String mensaje) {
+//
+//        Data datos = new Data.Builder()
+//                .putString("fichero", "DAS_users.php")
+//                .putString("parametros", "funcion=datosUsuario&id=" + id_remitente)
+//                .build();
+//        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("getDatosUsuario"+id_remitente).build();
+//        WorkManager.getInstance(this.getBaseContext()).getWorkInfoByIdLiveData(requesContrasena.getId())
+//                .observe((LifecycleOwner) getApplicationContext(), new Observer<WorkInfo>() {
+//                    @Override
+//                    public void onChanged(WorkInfo workInfo) {
+//                        if (workInfo != null && workInfo.getState().isFinished()) {
+//                            String resultado = workInfo.getOutputData().getString("resultado");
+//                            Log.i("MYAPP", "inicio realizado");
+//
+//                            Log.i("MYAPP", resultado);
+//                            try {
+//
+//                                JSONObject jsonObject = new JSONObject(resultado);
+//                                String nombre = jsonObject.getString("nombre");
+//                                String token = jsonObject.getString("id_FCM");
+//
+//
+//                                BDLocal gestorDB = new BDLocal (getBaseContext(), "DAS", null, 1);
+//                                SQLiteDatabase bd = gestorDB.getWritableDatabase();
+//                                ContentValues nuevo = new ContentValues();
+//                                nuevo.put("Id", id_remitente);
+//                                nuevo.put("Nombre", nombre);
+//                                nuevo.put("Token", token);
+//                                nuevo.put("Imagen", imagen);
+//                                bd.insert("Usuarios", null, nuevo);
+//                                gestorDB.guardarMensaje(id_remitente,mensaje, 0);
+//
+//                                nombreRemitente=nombre;
+//                                token_remitente=token;
+//                                imagenRemitente=imagen;
+//                                recibirMensajeFCM(mensaje,id_remitente,nombreRemitente,token_remitente,imagenRemitente);
+//
+//
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//
+//
+//                        }
+//                    }
+//                });
+//        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
+//        WorkManager.getInstance(this).enqueueUniqueWork("getDatosUsuario"+id_remitente, ExistingWorkPolicy.REPLACE, requesContrasena);
+//    }
 
 //    //Metodo que gestiona el recibir un mensaje
 //    private void recibirMensajeFCM(String nombreEmisor,String mensaje, String id_remitente,String token_remitente){
@@ -355,15 +375,15 @@ public void onMessageReceived(RemoteMessage remoteMessage) {
 
 
     //Emite una notificación recibida desde la consola de Firebase
-    private void sendNotification(String titulo,String messageBody) {
+    private void sendNotification(String titulo, String messageBody) {
 
         //Método que muestra la notificación recibida
-        NotificationManager elManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager elManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(getApplicationContext(), "IdCanal");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel elCanal = new NotificationChannel("IdCanal", "NombreCanal",
                     NotificationManager.IMPORTANCE_DEFAULT);
-            Intent i = new Intent(getApplicationContext(),MainActivity.class);
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
             PendingIntent intentEnNot = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
             elManager.createNotificationChannel(elCanal);
             elBuilder.setSmallIcon(R.drawable.logo_das)
@@ -378,11 +398,11 @@ public void onMessageReceived(RemoteMessage remoteMessage) {
 
 
     //https://stackoverflow.com/questions/37787373/firebase-fcm-how-to-get-token
-    public static String getToken(Context context){
-        return  context.getSharedPreferences("_", MODE_PRIVATE).getString("fb", "empty");
+    public static String getToken(Context context) {
+        return context.getSharedPreferences("_", MODE_PRIVATE).getString("fb", "empty");
     }
 
-    public static void enviarMensajeFCM(Context context, String mensaje, String idFCMDestinatario, String idAppRemitente){
+    public static void enviarMensajeFCM(Context context, String mensaje, String idFCMDestinatario, String idAppRemitente) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -412,14 +432,14 @@ public void onMessageReceived(RemoteMessage remoteMessage) {
                     int statusCode = urlConnection.getResponseCode();
 
                     BufferedInputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
-                    BufferedReader bufferedReader = new BufferedReader (new InputStreamReader(inputStream, "UTF-8"));
-                    String line, result="";
-                    while ((line = bufferedReader.readLine()) != null){
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                    String line, result = "";
+                    while ((line = bufferedReader.readLine()) != null) {
                         result += line;
                     }
                     inputStream.close();
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
