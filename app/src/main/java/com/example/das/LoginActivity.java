@@ -1,6 +1,7 @@
 package com.example.das;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.work.Data;
@@ -9,10 +10,12 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -216,9 +219,10 @@ public class LoginActivity extends AppCompatActivity {
                                 jsonObject = new JSONObject(resultado);
                                 String nombre = jsonObject.getString("nombre");
                                 if (nombre.equals("null")){
-                                    Intent i=new Intent(LoginActivity.this, RegisterActivity.class);
-                                    i.putExtra("id",id);
-                                    startActivity(i);
+                                    crearDialog(id);
+
+
+
 
                                 }
                                 else{
@@ -242,6 +246,42 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void crearDialog(String id) {
+        EditText editTextField = new EditText(this);
+        editTextField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Comprobar contraseña")
+                .setMessage("Repite la contraseña")
+                .setView(editTextField)
+                .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String editTextInput = editTextField.getText().toString();
+
+                        if (editTextInput.equals(inputPassword.getText().toString())){
+                            Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
+                            intent.putExtra("id",id);
+                            startActivity(intent);
+                        }
+                        else{
+                            Toast toast = Toast.makeText(getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+                            toast.show();
+
+                        }
+                    }
+                })
+                .setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create();
+        dialog.show();
     }
 
     private void actualizarTokenFCM(String idUsuario){
