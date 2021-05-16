@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fondo_perfil"
     android:textAlignment="center"
     tools:context=".PerfilFragment">
 
@@ -19,8 +20,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button7">
+            app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
                 android:id="@+id/linearLayout"
@@ -32,141 +32,229 @@
                     android:id="@+id/imageView3"
                     android:layout_width="match_parent"
                     android:layout_height="263dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/fondo_foto_perfil"
+                    android:paddingStart="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
                     android:src="@android:drawable/ic_menu_gallery" />
 
                 <Button
                     android:id="@+id/button7"
-                    android:layout_width="wrap_content"
+                    android:layout_width="126dp"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
+                    android:background="@drawable/fondo_boton_perfil"
                     android:gravity="center"
                     android:text="Cambiar foto" />
+
+                <androidx.constraintlayout.utils.widget.MockView
+                    android:id="@+id/mockView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/textViewNombre"
+                    android:layout_width="189dp"
+                    android:layout_height="47dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/shrikhand"
+                    android:foregroundGravity="center"
+                    android:gravity="center"
+                    android:text=" Nombre"
+                    android:textAlignment="gravity"
+                    android:textAllCaps="true"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textViewNombre"
-                        android:layout_width="61dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text=" Nombre"
-                        android:textAllCaps="true"
-                        android:textStyle="bold" />
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/fondo_foto_perfil"
+                    android:orientation="horizontal"
+                    android:padding="6dp">
 
                     <EditText
                         android:id="@+id/editTextNombre"
                         android:layout_width="135dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+
                         android:layout_weight="1"
                         android:ems="10"
-
                         android:focusable="false"
-                        android:inputType="none"
-                        android:text="Prueba" />
+                        android:inputType="none" />
 
                     <Button
                         android:id="@+id/button"
                         android:layout_width="102dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:layout_weight="1"
+                        android:background="@drawable/fondo_boton_perfil"
                         android:drawableLeft="@android:drawable/ic_menu_edit"
+                        android:paddingStart="20dp"
                         android:text="Editar" />
                 </LinearLayout>
+
+                <androidx.constraintlayout.utils.widget.MockView
+                    android:id="@+id/mockView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/textViewEdad"
+                    android:layout_width="171dp"
+                    android:layout_height="46dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/shrikhand"
+                    android:foregroundGravity="center"
+                    android:gravity="center"
+                    android:text=" Edad"
+                    android:textAlignment="gravity"
+                    android:textAllCaps="true"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textViewEdad"
-                        android:layout_width="58dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text=" Edad"
-                        android:textAllCaps="true"
-                        android:textStyle="bold" />
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/fondo_foto_perfil"
+                    android:orientation="horizontal"
+                    android:padding="6dp">
 
                     <EditText
                         android:id="@+id/editTextEdad"
                         android:layout_width="138dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+
                         android:layout_weight="1"
                         android:ems="10"
-
                         android:focusable="false"
-                        android:inputType="none"
-                        android:text="Name" />
+                        android:inputType="none" />
 
                     <Button
                         android:id="@+id/button2"
                         android:layout_width="102dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:layout_weight="1"
+                        android:background="@drawable/fondo_boton_perfil"
                         android:drawableLeft="@android:drawable/ic_menu_edit"
+                        android:paddingStart="20dp"
                         android:text="Editar" />
                 </LinearLayout>
+
+                <androidx.constraintlayout.utils.widget.MockView
+                    android:id="@+id/mockView7"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/textViewGenero"
+                    android:layout_width="146dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/shrikhand"
+                    android:foregroundGravity="center"
+                    android:gravity="center"
+                    android:text=" Género"
+                    android:textAlignment="gravity"
+                    android:textAllCaps="true"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textViewGenero"
-                        android:layout_width="65dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text=" Género"
-                        android:textAllCaps="true"
-                        android:textStyle="bold" />
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/fondo_foto_perfil"
+                    android:orientation="horizontal"
+                    android:padding="6dp">
 
                     <EditText
                         android:id="@+id/editTextGenero"
                         android:layout_width="131dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
 
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="1"
                         android:ems="10"
                         android:focusable="false"
-                        android:inputType="none"
-                        android:text="Name" />
+                        android:inputType="none" />
 
                     <Button
                         android:id="@+id/button3"
                         android:layout_width="102dp"
                         android:layout_height="match_parent"
 
+                        android:layout_marginStart="5dp"
                         android:layout_weight="1"
+                        android:background="@drawable/fondo_boton_perfil"
                         android:drawableLeft="@android:drawable/ic_menu_edit"
+                        android:paddingStart="20dp"
                         android:text="Editar" />
                 </LinearLayout>
+
+                <androidx.constraintlayout.utils.widget.MockView
+                    android:id="@+id/mockView8"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/textViewUbicacion"
+                    android:layout_width="214dp"
+                    android:layout_height="51dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/shrikhand"
+                    android:foregroundGravity="center"
+                    android:gravity="center"
+                    android:text=" Ubicación"
+                    android:textAlignment="gravity"
+                    android:textAllCaps="true"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textViewUbicacion"
-                        android:layout_width="82dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text=" Ubicación"
-                        android:textAllCaps="true"
-                        android:textStyle="bold" />
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/fondo_foto_perfil"
+                    android:orientation="horizontal"
+                    android:padding="6dp">
 
                     <EditText
                         android:id="@+id/editTextUbicacion"
                         android:layout_width="123dp"
                         android:layout_height="match_parent"
+                        android:layout_marginEnd="5dp"
+
                         android:layout_weight="1"
                         android:ems="10"
-
                         android:focusable="false"
                         android:inputType="none" />
 
@@ -174,61 +262,125 @@
                         android:id="@+id/button4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:layout_weight="1"
+                        android:background="@drawable/fondo_boton_perfil"
                         android:drawableLeft="@android:drawable/stat_notify_sync"
+                        android:paddingStart="20dp"
                         android:text="Actualizar" />
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/button5"
+                <androidx.constraintlayout.utils.widget.MockView
+                    android:id="@+id/mockView9"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@android:drawable/ic_menu_compass"
-                    android:text="Sobre mí" />
+                    android:layout_height="44dp"
+                    android:visibility="invisible" />
 
-                <Button
-                    android:id="@+id/button6"
+                <TextView
+                    android:id="@+id/textViewOtrosDatos"
+                    android:layout_width="208dp"
+                    android:layout_height="53dp"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/shrikhand"
+                    android:foregroundGravity="center"
+                    android:gravity="center"
+                    android:text="Otros Datos"
+                    android:textAlignment="gravity"
+                    android:textAllCaps="true"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@android:drawable/btn_star"
-                    android:text="Intereses" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/button5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/fondo_boton_perfil"
+                        android:drawableLeft="@android:drawable/ic_menu_compass"
+                        android:paddingStart="20dp"
+                        android:text="Sobre mí" />
+
+                    <Button
+                        android:id="@+id/button6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/fondo_boton_perfil"
+                        android:drawableLeft="@android:drawable/btn_star"
+                        android:paddingStart="20dp"
+                        android:text="Intereses" />
+                </LinearLayout>
+
+                <androidx.constraintlayout.utils.widget.MockView
+                    android:id="@+id/mockView11"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:visibility="invisible" />
 
                 <TextView
                     android:id="@+id/textView6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:fontFamily="@font/shrikhand"
                     android:text="Distancia máxima de los perfiles"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
 
                 <SeekBar
                     android:id="@+id/seekBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/fondo_foto_perfil"
                     android:max="100"
-                    android:progress="20" />
+                    android:progress="20"
+                    android:progressTint="@color/rojo"
+                    android:thumbTint="@color/rojo" />
 
                 <TextView
                     android:id="@+id/seekBarText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/shrikhand"
                     android:text="20km"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+
+                <androidx.constraintlayout.utils.widget.MockView
+                    android:id="@+id/mockView12"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:visibility="invisible" />
 
                 <Button
                     android:id="@+id/button10"
-                    android:layout_width="match_parent"
+                    android:layout_width="158dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/fondo_foto_perfil"
+                    android:foregroundGravity="center"
+                    android:gravity="center"
                     android:text="Cerrar sesión" />
+
+                <androidx.constraintlayout.utils.widget.MockView
+                    android:id="@+id/mockView10"
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:visibility="invisible" />
 
             </LinearLayout>
         </ScrollView>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
