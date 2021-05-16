@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         tabhost.addTab(spec);
 
         actualizarPerfiles();
-        actualizar("editarToken", "token=" + Firebase.getToken(this));
+        actualizar("editarToken", "token=" + Firebase.getToken(this)+"&sesion=1");
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 24);
@@ -195,7 +195,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case 24:{
+                // Si la petición se cancela, granResults estará vacío
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // PERMISO CONCEDIDO, EJECUTAR LA FUNCIONALIDAD
+                    SupportMapFragment elfragmento = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentoMapa);
+                    elfragmento.getMapAsync(this);
 
+                }
+                else {
+                    // PERMISO DENEGADO, DESHABILITAR LA FUNCIONALIDAD O EJECUTAR ALTERNATIVA
+
+
+                }
+                return;
+            }
+
+        }
+    }
     public void centrar() {
         //Se crea un círculo con la distancia actual o 20km por defecto
         Circle circle=miMapa.addCircle(new CircleOptions()
@@ -620,6 +642,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void actualizar(String funcion, String campo) {
+
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=" + funcion + "&id=" + id + "&" + campo)
