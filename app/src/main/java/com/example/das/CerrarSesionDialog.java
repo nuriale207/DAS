@@ -59,11 +59,11 @@ public class CerrarSesionDialog extends DialogFragment {
                 bd.delete("Mensajes",null,null);
 
                 editor.apply();
-                //eliminarTokenFCM();
-                Intent i=new Intent(getActivity(),LoginActivity.class);
-                getActivity().finish();
-
-                startActivity(i);
+                eliminarTokenFCM();
+//                Intent i=new Intent(getActivity(),LoginActivity.class);
+//                getActivity().finish();
+//
+//                startActivity(i);
             }
         });
 
@@ -86,7 +86,7 @@ public class CerrarSesionDialog extends DialogFragment {
 
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
-                .putString("parametros", "funcion=" + "editarToken" + "&id=" + id + "&" + "token="+"")
+                .putString("parametros", "funcion=" + "editarToken" + "&id=" + id + "&" + "token="+"logged out")
                 .build();
         OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("actualizar" + id).build();
         WorkManager.getInstance(this.getActivity()).getWorkInfoByIdLiveData(requesContrasena.getId())
@@ -105,8 +105,10 @@ public class CerrarSesionDialog extends DialogFragment {
                                 toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                                 toast.show();
                             } else {
-                                startActivity(new Intent(getActivity(), LoginActivity.class));
+                                Intent i=new Intent(getActivity(),LoginActivity.class);
                                 getActivity().finish();
+
+                                startActivity(i);
                             }
 
                         }
