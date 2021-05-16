@@ -358,7 +358,7 @@ public class PerfilFragment extends Fragment {
         });
 
 
-        actualizar("editarToken", "token=" + Firebase.getToken(getContext()));
+        actualizar("editarToken", "token=" + Firebase.getToken(getContext())+"&sesion=1");
 
 
     }

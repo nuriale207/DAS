@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         tabhost.addTab(spec);
 
         actualizarPerfiles();
-        actualizar("editarToken", "token=" + Firebase.getToken(this));
+        actualizar("editarToken", "token=" + Firebase.getToken(this)+"&sesion=1");
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 24);
@@ -620,6 +620,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void actualizar(String funcion, String campo) {
+
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=" + funcion + "&id=" + id + "&" + campo)
