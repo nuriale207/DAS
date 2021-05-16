@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -52,10 +53,10 @@ public class InfoUserActivity extends AppCompatActivity {
     private String intereses;
     private String id_FCM;
 
-    private EditText viewGenero;
+    private TextView viewGenero;
     private TextView viewNombreEdad;
-    private EditText viewDescripcion;
-    private EditText viewIntereses;
+    private TextView viewDescripcion;
+    private TextView viewIntereses;
 
     private ImageView imagen;
 
@@ -136,6 +137,17 @@ public class InfoUserActivity extends AppCompatActivity {
                 }
                 startActivity(i);
                 finish();
+            }
+        });
+
+        ScrollView scroll = findViewById(R.id.scroll);
+        scroll.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                float maxScroll = 150;
+                int scroll = (int) Math.min(maxScroll, scrollY);
+                float relativo = (float) (scroll/maxScroll);
+                imagen.setAlpha(1-relativo*2/3);
             }
         });
 
