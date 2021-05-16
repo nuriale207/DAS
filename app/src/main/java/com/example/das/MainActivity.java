@@ -195,7 +195,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case 24:{
+                // Si la petición se cancela, granResults estará vacío
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // PERMISO CONCEDIDO, EJECUTAR LA FUNCIONALIDAD
+                    SupportMapFragment elfragmento = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentoMapa);
+                    elfragmento.getMapAsync(this);
 
+                }
+                else {
+                    // PERMISO DENEGADO, DESHABILITAR LA FUNCIONALIDAD O EJECUTAR ALTERNATIVA
+
+
+                }
+                return;
+            }
+
+        }
+    }
     public void centrar() {
         //Se crea un círculo con la distancia actual o 20km por defecto
         Circle circle=miMapa.addCircle(new CircleOptions()
