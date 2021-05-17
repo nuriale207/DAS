@@ -4,102 +4,159 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azulFondo"
-    tools:context=".RegisterActivity">
+    tools:context=".RegisterActivity"
+    android:background="@drawable/fondo_perfil"
+    >
 
-    <Button
-        android:id="@+id/registrarse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#F91111"
-        android:text="Siguiente"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editUbicacion" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="153dp"
-        android:layout_height="168dp"
-        app:layout_constraintBottom_toTopOf="@+id/añadirImagen"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_gallery" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/añadirImagen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#FB7979"
-        android:backgroundTint="#FDA4A4"
-        android:text="Añadir Imagen"
-        app:layout_constraintBottom_toTopOf="@+id/editNombreUsuario"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="289dp"
+                android:layout_height="263dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/fondo_foto_perfil"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:src="@android:drawable/ic_menu_gallery"
+                app:srcCompat="@android:drawable/ic_menu_gallery" />
 
-    <EditText
-        android:id="@+id/editNombreUsuario"
-        android:layout_width="204dp"
-        android:layout_height="41dp"
-        android:ems="10"
-        android:hint="Nombre"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/editFechaNacimiento"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/añadirImagen" />
+            <Button
+                android:id="@+id/añadirImagen"
+                android:layout_width="124dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fondo_boton_perfil"
+                android:text="Añadir Imagen" />
 
-    <EditText
-        android:id="@+id/editFechaNacimiento"
-        android:layout_width="204dp"
-        android:layout_height="41dp"
-        android:clickable="true"
-        android:ems="10"
-        android:focusable="false"
-        android:hint="Fecha de nacimiento"
-        android:inputType="date"
-        android:maxLines="1"
-        app:layout_constraintBottom_toTopOf="@+id/editGenero"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editNombreUsuario" />
+            <TextView
+                android:id="@+id/textViewNombre2"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:fontFamily="@font/shrikhand"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:text=" Nombre"
+                android:textAlignment="gravity"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/editGenero"
-        android:layout_width="204dp"
-        android:layout_height="41dp"
+            <EditText
+                android:id="@+id/editNombreUsuario"
+                android:layout_width="204dp"
+                android:layout_height="41dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:background="@drawable/fondo_foto_perfil"
+                />
 
-        android:ems="10"
-        android:focusable="false"
-        android:hint="Género"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/editUbicacion"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editFechaNacimiento" />
+            <TextView
+                android:id="@+id/textViewNombre3"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:fontFamily="@font/shrikhand"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:text=" Fecha de nacimiento"
+                android:textAlignment="gravity"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/editUbicacion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:ems="10"
-        android:focusable="false"
-        android:hint="Ubicación"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/registrarse"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editGenero" />
+            <EditText
+                android:id="@+id/editFechaNacimiento"
+                android:layout_width="204dp"
+                android:layout_height="41dp"
+                android:clickable="true"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="date"
+                android:maxLines="1"
+                android:background="@drawable/fondo_foto_perfil"
+                />
+
+            <TextView
+                android:id="@+id/textViewNombre4"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:fontFamily="@font/shrikhand"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:text=" Género"
+                android:textAlignment="gravity"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editGenero"
+                android:layout_width="204dp"
+                android:layout_height="41dp"
+
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="textPersonName"
+                android:background="@drawable/fondo_foto_perfil"
+                />
+
+            <TextView
+                android:id="@+id/textViewNombre5"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:fontFamily="@font/shrikhand"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:text=" Ubicación"
+                android:textAlignment="gravity"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editUbicacion"
+                android:layout_width="204dp"
+                android:layout_height="41dp"
+                android:clickable="true"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="textPersonName"
+                android:background="@drawable/fondo_foto_perfil"
+                />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="17dp" />
+
+            <Button
+                android:id="@+id/registrarse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/fondo_boton_perfil"
+                android:text="Siguiente"
+
+                />
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
