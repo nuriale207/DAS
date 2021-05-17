@@ -54,9 +54,14 @@ public class Firebase extends FirebaseMessagingService {
     private String nombreRemitente;
     private String token_remitente;
     private byte[] imagenRemitente;
+    private boolean solicitudAnadir;
 
+    public static Firebase miFirebase=new Firebase();
     public Firebase() {
 
+    }
+    public static Firebase getFirebase(){
+        return miFirebase;
     }
 
 
@@ -174,21 +179,24 @@ public class Firebase extends FirebaseMessagingService {
             GestorChats.getGestorListas().activarNuevoMensaje();
             recibirMensajeFCM(mensaje, id_remitente, nombreRemitente, token_remitente, imagenRemitente);
 
-        } else {
+        } else{
 
-            //anadirUsuarioABDLocal(id_remitente,mensaje);
-            GestorChats.getGestorListas().activarNuevoChat();
+            //Si el chat es nuevo, el gestor de chats se encarga de añadirlo a la BD
+            solicitudAnadir=true;
 
-            recibirMensajeFCM(mensaje, id_remitente);
-
+            GestorChats.getGestorListas().activarNuevoChat(id_remitente,mensaje);
+            //recibirMensajeFCM(mensaje, id_remitente);
+            //obtenerInfoRemitente(id_remitente,mensaje);
 
         }
 
+
     }
 
-    private void recibirMensajeFCM(String mensaje, String id_remitente, String nombreRemitente, String token_remitente, byte[] imagenRemitente) {
+    public void recibirMensajeFCM(String mensaje, String id_remitente, String nombreRemitente, String token_remitente, byte[] imagenRemitente) {
         //obtenerInfoRemitente(id_remitente,mensaje);
         //Muestro una notificación con los datos del mensaje y creo en ella un intent al chat
+        solicitudAnadir=false;
         boolean mostrarNotificacion = true;
         boolean running = ChatActivity.running;
         if (running) {

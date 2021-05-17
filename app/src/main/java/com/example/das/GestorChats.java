@@ -8,6 +8,8 @@ public class GestorChats {
     private AdaptadorChats adaptadorChats;
     private Boolean flagNuevoMensaje = false;
     private Boolean getFlagNuevoChat =  false;
+    private String idNuevoChat;
+    private String mensajeNuevo;
 
     public static GestorChats getGestorListas() {
         if (gestorChats == null) {
@@ -37,9 +39,19 @@ public class GestorChats {
         return res;
     }
 
-    public void activarNuevoChat(){
+//    //public void activarNuevoChat(){
+//        getFlagNuevoChat = true;
+//    }
+
+    public void activarNuevoChat(String id_chat,String mensaje){
+
         getFlagNuevoChat = true;
+        idNuevoChat= id_chat;
+        mensajeNuevo = mensaje;
     }
+
+
+
 
     public Boolean comprobarNuevoChat(){
         Boolean res = false;
@@ -48,5 +60,14 @@ public class GestorChats {
             getFlagNuevoChat = false;
         }
         return res;
+    }
+
+    public String getIdNuevoChat(){
+        return this.idNuevoChat;
+
+    }
+    public String getMensajeNuevo(){
+        return this.mensajeNuevo;
+
     }
 }
