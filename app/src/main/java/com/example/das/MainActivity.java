@@ -147,6 +147,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         spec.setIndicator("Perfil");
         tabhost.addTab(spec);
 
+        tabhost.getTabWidget().getChildAt(0).setSelected(true);
+        tabhost.getTabWidget()
+                .getChildAt(0)
+                .setBackgroundResource(
+                        R.drawable.fondo_boton_perfil);
+        tabhost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+
+            @Override
+            public void onTabChanged(String tabId) {
+                for (int i = 0; i < tabhost.getTabWidget().getChildCount(); i++) {
+
+                    if (tabhost.getTabWidget().getChildAt(i).isSelected()) {
+                        tabhost.getTabWidget()
+                                .getChildAt(i)
+                                .setBackgroundResource(
+                                        R.drawable.fondo_boton_perfil);
+                    }
+                    else{
+                        tabhost.getTabWidget()
+                                .getChildAt(i)
+                                .setBackgroundColor(Color.TRANSPARENT);
+                    }
+                }
+            }
+        });
+
+
+
         actualizarPerfiles();
         actualizar("editarToken", "token=" + Firebase.getToken(this)+"&sesion=1");
 
@@ -184,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
+
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

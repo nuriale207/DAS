@@ -12,9 +12,11 @@
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="59dp"
-        android:background="#F34242"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/fondo_nombre_chat"
         android:orientation="horizontal"
+        android:padding="6dp"
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -24,7 +26,7 @@
 
         <ImageView
             android:id="@+id/imagenOtroChat"
-            android:layout_width="wrap_content"
+            android:layout_width="65dp"
             android:layout_height="match_parent"
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
@@ -35,8 +37,8 @@
         <TextView
             android:id="@+id/nombreOtroChat"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/pragati_narrow"
+            android:layout_height="64dp"
+            android:fontFamily="@font/asap_medium"
             android:gravity="center_vertical"
             android:hapticFeedbackEnabled="true"
             android:paddingStart="10dp"
@@ -45,7 +47,7 @@
             android:textColor="#000000"
             android:textColorHighlight="#000000"
             android:textColorLink="#040404"
-            android:textSize="30sp" />
+            android:textSize="36sp" />
     </LinearLayout>
 
     <LinearLayout

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
+        <item>@font/asap_medium</item>
         <item>@font/audiowide</item>
         <item>@font/bangers</item>
         <item>@font/poller_one</item>

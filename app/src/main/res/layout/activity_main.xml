@@ -21,7 +21,14 @@
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@drawable/fondo_foto_perfil"
+                android:scrollbarThumbHorizontal="@color/white"
+                android:scrollbarThumbVertical="@color/white"
+                android:scrollbarTrackHorizontal="@color/white"
+                android:scrollbarTrackVertical="@color/white"
+                android:tabStripLeft="@color/white"
+                android:tabStripRight="@color/white" />
 
             <!--FrameLayout which contains the data of the activity-->
             <FrameLayout
