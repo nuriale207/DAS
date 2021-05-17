@@ -21,6 +21,9 @@ public class ChatsFragment extends Fragment {
     byte[][] imagenes = {};
     Handler handler;
     AdaptadorChats adaptador;
+
+    public static boolean running;
+
     public ChatsFragment() {
         // Required empty public constructor
     }
@@ -55,6 +58,19 @@ public class ChatsFragment extends Fragment {
         lista.setSelection(0);
     }
 
+    //https://stackoverflow.com/questions/5446565/android-how-do-i-check-if-activity-is-running
+    @Override
+    public void onStart() {
+        super.onStart();
+        running = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        running = false;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -87,6 +103,7 @@ public class ChatsFragment extends Fragment {
                 }
                 cu.moveToNext();
             }
+            cu.close();
             ids = new String[idsAux.size()];
             nombres = new String[nombresAux.size()];
             tokens = new String[tokensAux.size()];

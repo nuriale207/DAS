@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@drawable/fondo_perfil"
+    >
 
     <TabHost
         android:id="@+id/tabhost"
@@ -41,7 +43,7 @@
                     android:id="@+id/tab1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/azulFondo"
+                    android:background="@drawable/fondo_perfil"
                     android:orientation="vertical">
 
                     <!--Text View for applying the text to the tab-->
@@ -49,7 +51,8 @@
                         android:id="@+id/fragmentChats"
                         android:name="com.example.das.ChatsFragment"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        />
 
                 </LinearLayout>
 
@@ -78,9 +81,10 @@
                         android:id="@+id/botonCentrar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#359c5e"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentEnd="true"
+                        android:background="@drawable/fondo_boton_perfil"
+
                         android:padding="8dp"
                         android:layout_margin="5dp"
                         android:text="Centrar"
