@@ -179,7 +179,7 @@ public class Firebase extends FirebaseMessagingService {
             GestorChats.getGestorListas().activarNuevoMensaje();
             recibirMensajeFCM(mensaje, id_remitente, nombreRemitente, token_remitente, imagenRemitente);
 
-        } else{
+        } else if(ChatsFragment.running){
 
             //Si el chat es nuevo, el gestor de chats se encarga de añadirlo a la BD
             solicitudAnadir=true;
