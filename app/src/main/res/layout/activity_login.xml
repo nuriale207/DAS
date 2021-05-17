@@ -7,37 +7,40 @@
     android:background="@drawable/fondo_perfil"
     tools:context=".LoginActivity">
 
-    <Button
-        android:id="@+id/botonIniciarSesion"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="218dp"
         android:layout_height="wrap_content"
-        android:background="#F91111"
-        android:text="Iniciar sesión"
-        app:layout_constraintBottom_toTopOf="@+id/botonRegistrarse"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
-
-    <Button
-        android:id="@+id/botonRegistrarse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#F91111"
-        android:drawableRight="@drawable/googleg_standard_color_18"
-        android:text="Iniciar sesión con google"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/botonIniciarSesion" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+        <Button
+            android:id="@+id/botonIniciarSesion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/fondo_boton_perfil"
+            android:text="Iniciar sesión" />
+
+        <Button
+            android:id="@+id/botonRegistrarse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/fondo_boton_perfil"
+            android:drawableLeft="@drawable/googleg_standard_color_18"
+            android:text="Iniciar sesión con google" />
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="340dp"
         android:layout_height="200dp"
-        android:background="#ADD8E6"
-        app:layout_constraintBottom_toTopOf="@+id/botonIniciarSesion"
+        android:background="@drawable/fondo_foto_perfil"
+
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,10 +50,17 @@
             android:id="@+id/nombreUsuario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/shrikhand"
+            android:foregroundGravity="center"
+            android:gravity="center"
             android:text="Email"
+            android:textAlignment="gravity"
+            android:textAllCaps="true"
+            android:textSize="24sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/nombreUsuarioEdit"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.213"
+            app:layout_constraintHorizontal_bias="0.455"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -58,6 +68,7 @@
             android:id="@+id/nombreUsuarioEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:ems="10"
             android:hint="example@example.com"
             android:inputType="textPersonName"
@@ -71,10 +82,17 @@
             android:id="@+id/contraseña"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/shrikhand"
+            android:foregroundGravity="center"
+            android:gravity="center"
             android:text="Contraseña"
+            android:textAlignment="gravity"
+            android:textAllCaps="true"
+            android:textSize="24sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/contraseñaEdit"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.242"
+            app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nombreUsuarioEdit" />
 
