@@ -30,6 +30,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -104,17 +105,14 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
 
-
-        /*EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
-        TextView.OnEditorActionListener listenerTeclado = new TextView.OnEditorActionListener() {
+        ImageView botonJuego = findViewById(R.id.botonJuego);
+        botonJuego.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEND){
-                    enviarMensaje();
-                }
-                return false;
+            public void onClick(View v) {
+                Intent i = new Intent(ChatActivity.this, JuegoActivity.class);
+                startActivity(i);
             }
-        };*/
+        });
 
         ImageButton enviarMensaje = findViewById(R.id.botonEnviarMensaje);
         enviarMensaje.setOnClickListener(new View.OnClickListener() {
