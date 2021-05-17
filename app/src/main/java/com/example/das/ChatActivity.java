@@ -79,6 +79,10 @@ public class ChatActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         imagenOtroChat = findViewById(R.id.imagenOtroChat);
         nombreOtroChat = findViewById(R.id.nombreOtroChat);
+
+        SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
+        miId = preferencias.getString("id", "null");
+
         if (extras != null) {
             idOtro = extras.getString("id");
 
@@ -110,6 +114,8 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(ChatActivity.this, JuegoActivity.class);
+                i.putExtra("miId", miId);
+                i.putExtra("idOtro", idOtro);
                 startActivity(i);
             }
         });
