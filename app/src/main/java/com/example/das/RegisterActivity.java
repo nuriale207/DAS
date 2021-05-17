@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -29,6 +30,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -202,7 +204,13 @@ public class RegisterActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                añadirUsuario(nombre.getText().toString(), fechaNacimiento.getText().toString(), genero.getText().toString(),ubicacion.getText().toString());
+                BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] fototransformada = stream.toByteArray();
+                String fotoen64 = Base64.encodeToString(fototransformada,Base64.DEFAULT);
+                añadirUsuario(nombre.getText().toString(), fechaNacimiento.getText().toString(), genero.getText().toString(),ubicacion.getText().toString(),fotoen64);
 
             }
         });
@@ -439,7 +447,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void añadirUsuario(String nombre, String fecha, String genero,String ubicacion) {
+    private void añadirUsuario(String nombre, String fecha, String genero,String ubicacion,String fotoEn64) {
         //Método que añade el usuario a la BD remota haciendo una solicitud a un Worker
         boolean valido= comprobarFormulario(nombre, fecha, genero,ubicacion);
         if (valido) {
@@ -450,7 +458,7 @@ public class RegisterActivity extends AppCompatActivity {
 //        } else {
             Data datos = new Data.Builder()
                     .putString("fichero", "DAS_users.php")
-                    .putString("parametros", "funcion=insertarUsuario&nombreUsuario=" + nombre + "&fechaNacimiento=" + fecha + "&genero=" + genero+"&id="+id+"&id_FCM="+id_FCM+"&longitud="+longitud+"&latitud="+latitud)
+                    .putString("parametros", "funcion=insertarUsuario&nombreUsuario=" + nombre + "&fechaNacimiento=" + fecha + "&genero=" + genero+"&id="+id+"&id_FCM="+id_FCM+"&longitud="+longitud+"&latitud="+latitud+"&imagen="+fotoEn64)
                     .build();
             OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario").build();
             WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
@@ -579,7 +587,6 @@ public class RegisterActivity extends AppCompatActivity {
                         //hiding the progress dialog
                         //and displaying a success toast
                         //String profilePicUrl = taskSnapshot.getDownloadUrl().toString();
-                        Toast.makeText(getApplication(), "La imagen se ha subido con éxito", Toast.LENGTH_LONG).show();
 
                     }
                 })

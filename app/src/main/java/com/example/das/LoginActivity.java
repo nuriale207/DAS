@@ -94,8 +94,6 @@ public class LoginActivity extends AppCompatActivity {
                                                         if (task.isSuccessful()) {
                                                             // Inicio de sesión correcto
                                                             Log.i("MY", "signInWithEmail:success");
-                                                            Toast.makeText(LoginActivity.this, "Signing in" ,
-                                                                    Toast.LENGTH_SHORT).show();
                                                             FirebaseUser user =  firebaseAuth.getCurrentUser();
                                                             loginUsuario(user.getUid());
                                                             Log.i("MY", "firebase: "+user.getUid(), task.getException());
@@ -122,7 +120,6 @@ public class LoginActivity extends AppCompatActivity {
                                     FirebaseUser user =  firebaseAuth.getCurrentUser();
                                     loginUsuario(user.getUid());
                                     Log.i("MY", "firebase: "+user.getUid(), task.getException());
-                                    Toast.makeText(LoginActivity.this, "User created successfully.", Toast.LENGTH_SHORT).show();
 
                                 }
                             }
