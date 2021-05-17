@@ -83,8 +83,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     FusedLocationProviderClient proveedordelocalizacion;
     LocationCallback actualizador;
     Marker usuario;
-    ArrayList<Marker> listaMarkers = new ArrayList<>(5);
-    ArrayList<GroundOverlay> listaCirculos = new ArrayList<>(5);
     SharedPreferences preferencias;
 
     @Override

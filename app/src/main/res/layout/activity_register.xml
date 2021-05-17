@@ -45,6 +45,10 @@
                 android:background="@drawable/fondo_boton_perfil"
                 android:text="Añadir Imagen" />
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="23dp" />
+
             <TextView
                 android:id="@+id/textViewNombre2"
                 android:layout_width="match_parent"
@@ -146,7 +150,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="17dp" />
+                android:layout_height="28dp" />
 
             <Button
                 android:id="@+id/registrarse"

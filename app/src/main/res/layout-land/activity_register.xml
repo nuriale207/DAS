@@ -10,7 +10,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="33dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,10 +65,9 @@
                 android:id="@+id/editNombreUsuario"
                 android:layout_width="204dp"
                 android:layout_height="41dp"
-                android:ems="10"
-                android:inputType="textPersonName"
                 android:background="@drawable/fondo_foto_perfil"
-                />
+                android:ems="10"
+                android:inputType="textPersonName" />
 
             <TextView
                 android:id="@+id/textViewNombre3"
@@ -86,13 +87,12 @@
                 android:id="@+id/editFechaNacimiento"
                 android:layout_width="204dp"
                 android:layout_height="41dp"
+                android:background="@drawable/fondo_foto_perfil"
                 android:clickable="true"
                 android:ems="10"
                 android:focusable="false"
                 android:inputType="date"
-                android:maxLines="1"
-                android:background="@drawable/fondo_foto_perfil"
-                />
+                android:maxLines="1" />
 
             <TextView
                 android:id="@+id/textViewNombre4"
@@ -113,11 +113,10 @@
                 android:layout_width="204dp"
                 android:layout_height="41dp"
 
+                android:background="@drawable/fondo_foto_perfil"
                 android:ems="10"
                 android:focusable="false"
-                android:inputType="textPersonName"
-                android:background="@drawable/fondo_foto_perfil"
-                />
+                android:inputType="textPersonName" />
 
             <TextView
                 android:id="@+id/textViewNombre5"
@@ -137,12 +136,11 @@
                 android:id="@+id/editUbicacion"
                 android:layout_width="204dp"
                 android:layout_height="41dp"
+                android:background="@drawable/fondo_foto_perfil"
                 android:clickable="true"
                 android:ems="10"
                 android:focusable="false"
-                android:inputType="textPersonName"
-                android:background="@drawable/fondo_foto_perfil"
-                />
+                android:inputType="textPersonName" />
 
             <Space
                 android:layout_width="match_parent"
