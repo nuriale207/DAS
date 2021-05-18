@@ -35,6 +35,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -67,6 +68,7 @@ public class ChatActivity extends AppCompatActivity {
     ArrayList<Boolean> mios = new ArrayList<>();
     private Handler handler;
 
+    private LinearLayout layoutPerfil;
     private ImageView imagenOtroChat;
     private Boolean mostrarImagen;
     public static boolean running;
@@ -80,6 +82,7 @@ public class ChatActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         imagenOtroChat = findViewById(R.id.imagenOtroChat);
         nombreOtroChat = findViewById(R.id.nombreOtroChat);
+        layoutPerfil=findViewById(R.id.linearLayout3);
 
         SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
         miId = preferencias.getString("id", "null");
@@ -129,6 +132,16 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        nombreOtroChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(ChatActivity.this,InfoUserActivity.class);
+                i.putExtra("id",idOtro);
+                i.putExtra("chat",true);
+                startActivity(i);
+
+            }
+        });
         handler = new Handler();
         Runnable actualizadorChat = new Runnable() {
             @Override

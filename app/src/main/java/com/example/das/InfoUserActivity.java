@@ -62,6 +62,7 @@ public class InfoUserActivity extends AppCompatActivity {
 
     private Button botonVolver;
     private Button botonEnviarMensaje;
+    Boolean chat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +73,8 @@ public class InfoUserActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             idUser = extras.getString("id");
+            chat=extras.getBoolean("chat");
+
 
         }
 
@@ -94,10 +97,16 @@ public class InfoUserActivity extends AppCompatActivity {
         botonVolver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i=new Intent(InfoUserActivity.this, MainActivity.class);
-                i.putExtra("tab",1);
-                finish();
-                startActivity(i);
+                if(!chat){
+                    Intent i=new Intent(InfoUserActivity.this, MainActivity.class);
+                    i.putExtra("tab",1);
+                    finish();
+                    startActivity(i);
+                }
+                else {
+                   finish();
+                }
+
 
             }
         });
@@ -267,10 +276,16 @@ public class InfoUserActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i=new Intent(InfoUserActivity.this, MainActivity.class);
-        i.putExtra("tab",1);
-        startActivity(i);
-        finish();
+        if(!chat){
+            Intent i=new Intent(InfoUserActivity.this, MainActivity.class);
+            i.putExtra("tab",1);
+            startActivity(i);
+            finish();
+        }
+        else {
+            finish();
+        }
+
     }
 
 
