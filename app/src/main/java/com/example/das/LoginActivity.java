@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     private Button botonIniciarSesion;
-    private Button botonRegistroGoogle;
+    //private Button botonRegistroGoogle;
     private EditText inputEmail;
     private EditText inputPassword;
     private String idUsuario;
@@ -66,7 +66,9 @@ public class LoginActivity extends AppCompatActivity {
         //Cargar los elementos de la ventana
 
         botonIniciarSesion = findViewById(R.id.botonIniciarSesion);
-        botonRegistroGoogle = findViewById(R.id.botonRegistrarse);
+
+
+        //botonRegistroGoogle = findViewById(R.id.botonRegistrarse);
         inputEmail = findViewById(R.id.nombreUsuarioEdit);
         inputPassword = findViewById(R.id.contraseñaEdit);
 
@@ -136,22 +138,22 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         //En caso de pulsar el botón iniciar sesión con google se lleva a cabo el proceso con Google
-        botonRegistroGoogle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Configure Google Sign In
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build();
-
-                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(v.getContext(), gso);
-                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent, 1);
-
-
-            }
-        });
+//        botonRegistroGoogle.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Configure Google Sign In
+//                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                        .requestIdToken(getString(R.string.default_web_client_id))
+//                        .requestEmail()
+//                        .build();
+//
+//                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(v.getContext(), gso);
+//                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+//                startActivityForResult(signInIntent, 1);
+//
+//
+//            }
+//        });
 
 
     }
@@ -165,6 +167,8 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("MYAPP", "signInWithCredential:success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
+                            String userID=user.getUid();
+                            loginUsuarioGoogle(userID);
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -188,9 +192,7 @@ public class LoginActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.i("MY", "firebaseAuthWithGoogle:" + account.getId()+ "  :"+account.getIdToken());
                 firebaseAuthWithGoogle(account.getIdToken());
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                String userID=user.getUid();
-                loginUsuario(userID);
+
 
 
                 //En caso de error se muestra el error
@@ -225,10 +227,57 @@ public class LoginActivity extends AppCompatActivity {
                                 String nombre = jsonObject.getString("nombre");
                                 if (nombre.equals("null")){
                                     crearDialog(id);
+                                }
+                                else{
+                                    SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                    preferencias.edit().putString("id",id).apply();
+                                    actualizarTokenFCM(id);
+
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
 
 
+                        }
+                    }
+                });
+        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
+        WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario"+id, ExistingWorkPolicy.REPLACE, requesContrasena);
 
+
+
+    }
+
+    public void loginUsuarioGoogle(String id){
+        Log.i("MYAPP","Obteniendo info de: "+id);
+        Data datos = new Data.Builder()
+                .putString("fichero", "DAS_users.php")
+                .putString("parametros", "funcion=datosUsuario&id=" +id)
+                .build();
+        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario"+id).build();
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
+                .observe(this, new Observer<WorkInfo>() {
+                    @Override
+                    public void onChanged(WorkInfo workInfo) {
+                        if (workInfo != null && workInfo.getState().isFinished()) {
+                            String resultado = workInfo.getOutputData().getString("resultado");
+                            Log.i("MYAPP", "inicio realizado");
+
+                            Log.i("MYAPP", resultado);
+
+
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(resultado);
+                                String nombre = jsonObject.getString("nombre");
+                                if (nombre.equals("null")){
+                                    Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
+                                    intent.putExtra("id",id);
+                                    finish();
+                                    startActivity(intent);
                                 }
                                 else{
                                     SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -271,6 +320,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (editTextInput.equals(inputPassword.getText().toString())){
                             Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
                             intent.putExtra("id",id);
+                            finish();
                             startActivity(intent);
                         }
                         else{
@@ -319,7 +369,7 @@ public class LoginActivity extends AppCompatActivity {
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=" + "editarToken" + "&id=" + id + "&" + "token="+token+"&sesion=1")
                 .build();
-        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("actualizar" + id).build();
+        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("actualizar" + token).build();
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
                 .observe(this, new Observer<WorkInfo>() {
                     @Override
@@ -344,7 +394,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
         //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
-        WorkManager.getInstance(this).enqueueUniqueWork("actualizar" + id, ExistingWorkPolicy.REPLACE, requesContrasena);
+        WorkManager.getInstance(this).enqueueUniqueWork("actualizar" + token, ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 
     //En caso de que la aplicación se detenga se almacenan los nombres escritos hasta el momento

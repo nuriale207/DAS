@@ -100,8 +100,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (id == null) {
             // En caso de no haber un usuario loggeado se abre la actividad de login
             Intent i = new Intent(this, LoginActivity.class);
-            startActivity(i);
             finish();
+
+            startActivity(i);
         }
 
 
