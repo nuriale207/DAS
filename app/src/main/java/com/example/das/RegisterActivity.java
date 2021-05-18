@@ -432,7 +432,9 @@ public class RegisterActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             //Código de:https://stackoverflow.com/questions/5991319/capture-image-from-camera-and-display-in-activity
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            imagen.setImageBitmap(photo);
+            Bitmap resized = Bitmap.createScaledBitmap(photo, imagen.getWidth(), imagen.getHeight(), true);
+
+            imagen.setImageBitmap(resize(photo,imagen.getWidth(),imagen.getHeight()));
         } else {
             final Uri imageUri = data.getData();
             final InputStream imageStream;
@@ -440,11 +442,34 @@ public class RegisterActivity extends AppCompatActivity {
                 //Código de:https://stackoverflow.com/questions/38352148/get-image-from-the-gallery-and-show-in-imageview
                 imageStream = getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                imagen.setImageBitmap(selectedImage);
+                Bitmap resized = Bitmap.createScaledBitmap(selectedImage, imagen.getWidth(), imagen.getHeight(), true);
+
+                imagen.setImageBitmap(resize(selectedImage,imagen.getWidth(),imagen.getHeight()));
+                //imagen.setImageBitmap(selectedImage);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
 
+        }
+    }
+    private static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
+        if (maxHeight > 0 && maxWidth > 0) {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            float ratioBitmap = (float) width / (float) height;
+            float ratioMax = (float) maxWidth / (float) maxHeight;
+
+            int finalWidth = maxWidth;
+            int finalHeight = maxHeight;
+            if (ratioMax > ratioBitmap) {
+                finalWidth = (int) ((float)maxHeight * ratioBitmap);
+            } else {
+                finalHeight = (int) ((float)maxWidth / ratioBitmap);
+            }
+            image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+            return image;
+        } else {
+            return image;
         }
     }
 
