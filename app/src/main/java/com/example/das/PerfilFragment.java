@@ -69,7 +69,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -154,6 +157,7 @@ public class PerfilFragment extends Fragment {
         cambiarEdad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 showDatePickerDialog();
             }
         });
@@ -204,6 +208,12 @@ public class PerfilFragment extends Fragment {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 String editTextInput = editTextField.getText().toString();
                                 Log.d("onclick", "editext value is: " + editTextInput);
+                                if(editTextInput.length()<2){
+                                    Toast toast = Toast.makeText(getActivity(), "El nombre debe tener al menos dos caracteres", Toast.LENGTH_SHORT);
+                                    toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+                                    toast.show();
+
+                                }
                                 actualizar("editarNombre", "nombre=" + editTextInput);
                             }
                         })
@@ -231,9 +241,21 @@ public class PerfilFragment extends Fragment {
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+
                                 String editTextInput = editTextField.getText().toString();
                                 Log.d("onclick", "editext value is: " + editTextInput);
-                                actualizar("anadirDescripcion", "descripcion=" + editTextInput);
+                                if(editTextInput.length()>280){
+                                    Toast toast = Toast.makeText(v.getContext(), "La descripción no puede tener mas de 280 caracteres", Toast.LENGTH_LONG);
+                                    toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+                                    toast.show();
+
+                                }
+                                else{
+                                    actualizar("anadirDescripcion", "descripcion=" + editTextInput);
+
+                                }
+
+
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -264,6 +286,26 @@ public class PerfilFragment extends Fragment {
 //                        if(wantToCloseDialog)
 //                            dialog.dismiss();
 //                        //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
+                    }
+                });
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        String editTextInput = editTextField.getText().toString();
+                        Log.d("onclick", "editext value is: " + editTextInput);
+                        if(editTextInput.length()>280){
+                            Toast toast = Toast.makeText(v.getContext(), "La descripción no puede tener mas de 280 caracteres", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+                            toast.show();
+
+                        }
+                        else{
+                            actualizar("anadirDescripcion", "descripcion=" + editTextInput);
+
+                        }
+                        dialog.cancel();
                     }
                 });
 
@@ -605,7 +647,25 @@ public class PerfilFragment extends Fragment {
                 //final String selectedDate = day + " / " + (month+1) + " / " + year;
                 final String selectedDate = year + "-" + (month + 1) + "-" + day;
                 Log.i("MY", selectedDate);
-                actualizar("editarFechaNacimiento", "fecha=" + selectedDate);
+                SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+                Date now = new Date();
+                long difference = 0;
+                try {
+                    Date fechNac = sdfDate.parse(selectedDate);
+                    difference = now.getYear() - fechNac.getYear();
+                    if(difference<16){
+                        Toast toast = Toast.makeText(getActivity(), "Tienes que tener al menos 16 años para usar la app", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+                        toast.show();
+                    }
+                    else{
+                        actualizar("editarFechaNacimiento", "fecha=" + selectedDate);
+
+                    }
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
 
             }

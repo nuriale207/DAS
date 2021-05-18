@@ -35,6 +35,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -67,6 +68,7 @@ public class ChatActivity extends AppCompatActivity {
     ArrayList<Boolean> mios = new ArrayList<>();
     private Handler handler;
 
+    private LinearLayout layoutPerfil;
     private ImageView imagenOtroChat;
     private Boolean mostrarImagen;
     public static boolean running;
@@ -80,6 +82,7 @@ public class ChatActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         imagenOtroChat = findViewById(R.id.imagenOtroChat);
         nombreOtroChat = findViewById(R.id.nombreOtroChat);
+        layoutPerfil=findViewById(R.id.linearLayout3);
 
         SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
         miId = preferencias.getString("id", "null");
@@ -129,6 +132,16 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        nombreOtroChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(ChatActivity.this,InfoUserActivity.class);
+                i.putExtra("id",idOtro);
+                i.putExtra("chat",true);
+                startActivity(i);
+
+            }
+        });
         handler = new Handler();
         Runnable actualizadorChat = new Runnable() {
             @Override
@@ -285,21 +298,25 @@ public class ChatActivity extends AppCompatActivity {
 //    }
     private void enviarMensaje() {
         EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
-        mensajes.add(mensajeEscrito.getText().toString());
-        mios.add(true);
-        adaptador.notifyDataSetChanged();
+        String texto=mensajeEscrito.getText().toString();
+        if(texto.length()>0){
+            mensajes.add(texto);
+            mios.add(true);
+            adaptador.notifyDataSetChanged();
 
 
-        BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
-        gestorDB.guardarMensaje(idOtro,mensajeEscrito.getText().toString(), 1);
-        SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
+            BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
+            gestorDB.guardarMensaje(idOtro,mensajeEscrito.getText().toString(), 1);
+            SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
 
-        String idRemitente=preferencias.getString("id", "null");
-        Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,idRemitente);
+            String idRemitente=preferencias.getString("id", "null");
+            Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,idRemitente);
 
-        mensajeEscrito.setText("");
-        ListView lista=findViewById(R.id.mensajes);
-        lista.setSelection(adaptador.getCount() - 1);
+            mensajeEscrito.setText("");
+            ListView lista=findViewById(R.id.mensajes);
+            lista.setSelection(adaptador.getCount() - 1);
+        }
+
     }
 
 

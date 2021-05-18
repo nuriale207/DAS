@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     private Button botonIniciarSesion;
-    //private Button botonRegistroGoogle;
+    private Button botonRegistroGoogle;
     private EditText inputEmail;
     private EditText inputPassword;
     private String idUsuario;
@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         botonIniciarSesion = findViewById(R.id.botonIniciarSesion);
 
 
-        //botonRegistroGoogle = findViewById(R.id.botonRegistrarse);
+        botonRegistroGoogle = findViewById(R.id.botonRegistrarse);
         inputEmail = findViewById(R.id.nombreUsuarioEdit);
         inputPassword = findViewById(R.id.contraseñaEdit);
 
@@ -138,22 +138,22 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         //En caso de pulsar el botón iniciar sesión con google se lleva a cabo el proceso con Google
-//        botonRegistroGoogle.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Configure Google Sign In
-//                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                        .requestIdToken(getString(R.string.default_web_client_id))
-//                        .requestEmail()
-//                        .build();
-//
-//                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(v.getContext(), gso);
-//                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-//                startActivityForResult(signInIntent, 1);
-//
-//
-//            }
-//        });
+        botonRegistroGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Configure Google Sign In
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(getString(R.string.default_web_client_id))
+                        .requestEmail()
+                        .build();
+
+                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(v.getContext(), gso);
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, 1);
+
+
+            }
+        });
 
 
     }
