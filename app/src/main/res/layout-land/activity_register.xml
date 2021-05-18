@@ -47,6 +47,10 @@
                 android:background="@drawable/fondo_boton_perfil"
                 android:text="Añadir Imagen" />
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="31dp" />
+
             <TextView
                 android:id="@+id/textViewNombre2"
                 android:layout_width="match_parent"
@@ -67,7 +71,13 @@
                 android:layout_height="41dp"
                 android:background="@drawable/fondo_foto_perfil"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textColor="#FFFFFF"
+                android:textColorHighlight="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:textColorLink="#FFFFFF" />
 
             <TextView
                 android:id="@+id/textViewNombre3"
@@ -92,7 +102,12 @@
                 android:ems="10"
                 android:focusable="false"
                 android:inputType="date"
-                android:maxLines="1" />
+                android:maxLines="1"
+                android:paddingLeft="10dp"
+                android:textColor="#FFFFFF"
+                android:textColorHighlight="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:textColorLink="#FFFFFF" />
 
             <TextView
                 android:id="@+id/textViewNombre4"
@@ -116,7 +131,13 @@
                 android:background="@drawable/fondo_foto_perfil"
                 android:ems="10"
                 android:focusable="false"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textColor="#FFFFFF"
+                android:textColorHighlight="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:textColorLink="#FFFFFF" />
 
             <TextView
                 android:id="@+id/textViewNombre5"
@@ -140,7 +161,9 @@
                 android:clickable="true"
                 android:ems="10"
                 android:focusable="false"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp" />
 
             <Space
                 android:layout_width="match_parent"
@@ -154,6 +177,10 @@
                 android:text="Siguiente"
 
                 />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="25dp" />
         </LinearLayout>
     </ScrollView>
 
