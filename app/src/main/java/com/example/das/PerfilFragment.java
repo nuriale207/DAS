@@ -351,6 +351,7 @@ public class PerfilFragment extends Fragment {
                 textoBarraDistancia.setText(String.valueOf(progress)+"Km");
                 preferencias.edit().putInt("distancia",progress).apply();
                 ((MainActivity)getActivity()).centrar();
+                actualizar("editarDistancia","distancia="+progress);
 
             }
 

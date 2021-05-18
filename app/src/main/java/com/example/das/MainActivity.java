@@ -475,6 +475,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 JSONObject infoUsuario=usuarios.getJSONObject(i);
                 double longitud=infoUsuario.getDouble("longitud");
                 double latitud=infoUsuario.getDouble("latitud");
+                int distanciaMaxVecino=infoUsuario.getInt("distancia");
                 LatLng locVecino=new LatLng(latitud,longitud);
                 String idUsuario=infoUsuario.getString("id");
                 String nombre=infoUsuario.getString("nombre");
@@ -482,7 +483,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     double distancia=calcularDistancia(locVecino,coordenadasActuales);
                     Log.i("MYAPP","Distancia a: "+infoUsuario.getString("id")+" "+distancia);
 
-                    if (distancia<distanciaMax){
+                    if (distancia<distanciaMax && distancia<distanciaMaxVecino){
                         generarMarcador(idUsuario,nombre,locVecino);
 //                        Marker marker=miMapa.addMarker(new MarkerOptions()
 //                                .position(locVecino)
