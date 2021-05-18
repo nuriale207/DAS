@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -114,9 +115,15 @@ public class InteresesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String strDescripcion = descripcion.getText().toString();
-                if (strDescripcion.length() > 0) {
+                if (strDescripcion.length() > 0 && strDescripcion.length()<280) {
                     guardarDescripcion();
                 }
+                else if(descripcion.length()>280){
+                    Toast toast = Toast.makeText(getApplicationContext(), "La descripción no puede sobrepasar los 280 caracteres", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+                    toast.show();
+                }
+
                 String strIntereses = intereses.getText().toString();
                 if (strIntereses.length() > 0) {
                     guardarIntereses();

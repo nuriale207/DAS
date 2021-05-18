@@ -610,7 +610,14 @@ public class RegisterActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(getApplicationContext(), "El nombre tiene que tener al menos dos caracteres", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
             toast.show();
-        } else if (fechaNacimiento.length() == 0) {
+        }
+        else if(nombre.length()>40){
+            valido = false;
+            Toast toast = Toast.makeText(getApplicationContext(), "El nombre tiene que tener menos de 40 caracteres", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+        else if (fechaNacimiento.length() == 0) {
             valido = false;
             Toast toast = Toast.makeText(getApplicationContext(), "Introduce tu fecha de nacimiento", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
