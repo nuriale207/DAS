@@ -37,6 +37,7 @@
         android:inputType="textMultiLine"
 
         android:maxLength="200"
+        android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/textViewNombre7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -99,6 +100,7 @@
         android:focusable="false"
         android:gravity="start|top"
         android:inputType="textMultiLine"
+        android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/buttonSaltar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
