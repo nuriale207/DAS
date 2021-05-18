@@ -41,7 +41,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="  Iniciar sesión con google"
-            android:visibility="invisible" />
+            android:visibility="visible" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
