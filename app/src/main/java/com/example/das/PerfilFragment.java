@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -30,6 +31,7 @@ import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -57,10 +59,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -343,6 +351,7 @@ public class PerfilFragment extends Fragment {
                 textoBarraDistancia.setText(String.valueOf(progress)+"Km");
                 preferencias.edit().putInt("distancia",progress).apply();
                 ((MainActivity)getActivity()).centrar();
+                actualizar("editarDistancia","distancia="+progress);
 
             }
 
@@ -746,6 +755,13 @@ public class PerfilFragment extends Fragment {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             imagen.setImageBitmap(photo);
             guardarImagen();
+            BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
+            Bitmap bitmap = drawable.getBitmap();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] fototransformada = stream.toByteArray();
+            String fotoen64 = Base64.encodeToString(fototransformada, Base64.DEFAULT);
+            actualizarImagenBD(fotoen64);
         }
         else{
             final Uri imageUri = data.getData();
@@ -756,6 +772,14 @@ public class PerfilFragment extends Fragment {
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 imagen.setImageBitmap(selectedImage);
                 guardarImagen();
+
+                BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] fototransformada = stream.toByteArray();
+                String fotoen64 = Base64.encodeToString(fototransformada, Base64.DEFAULT);
+                actualizarImagenBD(fotoen64);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -801,6 +825,69 @@ public class PerfilFragment extends Fragment {
                     }
                 });
     }
+
+    private void actualizarImagenBD(String fotoen64) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/DAS_users.php";
+                Log.i("MYAPP", direccion);
+
+                //Los parámetros de la consulta los recibe de los input data
+                String parametros = "funcion=editarImagen&"+ "id=" + id + "&imagen=" + fotoen64;
+                Log.i("MYAPP", parametros);
+
+                HttpURLConnection urlConnection = null;
+                String result = "";
+                try {
+                    //Se realiza la conexión
+                    URL destino = new URL(direccion);
+                    urlConnection = (HttpURLConnection) destino.openConnection();
+                    urlConnection.setConnectTimeout(5000);
+                    urlConnection.setReadTimeout(5000);
+                    urlConnection.setRequestMethod("POST");
+                    urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    urlConnection.setDoOutput(true);
+
+                    //Se añaden los parámetros a la petición
+                    PrintWriter out = new PrintWriter(urlConnection.getOutputStream());
+                    out.print(parametros);
+                    out.close();
+                    Log.i("MYAPP", "vAMOS A HACER EL POST");
+
+
+                    //En caso de obtener los datos correctamente se almacenan en una variable result que se devuelve a la clase que hizo la petición
+                    int statusCode = urlConnection.getResponseCode();
+                    Log.i("MYAPP", String.valueOf(statusCode));
+                    Log.i("MYAPP", urlConnection.getResponseMessage());
+                    if (statusCode == 200) {
+                        Log.i("MYAPP", "CONEXION ESTABLECIDA");
+
+                        BufferedInputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                        String line = "";
+                        while ((line = bufferedReader.readLine()) != null) {
+                            result += line;
+                        }
+                        inputStream.close();
+
+
+
+
+
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Log.i("MYAPP", result);
+                Data resultados = new Data.Builder()
+                        .putString("resultado", result)
+                        .build();
+            }
+        }).start();
+    }
+
     public byte[] getByteArray(){
         // Get the data from an ImageView as bytes
         this.imagen.setDrawingCacheEnabled(true);
