@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.work.Data;
 import androidx.work.ExistingWorkPolicy;
+import androidx.work.ListenableWorker;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
@@ -54,10 +55,16 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -209,8 +216,8 @@ public class RegisterActivity extends AppCompatActivity {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] fototransformada = stream.toByteArray();
-                String fotoen64 = Base64.encodeToString(fototransformada,Base64.DEFAULT);
-                añadirUsuario(nombre.getText().toString(), fechaNacimiento.getText().toString(), genero.getText().toString(),ubicacion.getText().toString(),fotoen64);
+                String fotoen64 = Base64.encodeToString(fototransformada, Base64.DEFAULT);
+                añadirUsuario(nombre.getText().toString(), fechaNacimiento.getText().toString(), genero.getText().toString(), ubicacion.getText().toString(), fotoen64);
 
             }
         });
@@ -218,7 +225,7 @@ public class RegisterActivity extends AppCompatActivity {
         ubicacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("MYAPP","Obteniendo ubicacion...");
+                Log.i("MYAPP", "Obteniendo ubicacion...");
                 obtenerUbicacion();
 
             }
@@ -254,25 +261,23 @@ public class RegisterActivity extends AppCompatActivity {
 
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     3);
-        }
-        else{
+        } else {
             proveedordelocalizacion.getLastLocation()
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
                             if (location != null) {
-                                Log.i("MYAPP","Latitud: " + location.getLatitude());
-                                Log.i("MYAPP","Longitud: " + location.getLongitude());
-                                longitud=location.getLongitude();
-                                latitud=location.getLatitude();
-                                Geocoder gcd = new Geocoder(getApplicationContext(),Locale.getDefault());
+                                Log.i("MYAPP", "Latitud: " + location.getLatitude());
+                                Log.i("MYAPP", "Longitud: " + location.getLongitude());
+                                longitud = location.getLongitude();
+                                latitud = location.getLatitude();
+                                Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
                                 try {
                                     List<Address> addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                                    if(addresses.size()>=1){
+                                    if (addresses.size() >= 1) {
                                         ubicacion.setText(addresses.get(0).getLocality());
 
-                                    }
-                                    else{
+                                    } else {
                                         ubicacion.setText("Población desconocida");
                                     }
                                 } catch (IOException e) {
@@ -281,8 +286,8 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                             } else {
-                                Log.i("MYAPP","Latitud: (desconocida)");
-                                Log.i("MYAPP","Longitud: (desconocida)");
+                                Log.i("MYAPP", "Latitud: (desconocida)");
+                                Log.i("MYAPP", "Longitud: (desconocida)");
                                 Toast toast = Toast.makeText(getApplicationContext(), "Error al obtener la ubicación intentalo de nuevo más tarde", Toast.LENGTH_LONG);
                                 toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                                 toast.show();
@@ -292,7 +297,7 @@ public class RegisterActivity extends AppCompatActivity {
                     .addOnFailureListener(this, new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.i("MYAPP","Error al obtener la posición");
+                            Log.i("MYAPP", "Error al obtener la posición");
                             Toast toast = Toast.makeText(getApplicationContext(), "Error al obtener la ubicación intentalo de nuevo más tarde", Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                             toast.show();
@@ -305,20 +310,20 @@ public class RegisterActivity extends AppCompatActivity {
     /***
      * Código obtenido de: https://programacionymas.com/blog/como-pedir-fecha-android-usando-date-picker
      */
-        private void showDatePickerDialog() {
-            DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                    // +1 because January is zero
-                    //final String selectedDate = day + " / " + (month+1) + " / " + year;
-                    final String selectedDate = year + "-" + (month+1) + "-" + day;
-                    Log.i("MY",selectedDate);
-                    fechaNacimiento.setText(selectedDate);
-                }
-            });
+    private void showDatePickerDialog() {
+        DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                // +1 because January is zero
+                //final String selectedDate = day + " / " + (month+1) + " / " + year;
+                final String selectedDate = year + "-" + (month + 1) + "-" + day;
+                Log.i("MY", selectedDate);
+                fechaNacimiento.setText(selectedDate);
+            }
+        });
 
-            newFragment.show(this.getSupportFragmentManager(), "datePicker");
-        }
+        newFragment.show(this.getSupportFragmentManager(), "datePicker");
+    }
 
     private void solicitarPermisoGaleria() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) !=
@@ -347,7 +352,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    public void solicitarPermisoCamara(){
+    public void solicitarPermisoCamara() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
                 PackageManager.PERMISSION_GRANTED) {
             //EL PERMISO NO ESTÁ CONCEDIDO, PEDIRLO
@@ -412,14 +417,13 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            case 3:{
+            case 3: {
                 obtenerUbicacion();
             }
 
 
         }
     }
-
 
 
     @Override
@@ -429,8 +433,7 @@ public class RegisterActivity extends AppCompatActivity {
             //Código de:https://stackoverflow.com/questions/5991319/capture-image-from-camera-and-display-in-activity
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             imagen.setImageBitmap(photo);
-        }
-        else{
+        } else {
             final Uri imageUri = data.getData();
             final InputStream imageStream;
             try {
@@ -445,72 +448,150 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void añadirUsuario(String nombre, String fecha, String genero,String ubicacion,String fotoEn64) {
+    private void añadirUsuario(String nombre, String fecha, String genero, String ubicacion, String fotoEn64) {
         //Método que añade el usuario a la BD remota haciendo una solicitud a un Worker
-        boolean valido= comprobarFormulario(nombre, fecha, genero,ubicacion);
+        boolean valido = comprobarFormulario(nombre, fecha, genero, ubicacion);
         if (valido) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/DAS_users.php";
+                    Log.i("MYAPP", direccion);
 
-//            Toast toast = Toast.makeText(getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG);
-//            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
-//            toast.show();
-//        } else {
-            Data datos = new Data.Builder()
-                    .putString("fichero", "DAS_users.php")
-                    .putString("parametros", "funcion=insertarUsuario&nombreUsuario=" + nombre + "&fechaNacimiento=" + fecha + "&genero=" + genero+"&id="+id+"&id_FCM="+id_FCM+"&longitud="+longitud+"&latitud="+latitud+"&imagen="+fotoEn64)
-                    .build();
-            OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario").build();
-            WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
-                    .observe(this, new Observer<WorkInfo>() {
-                        @Override
-                        public void onChanged(WorkInfo workInfo) {
-                            if (workInfo != null && workInfo.getState().isFinished()) {
-                                String resultado = workInfo.getOutputData().getString("resultado");
-                                Log.i("MYAPP", "inicio realizado");
+                    //Los parámetros de la consulta los recibe de los input data
+                    String parametros = "funcion=insertarUsuario&nombreUsuario=" + nombre + "&fechaNacimiento=" + fecha + "&genero=" + genero + "&id=" + id + "&id_FCM=" + id_FCM + "&longitud=" + longitud + "&latitud=" + latitud + "&imagen=" + fotoEn64;
+                    Log.i("MYAPP", parametros);
 
-                                Log.i("MYAPP", resultado);
-                                if (resultado.contains("error")){
-                                    Toast toast=Toast.makeText(getApplicationContext(),"Ya existe un usuario con ese id", Toast.LENGTH_LONG);
-                                    toast.setGravity(Gravity.BOTTOM| Gravity.CENTER, 0, 0);
-                                    toast.show();
-                                }
-                                else{
-                                    guardarImagen();
-                                    Toast toast=Toast.makeText(getApplicationContext(),nombre+ " bienvenido a Das", Toast.LENGTH_LONG);
-                                    toast.setGravity(Gravity.BOTTOM| Gravity.CENTER, 0, 0);
-                                    toast.show();
-                                    SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                                    preferencias.edit().putString("id",id).apply();
+                    HttpURLConnection urlConnection = null;
+                    String result = "";
+                    try {
+                        //Se realiza la conexión
+                        URL destino = new URL(direccion);
+                        urlConnection = (HttpURLConnection) destino.openConnection();
+                        urlConnection.setConnectTimeout(5000);
+                        urlConnection.setReadTimeout(5000);
+                        urlConnection.setRequestMethod("POST");
+                        urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                        urlConnection.setDoOutput(true);
 
-                                    Intent i = new Intent(getApplicationContext(), InteresesActivity.class);
-                                    startActivity(i);
-                                    finish();
+                        //Se añaden los parámetros a la petición
+                        PrintWriter out = new PrintWriter(urlConnection.getOutputStream());
+                        out.print(parametros);
+                        out.close();
+                        Log.i("MYAPP", "vAMOS A HACER EL POST");
 
 
-                                }
+                        //En caso de obtener los datos correctamente se almacenan en una variable result que se devuelve a la clase que hizo la petición
+                        int statusCode = urlConnection.getResponseCode();
+                        Log.i("MYAPP", String.valueOf(statusCode));
+                        Log.i("MYAPP", urlConnection.getResponseMessage());
+                        if (statusCode == 200) {
+                            Log.i("MYAPP", "CONEXION ESTABLECIDA");
 
-
+                            BufferedInputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                            String line = "";
+                            while ((line = bufferedReader.readLine()) != null) {
+                                result += line;
                             }
+                            inputStream.close();
+
+
+
+
+
+                            if(!result.contains("error")){
+                                guardarImagen();
+                                SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                preferencias.edit().putString("id", id).apply();
+                                Intent i = new Intent(getApplicationContext(), InteresesActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+
+
+
                         }
-                    });
-            //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
-            WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario", ExistingWorkPolicy.REPLACE, requesContrasena);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.i("MYAPP", result);
+                    Data resultados = new Data.Builder()
+                            .putString("resultado", result)
+                            .build();
+                }
+            }).start();
         }
     }
 
+
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    private void añadirUsuario(String nombre, String fecha, String genero,String ubicacion,String fotoEn64) {
+//        //Método que añade el usuario a la BD remota haciendo una solicitud a un Worker
+//        boolean valido= comprobarFormulario(nombre, fecha, genero,ubicacion);
+//        if (valido) {
+//
+////            Toast toast = Toast.makeText(getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG);
+////            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+////            toast.show();
+////        } else {
+//            Data datos = new Data.Builder()
+//                    .putString("fichero", "DAS_users.php")
+//                    .putString("parametros", "funcion=insertarUsuario&nombreUsuario=" + nombre + "&fechaNacimiento=" + fecha + "&genero=" + genero+"&id="+id+"&id_FCM="+id_FCM+"&longitud="+longitud+"&latitud="+latitud+"&imagen="+fotoEn64)
+//                    .build();
+//            OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario").build();
+//            WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
+//                    .observe(this, new Observer<WorkInfo>() {
+//                        @Override
+//                        public void onChanged(WorkInfo workInfo) {
+//                            if (workInfo != null && workInfo.getState().isFinished()) {
+//                                String resultado = workInfo.getOutputData().getString("resultado");
+//                                Log.i("MYAPP", "inicio realizado");
+//
+//                                Log.i("MYAPP", resultado);
+//                                if (resultado.contains("error")){
+//                                    Toast toast=Toast.makeText(getApplicationContext(),"Ya existe un usuario con ese id", Toast.LENGTH_LONG);
+//                                    toast.setGravity(Gravity.BOTTOM| Gravity.CENTER, 0, 0);
+//                                    toast.show();
+//                                }
+//                                else{
+//                                    guardarImagen();
+//                                    Toast toast=Toast.makeText(getApplicationContext(),nombre+ " bienvenido a Das", Toast.LENGTH_LONG);
+//                                    toast.setGravity(Gravity.BOTTOM| Gravity.CENTER, 0, 0);
+//                                    toast.show();
+//                                    SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//                                    preferencias.edit().putString("id",id).apply();
+//
+//                                    Intent i = new Intent(getApplicationContext(), InteresesActivity.class);
+//                                    startActivity(i);
+//                                    finish();
+//
+//
+//                                }
+//
+//
+//                            }
+//                        }
+//                    });
+//            //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
+//            WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario", ExistingWorkPolicy.REPLACE, requesContrasena);
+//        }
+//    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private boolean comprobarFormulario(String nombre, String fechaNacimiento, String genero,String ubicacion) {
+    private boolean comprobarFormulario(String nombre, String fechaNacimiento, String genero, String ubicacion) {
         boolean valido = true;
 
         //Se calcula la edad del usuario
 
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
         Date now = new Date();
-        long difference=0;
+        long difference = 0;
         try {
-            Date fechNac=sdfDate.parse(fechaNacimiento);
-            difference = now.getYear()-fechNac.getYear();
+            Date fechNac = sdfDate.parse(fechaNacimiento);
+            difference = now.getYear() - fechNac.getYear();
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -534,7 +615,7 @@ public class RegisterActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(getApplicationContext(), "Introduce tu fecha de nacimiento", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
             toast.show();
-        } else if (difference< 16) {
+        } else if (difference < 16) {
             valido = false;
             Toast toast = Toast.makeText(getApplicationContext(), "Debes tener al menos 16 años para usar la aplicación", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
@@ -544,32 +625,31 @@ public class RegisterActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(getApplicationContext(), "Selecciona un género", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
             toast.show();
+        } else if (ubicacion.length() == 0) {
+            valido = false;
+            Toast toast = Toast.makeText(getApplicationContext(), "Es necesario indicar la ubicación para usar la aplicación", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+            toast.show();
         }
-       else if (ubicacion.length() == 0) {
-        valido = false;
-        Toast toast = Toast.makeText(getApplicationContext(), "Es necesario indicar la ubicación para usar la aplicación", Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
-        toast.show();
-    }
 
-    return valido;
+        return valido;
     }
 
     @Override
-    protected void onSaveInstanceState (Bundle savedInstanceState) {
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
 
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putString("nombre",nombre.getText().toString());
-        savedInstanceState.putString("fechaNacimiento",fechaNacimiento.getText().toString());
-        savedInstanceState.putString("genero",genero.getText().toString());
+        savedInstanceState.putString("nombre", nombre.getText().toString());
+        savedInstanceState.putString("fechaNacimiento", fechaNacimiento.getText().toString());
+        savedInstanceState.putString("genero", genero.getText().toString());
         imagen.buildDrawingCache();
         Bitmap bitmap = imagen.getDrawingCache();
 
         //BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
         ByteArrayOutputStream bs = new ByteArrayOutputStream();
-       // Bitmap bitmap = drawable.getBitmap();
+        // Bitmap bitmap = drawable.getBitmap();
         bitmap.compress(Bitmap.CompressFormat.PNG, 50, bs);
-        savedInstanceState.putByteArray("imagen",bs.toByteArray());
+        savedInstanceState.putByteArray("imagen", bs.toByteArray());
     }
 
     private void guardarImagen() {
@@ -609,7 +689,8 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
     }
-    public byte[] getByteArray(){
+
+    public byte[] getByteArray() {
         // Get the data from an ImageView as bytes
         this.imagen.setDrawingCacheEnabled(true);
         imagen.buildDrawingCache();

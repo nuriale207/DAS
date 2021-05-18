@@ -12,6 +12,7 @@ import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -150,6 +151,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
+
 
 
     private void anadirUsuarioABDLocal2(String id_remitente,String mensaje) {
