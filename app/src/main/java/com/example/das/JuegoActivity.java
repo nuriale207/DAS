@@ -47,10 +47,28 @@ public class JuegoActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     empezarHilo();
+                    TextView textoGanador = findViewById(R.id.textoGanador);
+                    Button empezarDeNuevo = findViewById(R.id.botonNuevaPartida);
+                    if(!ganador.equals("null")){
+                        ponerListenerABoton();
+                        if (ganador.equals(miId)){
+                            empezarDeNuevo.setVisibility(View.VISIBLE);
+                            textoGanador.setText("¡Has ganado!");
+                            textoGanador.setVisibility(View.VISIBLE);
+                        }else{
+                            empezarDeNuevo.setVisibility(View.VISIBLE);
+                            textoGanador.setText("Has perdido...");
+                            textoGanador.setVisibility(View.VISIBLE);
+                        }
+                    } else{
+                        empezarDeNuevo.setVisibility(View.INVISIBLE);
+                        textoGanador.setVisibility(View.INVISIBLE);
+                    }
                     handler.postDelayed(this, 1000);
                 }
             };
             handler.post(runHilo);
+
 
             tablero = "_________";
 
@@ -113,14 +131,14 @@ public class JuegoActivity extends AppCompatActivity {
                                 // 3 4 5
                                 // 6 7 8
 
-                                if (tablero.charAt(0) == tablero.charAt(1) && tablero.charAt(1) == tablero.charAt(2) ||
-                                        tablero.charAt(3) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(5) ||
-                                        tablero.charAt(6) == tablero.charAt(7) && tablero.charAt(7) == tablero.charAt(8) ||
-                                        tablero.charAt(0) == tablero.charAt(3) && tablero.charAt(3) == tablero.charAt(6) ||
-                                        tablero.charAt(1) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(7) ||
-                                        tablero.charAt(2) == tablero.charAt(5) && tablero.charAt(5) == tablero.charAt(8) ||
-                                        tablero.charAt(0) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(8) ||
-                                        tablero.charAt(2) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(6)){
+                                if (tablero.charAt(0) == tablero.charAt(1) && tablero.charAt(1) == tablero.charAt(2) && tablero.charAt(0) != '_' ||
+                                        tablero.charAt(3) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(5) && tablero.charAt(3) != '_' ||
+                                        tablero.charAt(6) == tablero.charAt(7) && tablero.charAt(7) == tablero.charAt(8) && tablero.charAt(6) != '_' ||
+                                        tablero.charAt(0) == tablero.charAt(3) && tablero.charAt(3) == tablero.charAt(6) && tablero.charAt(0) != '_' ||
+                                        tablero.charAt(1) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(7) && tablero.charAt(1) != '_' ||
+                                        tablero.charAt(2) == tablero.charAt(5) && tablero.charAt(5) == tablero.charAt(8) && tablero.charAt(2) != '_' ||
+                                        tablero.charAt(0) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(8) && tablero.charAt(0) != '_' ||
+                                        tablero.charAt(2) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(6) && tablero.charAt(2) != '_'){
                                     ganado = true;
                                 }
 
@@ -188,18 +206,6 @@ public class JuegoActivity extends AppCompatActivity {
                                     }
                                 }else{
                                     meToca = 1;
-                                }
-                            }else{
-                                TextView textoGanador = findViewById(R.id.textoGanador);
-                                Button empezarDeNuevo = findViewById(R.id.botonNuevaPartida);
-                                if (ganador.equals(miId)){
-                                    empezarDeNuevo.setVisibility(View.VISIBLE);
-                                    textoGanador.setText("¡Has ganado!");
-                                    textoGanador.setVisibility(View.VISIBLE);
-                                }else{
-                                    empezarDeNuevo.setVisibility(View.VISIBLE);
-                                    textoGanador.setText("Has perdido...");
-                                    textoGanador.setVisibility(View.VISIBLE);
                                 }
                             }
                         }
