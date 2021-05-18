@@ -114,13 +114,16 @@ public class JuegoActivity extends AppCompatActivity {
                             }
                             turno = dif == 0;
                             StringBuilder nuevoTablero = new StringBuilder(tablero);
-                            if(turno && tablero.charAt(indice) == '_' && meToca == 0){
-                                nuevoTablero.setCharAt(indice, 'O');
-                                meToca = -1;
-                            }else if (!turno && tablero.charAt(indice) == '_' && meToca == 0){
-                                nuevoTablero.setCharAt(indice, 'X');
-                                meToca = -1;
+                            if (tablero.charAt(indice) == '_' && meToca == 0){
+                                if(turno){
+                                    nuevoTablero.setCharAt(indice, 'O');
+                                    meToca = 1;
+                                }else if (!turno){
+                                    nuevoTablero.setCharAt(indice, 'X');
+                                    meToca = 1;
+                                }
                             }
+
 
                             if (!nuevoTablero.toString().equals(tablero)){
                                 tablero = nuevoTablero.toString();
@@ -143,11 +146,6 @@ public class JuegoActivity extends AppCompatActivity {
                                 }
 
                                 if(ganado){
-                                    TextView textoGanador = findViewById(R.id.textoGanador);
-                                    Button empezarDeNuevo = findViewById(R.id.botonNuevaPartida);
-                                    empezarDeNuevo.setVisibility(View.VISIBLE);
-                                    textoGanador.setText("¡Has ganado!");
-                                    textoGanador.setVisibility(View.VISIBLE);
                                     ganador = miId;
                                 }
                                 actualizarTableroBD();
@@ -200,7 +198,7 @@ public class JuegoActivity extends AppCompatActivity {
                             //meToca = miId.equals(json.getString("turno"));
                             ganador = json.getString("ganador");
                             if(ganador.equals("null")){
-                                if(miId.equals(json.getString("turno"))){
+                                if(miId.equals(json.getString("turno")) || json.getString("turno").equals("null")){
                                     if (meToca != -1){
                                         meToca = 0;
                                     }
@@ -274,6 +272,7 @@ public class JuegoActivity extends AppCompatActivity {
         empezarPartida.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                meToca = 1;
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -282,7 +281,7 @@ public class JuegoActivity extends AppCompatActivity {
                                     .appendQueryParameter("id1", miId)
                                     .appendQueryParameter("id2",idOtro)
                                     .appendQueryParameter("tablero", "_________")
-                                    .appendQueryParameter("turno", miId)
+                                    .appendQueryParameter("turno", "null")
                                     .appendQueryParameter("ganador", "null");
                             String parametros = builder.build().getEncodedQuery();
 
