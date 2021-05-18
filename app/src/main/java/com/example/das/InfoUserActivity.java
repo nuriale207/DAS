@@ -94,7 +94,11 @@ public class InfoUserActivity extends AppCompatActivity {
         botonVolver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i=new Intent(InfoUserActivity.this, MainActivity.class);
+                i.putExtra("tab",1);
                 finish();
+                startActivity(i);
+
             }
         });
 
@@ -258,6 +262,15 @@ public class InfoUserActivity extends AppCompatActivity {
                 });
         //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(this).enqueueUniqueWork("getDatosUsuario"+idUser, ExistingWorkPolicy.REPLACE, requesContrasena);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i=new Intent(InfoUserActivity.this, MainActivity.class);
+        i.putExtra("tab",1);
+        startActivity(i);
+        finish();
     }
 
 

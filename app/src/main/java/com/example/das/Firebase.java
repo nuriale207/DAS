@@ -181,40 +181,40 @@ public class Firebase extends FirebaseMessagingService {
 
     }
 
-    private void recibirMensajeFCM(String mensaje, String id_remitente) {
-
-        //obtenerInfoRemitente(id_remitente,mensaje);
-        //Muestro una notificación con los datos del mensaje y creo en ella un intent al chat
-        boolean mostrarNotificacion = true;
-        boolean running = ChatActivity.running;
-        if (running) {
-            String idChat = ChatActivity.idChat;
-            if (idChat.equals(id_remitente)) {
-                mostrarNotificacion = false;
-            }
-
-        }
-        if (mostrarNotificacion) {
-            NotificationManager elManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(getApplicationContext(), "IdCanal");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel elCanal = new NotificationChannel("IdCanal", "NombreCanal",
-                        NotificationManager.IMPORTANCE_DEFAULT);
-                Intent i = new Intent(getApplicationContext(), ChatActivity.class);
-                i.putExtra("id", id_remitente);
-                i.putExtra("mensaje", mensaje);
-                PendingIntent intentEnNot = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
-                elManager.createNotificationChannel(elCanal);
-                elBuilder.setSmallIcon(R.drawable.logo_das)
-                        .setContentTitle(nombreRemitente)
-                        .setContentText(mensaje)
-                        .setSubText(mensaje)
-                        .setVibrate(new long[]{0, 1000, 500, 1000})
-                        .setAutoCancel(true).setContentIntent(intentEnNot);
-                elManager.notify(1, elBuilder.build());
-            }
-        }
-    }
+//    private void recibirMensajeFCM(String mensaje, String id_remitente) {
+//
+//        //obtenerInfoRemitente(id_remitente,mensaje);
+//        //Muestro una notificación con los datos del mensaje y creo en ella un intent al chat
+//        boolean mostrarNotificacion = true;
+//        boolean running = ChatActivity.running;
+//        if (running) {
+//            String idChat = ChatActivity.idChat;
+//            if (idChat.equals(id_remitente)) {
+//                mostrarNotificacion = false;
+//            }
+//
+//        }
+//        if (mostrarNotificacion) {
+//            NotificationManager elManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//            NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(getApplicationContext(), "IdCanal");
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                NotificationChannel elCanal = new NotificationChannel("IdCanal", "NombreCanal",
+//                        NotificationManager.IMPORTANCE_DEFAULT);
+//                Intent i = new Intent(getApplicationContext(), ChatActivity.class);
+//                i.putExtra("id", id_remitente);
+//                i.putExtra("mensaje", mensaje);
+//                PendingIntent intentEnNot = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
+//                elManager.createNotificationChannel(elCanal);
+//                elBuilder.setSmallIcon(R.drawable.logo_das)
+//                        .setContentTitle(nombreRemitente)
+//                        .setContentText(mensaje)
+//                        .setSubText(mensaje)
+//                        .setVibrate(new long[]{0, 1000, 500, 1000})
+//                        .setAutoCancel(true).setContentIntent(intentEnNot);
+//                elManager.notify(1, elBuilder.build());
+//            }
+//        }
+//    }
 
 
     private void anadirUsuarioABDLocal(String id_remitente,String mensaje) {

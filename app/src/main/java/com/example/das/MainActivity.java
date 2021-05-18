@@ -57,6 +57,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap miMapa;
     private Button boton;
+    private TabHost tabhost;
 
     FusedLocationProviderClient proveedordelocalizacion;
     LocationCallback actualizador;
@@ -93,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Se comprueba si hay un usuario logeado. En caso de no haberlo se abre la actividad de login
         preferencias = PreferenceManager.getDefaultSharedPreferences(this);
         id = preferencias.getString("id", null);
+        //int tab=preferencias.getInt("tab",0);
         int distancia=preferencias.getInt("distancia",0);
         if (id == null) {
             // En caso de no haber un usuario loggeado se abre la actividad de login
@@ -100,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             startActivity(i);
             finish();
         }
+
+
 //        else {
 //            //Se comprueba si el usuario ha completado el proceso de registro
 //            usuarioRegistrado(id);
@@ -116,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         // initiating the tabhost
-        TabHost tabhost = (TabHost) findViewById(R.id.tabhost);
+        tabhost = (TabHost) findViewById(R.id.tabhost);
 
         // setting up the tab host
         tabhost.setup();
@@ -170,7 +175,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
+        //Se obtiene el id de los extras
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            int tab=extras.getInt("tab",0);
+            tabhost.setCurrentTab(tab);
 
+        }
+
+
+        if(savedInstanceState!=null){
+            tabhost.setCurrentTab(savedInstanceState.getInt("LastTab"));
+
+
+        }
 
 
         actualizarPerfiles();
@@ -211,6 +229,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 });
 
+    }
+
+    protected void onSaveInstanceState (Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("LastTab", tabhost.getCurrentTab());
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -424,6 +447,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     //Using position get Value from arraylist
                     Intent i=new Intent(getApplicationContext(),InfoUserActivity.class);
                     i.putExtra("id",idClicado);
+                    finish();
                     startActivity(i);
                 }
 
