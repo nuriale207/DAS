@@ -7,7 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import org.json.JSONObject;
 
@@ -25,6 +27,7 @@ public class JuegoActivity extends AppCompatActivity {
     private String tablero;
     private Boolean turno;
     private int meToca = 1;
+    private String ganador = "null";
     private Thread hilo;
     private Handler handler;
 
@@ -65,6 +68,8 @@ public class JuegoActivity extends AppCompatActivity {
                                 boton.setImageDrawable(ContextCompat.getDrawable(JuegoActivity.this, R.drawable.circulo));
                             }else if (tablero.charAt(indice) == 'X'){
                                 boton.setImageResource(R.drawable.cruz);
+                            }else{
+                                boton.setImageDrawable(null);
                             }
                         }
                     }
@@ -90,7 +95,6 @@ public class JuegoActivity extends AppCompatActivity {
                                 }
                             }
                             turno = dif == 0;
-
                             StringBuilder nuevoTablero = new StringBuilder(tablero);
                             if(turno && tablero.charAt(indice) == '_' && meToca == 0){
                                 nuevoTablero.setCharAt(indice, 'O');
@@ -102,16 +106,39 @@ public class JuegoActivity extends AppCompatActivity {
 
                             if (!nuevoTablero.toString().equals(tablero)){
                                 tablero = nuevoTablero.toString();
+
+                                Boolean ganado = false;
+
+                                // 0 1 2
+                                // 3 4 5
+                                // 6 7 8
+
+                                if (tablero.charAt(0) == tablero.charAt(1) && tablero.charAt(1) == tablero.charAt(2) ||
+                                        tablero.charAt(3) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(5) ||
+                                        tablero.charAt(6) == tablero.charAt(7) && tablero.charAt(7) == tablero.charAt(8) ||
+                                        tablero.charAt(0) == tablero.charAt(3) && tablero.charAt(3) == tablero.charAt(6) ||
+                                        tablero.charAt(1) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(7) ||
+                                        tablero.charAt(2) == tablero.charAt(5) && tablero.charAt(5) == tablero.charAt(8) ||
+                                        tablero.charAt(0) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(8) ||
+                                        tablero.charAt(2) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(6)){
+                                    ganado = true;
+                                }
+
+                                if(ganado){
+                                    TextView textoGanador = findViewById(R.id.textoGanador);
+                                    Button empezarDeNuevo = findViewById(R.id.botonNuevaPartida);
+                                    empezarDeNuevo.setVisibility(View.VISIBLE);
+                                    textoGanador.setText("¡Has ganado!");
+                                    textoGanador.setVisibility(View.VISIBLE);
+                                    ganador = miId;
+                                }
                                 actualizarTableroBD();
                             }
                         }
                     });
-
                 }
             }
-
         }
-
     }
 
     private void empezarHilo(){
@@ -153,12 +180,27 @@ public class JuegoActivity extends AppCompatActivity {
                         if(!json.getString("tablero").equals("null")){
                             tablero = json.getString("tablero");
                             //meToca = miId.equals(json.getString("turno"));
-                            if(miId.equals(json.getString("turno"))){
-                                if (meToca != -1){
-                                    meToca = 0;
+                            ganador = json.getString("ganador");
+                            if(ganador.equals("null")){
+                                if(miId.equals(json.getString("turno"))){
+                                    if (meToca != -1){
+                                        meToca = 0;
+                                    }
+                                }else{
+                                    meToca = 1;
                                 }
                             }else{
-                                meToca = 1;
+                                TextView textoGanador = findViewById(R.id.textoGanador);
+                                Button empezarDeNuevo = findViewById(R.id.botonNuevaPartida);
+                                if (ganador.equals(miId)){
+                                    empezarDeNuevo.setVisibility(View.VISIBLE);
+                                    textoGanador.setText("¡Has ganado!");
+                                    textoGanador.setVisibility(View.VISIBLE);
+                                }else{
+                                    empezarDeNuevo.setVisibility(View.VISIBLE);
+                                    textoGanador.setText("Has perdido...");
+                                    textoGanador.setVisibility(View.VISIBLE);
+                                }
                             }
                         }
                         if(json.getString("tablero").equals("null") && meToca == 1){
@@ -184,7 +226,8 @@ public class JuegoActivity extends AppCompatActivity {
                             .appendQueryParameter("id1", miId)
                             .appendQueryParameter("id2",idOtro)
                             .appendQueryParameter("tablero", tablero)
-                            .appendQueryParameter("turno", idOtro);
+                            .appendQueryParameter("turno", idOtro)
+                            .appendQueryParameter("ganador", ganador);
                     String parametros = builder.build().getEncodedQuery();
 
                     String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/actualizarDatosJuego.php";
@@ -218,6 +261,58 @@ public class JuegoActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    private void ponerListenerABoton(){
+        Button empezarPartida = findViewById(R.id.botonNuevaPartida);
+        empezarPartida.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Uri.Builder builder = new Uri.Builder()
+                                    .appendQueryParameter("id1", miId)
+                                    .appendQueryParameter("id2",idOtro)
+                                    .appendQueryParameter("tablero", "_________")
+                                    .appendQueryParameter("turno", miId)
+                                    .appendQueryParameter("ganador", "null");
+                            String parametros = builder.build().getEncodedQuery();
+
+                            String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/actualizarDatosJuego.php";
+                            HttpURLConnection urlConnection = null;
+                            URL destino = new URL(direccion);
+                            urlConnection = (HttpURLConnection) destino.openConnection();
+                            urlConnection.setConnectTimeout(5000);
+                            urlConnection.setReadTimeout(5000);
+
+                            urlConnection.setRequestMethod("POST");
+                            urlConnection.setDoOutput(true);
+                            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                            PrintWriter out = new PrintWriter(urlConnection.getOutputStream());
+                            out.print(parametros);
+                            out.close();
+
+                            int statusCode = urlConnection.getResponseCode();
+                            if (statusCode == 200) {
+                                BufferedInputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                                String line, result = "";
+                                while ((line = bufferedReader.readLine()) != null) {
+                                    result += line;
+                                }
+                                inputStream.close();
+                            }
+                        }
+                        catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+        });
     }
 
 

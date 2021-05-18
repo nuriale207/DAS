@@ -150,12 +150,6 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
 
                             //Se establece el botón de centrar, que al pulsarlo mueve la cámara a la localización actual del jugador.
 
-                            //Se añade en el mapa un marcador en la ubicación actual del jugador, para representarlo.
-                            jugador = googleMap.addMarker(new MarkerOptions()
-                                    .position(nuevascoordenadas)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marcador))
-                                    .title("Yo"));
-
                             googleMap.moveCamera(otravista);
                         } else {
                             return;
@@ -172,9 +166,6 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
                     LatLng pos = new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
                     //Se elimina el antiguo marcador y se pone uno nuevo.
                     jugador.remove();
-                    jugador = googleMap.addMarker(new MarkerOptions()
-                            .position(pos)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.marcador)));
                 } else {
                     return;
                 }
