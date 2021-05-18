@@ -89,8 +89,9 @@
             android:background="@drawable/texto_mensaje"
             android:ems="10"
             android:hint="Escribe tu mensaje..."
+            android:inputType="textCapSentences"
             android:paddingStart="20dp"
-            android:inputType="textCapSentences"/>
+            android:paddingEnd="20dp" />
 
         <ImageButton
             android:id="@+id/botonEnviarMensaje"

@@ -32,6 +32,7 @@
             android:fontFamily="@font/pragati_narrow"
             android:foregroundGravity="center"
             android:gravity="center"
+            android:maxWidth="280sp"
             android:paddingStart="10dp"
             android:paddingTop="10dp"
             android:paddingEnd="10dp"
