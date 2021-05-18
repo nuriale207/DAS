@@ -211,13 +211,13 @@ public class RegisterActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
-                Bitmap bitmap = drawable.getBitmap();
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] fototransformada = stream.toByteArray();
-                String fotoen64 = Base64.encodeToString(fototransformada, Base64.DEFAULT);
-                añadirUsuario(nombre.getText().toString(), fechaNacimiento.getText().toString(), genero.getText().toString(), ubicacion.getText().toString(), fotoen64);
+//                BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
+//                Bitmap bitmap = drawable.getBitmap();
+//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                byte[] fototransformada = stream.toByteArray();
+//                String fotoen64 = Base64.encodeToString(fototransformada, Base64.DEFAULT);
+                añadirUsuario(nombre.getText().toString(), fechaNacimiento.getText().toString(), genero.getText().toString(), ubicacion.getText().toString());
 
             }
         });
@@ -449,7 +449,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void añadirUsuario(String nombre, String fecha, String genero, String ubicacion, String fotoEn64) {
+    private void añadirUsuario(String nombre, String fecha, String genero, String ubicacion) {
         //Método que añade el usuario a la BD remota haciendo una solicitud a un Worker
         boolean valido = comprobarFormulario(nombre, fecha, genero, ubicacion);
         if (valido) {
@@ -460,7 +460,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Log.i("MYAPP", direccion);
 
                     //Los parámetros de la consulta los recibe de los input data
-                    String parametros = "funcion=insertarUsuario&nombreUsuario=" + nombre + "&fechaNacimiento=" + fecha + "&genero=" + genero + "&id=" + id + "&id_FCM=" + id_FCM + "&longitud=" + longitud + "&latitud=" + latitud + "&imagen=" + fotoEn64;
+                    String parametros = "funcion=insertarUsuario&nombreUsuario=" + nombre + "&fechaNacimiento=" + fecha + "&genero=" + genero + "&id=" + id + "&id_FCM=" + id_FCM + "&longitud=" + longitud + "&latitud=" + latitud ;
                     Log.i("MYAPP", parametros);
 
                     HttpURLConnection urlConnection = null;

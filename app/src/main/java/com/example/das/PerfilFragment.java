@@ -665,7 +665,7 @@ public class PerfilFragment extends Fragment {
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=datosUsuario&id=" + id)
                 .build();
-        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("getDatosUsuario").build();
+        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("getDatosUsuarioPerfil").build();
         WorkManager.getInstance(this.getActivity()).getWorkInfoByIdLiveData(requesContrasena.getId())
                 .observe(this, new Observer<WorkInfo>() {
                     @Override
@@ -732,7 +732,7 @@ public class PerfilFragment extends Fragment {
                     }
                 });
         //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
-        WorkManager.getInstance(getActivity()).enqueueUniqueWork("getDatosUsuario", ExistingWorkPolicy.REPLACE, requesContrasena);
+        WorkManager.getInstance(getActivity()).enqueueUniqueWork("getDatosUsuarioPerfil", ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 
     @Override
@@ -755,13 +755,13 @@ public class PerfilFragment extends Fragment {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             imagen.setImageBitmap(photo);
             guardarImagen();
-            BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
-            Bitmap bitmap = drawable.getBitmap();
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] fototransformada = stream.toByteArray();
-            String fotoen64 = Base64.encodeToString(fototransformada, Base64.DEFAULT);
-            actualizarImagenBD(fotoen64);
+//            BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
+//            Bitmap bitmap = drawable.getBitmap();
+//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//            byte[] fototransformada = stream.toByteArray();
+//            String fotoen64 = Base64.encodeToString(fototransformada, Base64.DEFAULT);
+//            actualizarImagenBD(fotoen64);
         }
         else{
             final Uri imageUri = data.getData();
@@ -773,13 +773,13 @@ public class PerfilFragment extends Fragment {
                 imagen.setImageBitmap(selectedImage);
                 guardarImagen();
 
-                BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
-                Bitmap bitmap = drawable.getBitmap();
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] fototransformada = stream.toByteArray();
-                String fotoen64 = Base64.encodeToString(fototransformada, Base64.DEFAULT);
-                actualizarImagenBD(fotoen64);
+//                BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
+//                Bitmap bitmap = drawable.getBitmap();
+//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                byte[] fototransformada = stream.toByteArray();
+//                String fotoen64 = Base64.encodeToString(fototransformada, Base64.DEFAULT);
+//                actualizarImagenBD(fotoen64);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
