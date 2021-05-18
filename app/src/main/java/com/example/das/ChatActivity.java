@@ -298,21 +298,25 @@ public class ChatActivity extends AppCompatActivity {
 //    }
     private void enviarMensaje() {
         EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
-        mensajes.add(mensajeEscrito.getText().toString());
-        mios.add(true);
-        adaptador.notifyDataSetChanged();
+        String texto=mensajeEscrito.getText().toString();
+        if(texto.length()>0){
+            mensajes.add(texto);
+            mios.add(true);
+            adaptador.notifyDataSetChanged();
 
 
-        BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
-        gestorDB.guardarMensaje(idOtro,mensajeEscrito.getText().toString(), 1);
-        SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
+            BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
+            gestorDB.guardarMensaje(idOtro,mensajeEscrito.getText().toString(), 1);
+            SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
 
-        String idRemitente=preferencias.getString("id", "null");
-        Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,idRemitente);
+            String idRemitente=preferencias.getString("id", "null");
+            Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,idRemitente);
 
-        mensajeEscrito.setText("");
-        ListView lista=findViewById(R.id.mensajes);
-        lista.setSelection(adaptador.getCount() - 1);
+            mensajeEscrito.setText("");
+            ListView lista=findViewById(R.id.mensajes);
+            lista.setSelection(adaptador.getCount() - 1);
+        }
+
     }
 
 
