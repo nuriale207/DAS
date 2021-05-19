@@ -20,7 +20,7 @@
 
         <Button
             android:id="@+id/botonIniciarSesion"
-            android:layout_width="wrap_content"
+            android:layout_width="311dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dp"
@@ -28,7 +28,7 @@
             android:foregroundGravity="center"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Iniciar sesión" />
+            android:text="Iniciar sesión / Registrarse" />
 
         <Button
             android:id="@+id/botonRegistrarse"
