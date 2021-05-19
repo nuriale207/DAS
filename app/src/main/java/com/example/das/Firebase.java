@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -39,6 +40,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.installations.Utils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.firebase.storage.FirebaseStorage;
@@ -170,10 +172,13 @@ public class Firebase extends FirebaseMessagingService {
                 i.putExtra("nombre", nombreRemitente);
                 i.putExtra("token", token_remitente);
                 i.putExtra("imagen", imagenRemitente);
+
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imagenRemitente, 0, imagenRemitente.length);
                 PendingIntent intentEnNot = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
                 elManager.createNotificationChannel(elCanal);
                 elBuilder.setSmallIcon(R.drawable.logo_das)
                         .setContentTitle(nombreRemitente)
+                        .setLargeIcon(bitmap)
                         .setContentText(mensaje)
                         .setSubText(mensaje)
                         .setVibrate(new long[]{0, 1000, 500, 1000})
