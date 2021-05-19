@@ -55,9 +55,14 @@ public class JuegoActivity extends AppCompatActivity {
                             empezarDeNuevo.setVisibility(View.VISIBLE);
                             textoGanador.setText("¡Has ganado!");
                             textoGanador.setVisibility(View.VISIBLE);
-                        }else{
+                        }else if(ganador.equals(idOtro)){
                             empezarDeNuevo.setVisibility(View.VISIBLE);
                             textoGanador.setText("Has perdido...");
+                            textoGanador.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            empezarDeNuevo.setVisibility(View.VISIBLE);
+                            textoGanador.setText("Empate");
                             textoGanador.setVisibility(View.VISIBLE);
                         }
                     } else{
@@ -129,6 +134,7 @@ public class JuegoActivity extends AppCompatActivity {
                                 tablero = nuevoTablero.toString();
 
                                 Boolean ganado = false;
+                                Boolean empatado=false;
 
                                 // 0 1 2
                                 // 3 4 5
@@ -144,9 +150,16 @@ public class JuegoActivity extends AppCompatActivity {
                                         tablero.charAt(2) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(6) && tablero.charAt(2) != '_'){
                                     ganado = true;
                                 }
+                                if(tablero.charAt(0)!='_'&&tablero.charAt(1)!='_'&&tablero.charAt(2)!='_'&&tablero.charAt(3)!='_'&&tablero.charAt(4)!='_'&&tablero.charAt(5)!='_'&&
+                                        tablero.charAt(6)!='_'&&tablero.charAt(7)!='_'&&tablero.charAt(8)!='_'){
+                                    empatado=true;
+                                }
 
                                 if(ganado){
                                     ganador = miId;
+                                }
+                                if(empatado){
+                                    ganador="empate";
                                 }
                                 actualizarTableroBD();
                             }
