@@ -5,7 +5,7 @@
     android:id="@+id/chatLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo_chat"
+    android:background="@drawable/fondo_chat_land"
     tools:context=".ChatActivity">
 
 
@@ -27,19 +27,19 @@
 
         <ImageView
             android:id="@+id/imagenOtroChat"
-            android:layout_width="65dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
             android:layout_marginBottom="2dp"
-            android:layout_weight="7" />
+            android:layout_weight="4" />
 
         <TextView
             android:id="@+id/nombreOtroChat"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="7"
+            android:layout_weight="10"
             android:fontFamily="@font/asap_medium"
             android:gravity="center_vertical"
             android:hapticFeedbackEnabled="true"
