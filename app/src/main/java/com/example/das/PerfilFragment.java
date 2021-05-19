@@ -714,6 +714,7 @@ public class PerfilFragment extends Fragment {
         pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
+                imagen = getView().findViewById(R.id.imageView3);
                 Glide.with(getActivity()).load(uri).into(imagen);
             }
         });
