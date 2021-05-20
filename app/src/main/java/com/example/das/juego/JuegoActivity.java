@@ -147,9 +147,11 @@ public class JuegoActivity extends AppCompatActivity {
 
 
                             if (!nuevoTablero.toString().equals(tablero)){
-                                if(!estaEnBDLocal()){
+                                if(!hayMensajes()){
+                                    BDLocal gestorDB = new BDLocal(getApplicationContext(), "DAS", null, 1);
+                                    SQLiteDatabase bd = gestorDB.getWritableDatabase();
+                                    gestorDB.guardarMensaje(idOtro, "Hola, he iniciado una partida al tres en raya. ", 1);
 
-                                    guardarEnBDLocal();
                                 }
                                 Firebase.enviarMensajeFCM(getBaseContext(),"TRESRAYA_010203: "+miNombre+" ha marcado una casilla. Es tu turno!",tokenOtro,miId);
                                 tablero = nuevoTablero.toString();
@@ -216,18 +218,18 @@ public class JuegoActivity extends AppCompatActivity {
         }
     }
 
-    private boolean estaEnBDLocal() {
-        boolean esta=false;
-            BDLocal gestorDB = new BDLocal(getBaseContext(), "DAS", null, 1);
+    private boolean hayMensajes() {
+        boolean hayMensajes=true;
+         BDLocal gestorDB = new BDLocal(getBaseContext(), "DAS", null, 1);
             SQLiteDatabase bd = gestorDB.getWritableDatabase();
-            String[] campos = new String[]{"Nombre", "Token", "Imagen"};
+            String[] campos = new String[]{"Mensaje"};
             String[] argumentos = new String[]{idOtro};
-            Cursor cu = bd.query("Usuarios", campos, "Id=?", argumentos, null, null, null);
-            if (cu.getCount() != 0) {
-                esta=true;
+            Cursor cu = bd.query("Mensajes", campos, "Id=?", argumentos, null, null, null);
+            if (cu.getCount() == 0) {
+                hayMensajes=false;
 
             }
-            return esta;
+            return hayMensajes;
 
     }
 

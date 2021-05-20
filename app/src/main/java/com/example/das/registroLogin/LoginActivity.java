@@ -80,54 +80,56 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
-
-                //Se intenta crear un usuario con el email y contraseña dados
-                firebaseAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (!task.isSuccessful()) {
-                                    //Si el email está en uso se intenta iniciar sesión con ese email y contraseña
-                                    if(task.getException().getMessage().contains("email address is already in use")){
-                                        //Hacer login con ese email y password
-                                        firebaseAuth.signInWithEmailAndPassword(email, password)
-                                                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                                        if (task.isSuccessful()) {
-                                                            // Inicio de sesión correcto
-                                                            Log.i("MY", "signInWithEmail:success");
-                                                            FirebaseUser user =  firebaseAuth.getCurrentUser();
-                                                            //Se llama al método login usuario que comprueba en la BD que el usuario exista
-                                                            loginUsuario(user.getUid());
-                                                            Log.i("MY", "firebase: "+user.getUid(), task.getException());
+                if (formularioValido()) {
 
 
-                                                        } else {
-                                                            // Error al iniciar sesión
-                                                            Log.i("MY", "signInWithEmail:failure", task.getException());
-                                                            Toast.makeText(LoginActivity.this, "Ha habido un error al iniciar sesión."+ task.getException().getMessage(),
-                                                                    Toast.LENGTH_SHORT).show();
+                    //Se intenta crear un usuario con el email y contraseña dados
+                    firebaseAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (!task.isSuccessful()) {
+                                        //Si el email está en uso se intenta iniciar sesión con ese email y contraseña
+                                        if (task.getException().getMessage().contains("email address is already in use")) {
+                                            //Hacer login con ese email y password
+                                            firebaseAuth.signInWithEmailAndPassword(email, password)
+                                                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                                            if (task.isSuccessful()) {
+                                                                // Inicio de sesión correcto
+                                                                Log.i("MY", "signInWithEmail:success");
+                                                                FirebaseUser user = firebaseAuth.getCurrentUser();
+                                                                //Se llama al método login usuario que comprueba en la BD que el usuario exista
+                                                                loginUsuario(user.getUid());
+                                                                Log.i("MY", "firebase: " + user.getUid(), task.getException());
+
+
+                                                            } else {
+                                                                // Error al iniciar sesión
+                                                                Log.i("MY", "signInWithEmail:failure", task.getException());
+                                                                Toast.makeText(LoginActivity.this, "Ha habido un error al iniciar sesión." + task.getException().getMessage(),
+                                                                        Toast.LENGTH_SHORT).show();
+                                                            }
                                                         }
-                                                    }
-                                                });
+                                                    });
+
+                                        } else {
+                                            //Si el error al crear el usuario no está ocasionado porque ya exista se muestra un mensaje de error
+                                            Toast.makeText(LoginActivity.this, "Ha habido un error al iniciar sesión." + task.getException().getMessage(),
+                                                    Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    } else {
+                                        //Si no existe se crea un usuario nuevo
+                                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                                        loginUsuario(user.getUid());
+                                        Log.i("MY", "firebase: " + user.getUid(), task.getException());
 
                                     }
-                                    else{
-                                        //Si el error al crear el usuario no está ocasionado porque ya exista se muestra un mensaje de error
-                                        Toast.makeText(LoginActivity.this, "Ha habido un error al iniciar sesión." + task.getException().getMessage(),
-                                                Toast.LENGTH_SHORT).show();
-
-                                    }
-                                } else {
-                                    //Si no existe se crea un usuario nuevo
-                                    FirebaseUser user =  firebaseAuth.getCurrentUser();
-                                    loginUsuario(user.getUid());
-                                    Log.i("MY", "firebase: "+user.getUid(), task.getException());
-
                                 }
-                            }
-                        });
+                            });
+                }
             }
         });
 
@@ -149,6 +151,19 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+    //Comprueba si los datos introducidos son correctos
+    private Boolean formularioValido(){
+        String email = inputEmail.getText().toString().trim();
+        String password = inputPassword.getText().toString().trim();
+        Boolean correcto=true;
+        if(email.length()==0|| password.length()==0){
+            Toast.makeText(LoginActivity.this, "Es necesario rellenar ambos campos",
+                    Toast.LENGTH_SHORT).show();
+            correcto=false;
+        }
+        return correcto;
 
     }
     private void firebaseAuthWithGoogle(String idToken) {
