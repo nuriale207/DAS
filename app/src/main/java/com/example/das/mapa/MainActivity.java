@@ -108,14 +108,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             startActivity(i);
         }
 
-
-//        else {
-//            //Se comprueba si el usuario ha completado el proceso de registro
-//            usuarioRegistrado(id);
-//        }
-
-
-
+        //Se mira si hay una distancia máxima establecida si es 0 se establece e 20km
         if(distancia!=0){
             distanciaMax= distancia;
         }
@@ -160,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setBackgroundResource(
                         R.drawable.fondo_boton_perfil);
         tabhost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-
+            //Se gestiona el fondo de los tabs
             @Override
             public void onTabChanged(String tabId) {
                 for (int i = 0; i < tabhost.getTabWidget().getChildCount(); i++) {
@@ -179,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
-        //Se obtiene el id de los extras
+        //Se obtiene la pestaña que está seleccionada de los extras
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             int tab=extras.getInt("tab",0);
@@ -187,23 +180,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         }
 
-
+        //En caso de girar la pantalla se fija la vista en la pestaña que estaba abierta
         if(savedInstanceState!=null){
             tabhost.setCurrentTab(savedInstanceState.getInt("LastTab"));
 
 
         }
 
-
+        //Al abrir la aplicación se vuelca el contenido de la BD remota en la local, para tener todos los posibles cambios
         actualizarPerfiles();
         actualizar("editarToken", "token=" + Firebase.getToken(this)+"&sesion=1");
 
+        //Se solicita el permiso de la ubicación
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 24);
         } else {
             SupportMapFragment elfragmento = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentoMapa);
             elfragmento.getMapAsync(this);
         }
+
+        //Al clickas el botón centrar se cargan las coordenadas de los usuarios de nuevo y se centra la vista del mapa
         boton=findViewById(R.id.botonCentrar);
 
         boton.setOnClickListener(new View.OnClickListener() {
@@ -214,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        //Se obtiene el token FCM
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
@@ -235,10 +232,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    //Al girar el teléfono se almacena en qué pestaña se estaba
     protected void onSaveInstanceState (Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("LastTab", tabhost.getCurrentTab());
     }
+    //Al obtener el permiso de ubicación se carga el mapa
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -249,6 +248,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
     }
+    //Al obtener el permiso de ubicación se carga el mapa
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -272,6 +273,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         }
     }
+    //Método que centra la vista en el mapa en base a la distancia
     public void centrar() {
         //Se crea un círculo con la distancia actual o 20km por defecto
         Circle circle=miMapa.addCircle(new CircleOptions()
@@ -293,52 +295,53 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         cargarCoordenadasUsuarios();
     }
 
-    //Comprueba si el usuario ha sido registrado
-    public void usuarioRegistrado(String id) {
-
-        Data datos = new Data.Builder()
-                .putString("fichero", "DAS_users.php")
-                .putString("parametros", "funcion=datosUsuario&id=" + id)
-                .build();
-        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario1").build();
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
-                .observe(this, new Observer<WorkInfo>() {
-                    @Override
-                    public void onChanged(WorkInfo workInfo) {
-
-                        if (workInfo != null && workInfo.getState().isFinished()) {
-                            String resultado = workInfo.getOutputData().getString("resultado");
-                            Log.i("MYAPP", "inicio realizado");
-
-                            Log.i("MYAPP", resultado);
-                            JSONObject jsonObject = null;
-                            try {
-                                jsonObject = new JSONObject(resultado);
-                                String nombre = jsonObject.getString("nombre");
-                                if (nombre.equals("null")) {
-                                    Intent i = new Intent(MainActivity.this, RegisterActivity.class);
-                                    i.putExtra("id", id);
-                                    startActivity(i);
-                                    finish();
-
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-
-                        }
-                    }
-                });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
-        WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario1", ExistingWorkPolicy.REPLACE, requesContrasena);
-
-
-    }
+//    //Comprueba si el usuario ha sido registrado
+//    public void usuarioRegistrado(String id) {
+//
+//        Data datos = new Data.Builder()
+//                .putString("fichero", "DAS_users.php")
+//                .putString("parametros", "funcion=datosUsuario&id=" + id)
+//                .build();
+//        OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario1").build();
+//        WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
+//                .observe(this, new Observer<WorkInfo>() {
+//                    @Override
+//                    public void onChanged(WorkInfo workInfo) {
+//
+//                        if (workInfo != null && workInfo.getState().isFinished()) {
+//                            String resultado = workInfo.getOutputData().getString("resultado");
+//                            Log.i("MYAPP", "inicio realizado");
+//
+//                            Log.i("MYAPP", resultado);
+//                            JSONObject jsonObject = null;
+//                            try {
+//                                jsonObject = new JSONObject(resultado);
+//                                String nombre = jsonObject.getString("nombre");
+//                                if (nombre.equals("null")) {
+//                                    Intent i = new Intent(MainActivity.this, RegisterActivity.class);
+//                                    i.putExtra("id", id);
+//                                    startActivity(i);
+//                                    finish();
+//
+//                                }
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//
+//
+//                        }
+//                    }
+//                });
+//        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
+//        WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario1", ExistingWorkPolicy.REPLACE, requesContrasena);
+//
+//
+//    }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        //Al cargar el mapa
         //Si no tiene permisos, vuelve a la ventana principal
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Intent i = new Intent(MainActivity.this, MainActivity.class);
@@ -374,9 +377,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             float currentZoomLevel = getZoomLevel(circle);
                             float animateZomm = currentZoomLevel + 5;
 
-                            //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(coordenadasActuales, animateZomm));
-
-                            //googleMap.animateCamera(CameraUpdateFactory.zoomTo(currentZoomLevel), 2000, null);
+                           //Se centra la vista en el mapa
                             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                                     circle.getCenter(), getZoomLevel(circle)));
 
@@ -442,9 +443,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         proveedordelocalizacion.requestLocationUpdates(peticion, actualizador, null);
 
+        //Se establece el listener de los marcadores del mapa
        miMapa.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+                //Se abre la actividad infouser al clicar sobre un marcador
                 String idClicado = (String) (marker.getTag());
                 if (idClicado!=null){
                     Log.i("MYAPP","Usuario clicado: "+idClicado);
@@ -463,6 +466,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
+    //Método que obtiene el nivel de zoom en base a un círculo del mapa
+    /** stackoverflow
+     * pregunta: https://stackoverflow.com/questions/11309632/how-to-find-zoom-level-based-on-circle-draw-on-map/27654602
+     * usuario: https://stackoverflow.com/users/649256/anand-tiwari**/
     public float getZoomLevel(Circle circle) {
         float zoomLevel=0;
         if (circle != null){
@@ -472,6 +479,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         return zoomLevel +.5f;
     }
+
+    //Método que carga a los usuarios cercanos y sus coordenadas en base a la distancia
     private void cargarUsuariosCercanos() {
 
         for(int i=0;i<usuarios.length();i++){
@@ -483,16 +492,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 LatLng locVecino=new LatLng(latitud,longitud);
                 String idUsuario=infoUsuario.getString("id");
                 String nombre=infoUsuario.getString("nombre");
+                //Si el usuario no es el loggeado
                 if (!idUsuario.equals(id)){
                     double distancia=calcularDistancia(locVecino,coordenadasActuales);
                     Log.i("MYAPP","Distancia a: "+infoUsuario.getString("id")+" "+distancia);
-
+                    //Se comprueba si la distancia establecida es menor a la del usuario cercano y a la del logeado
                     if (distancia<distanciaMax && distancia<distanciaMaxVecino){
                         generarMarcador(idUsuario,nombre,locVecino);
-//                        Marker marker=miMapa.addMarker(new MarkerOptions()
-//                                .position(locVecino)
-//                                .title(nombre));
-//                        marker.setTag(idUsuario);
                     }
                 }
 
@@ -505,7 +511,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void generarMarcador(String idUsuario, String nombre, LatLng locVecino) {
-        //Metodo que carga la imagen de Firebase Storage
+        //Metodo que carga la imagen de Firebase Storage y crea un marcador con ella
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference pathReference = storageRef.child("images/" + idUsuario + ".jpg");
@@ -519,7 +525,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .into(new CustomTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-
+                                //Cambia el tamaño de la imagen al del icono del mapa y lo muestra
                                 Bitmap resized = Bitmap.createScaledBitmap(resource, 150, 150, true);
 
                                 Marker marker=miMapa.addMarker(new MarkerOptions()
@@ -539,7 +545,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-
+    //Método que calcula la distancia entre dos coordenadas
     private double calcularDistancia(LatLng loc1,LatLng loc2) {
         int Radius = 6371;// radio de la tierra en  kilómetros
         double lat1 = loc2.latitude;
@@ -566,7 +572,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    private void cargarCoordenadasUsuarios() {
+    public void cargarCoordenadasUsuarios() {
+        //Carga las coordenadas de los usuarios de la BD que tengan la sesión iniciada
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=" + "obtenerCoordenadasUsuarios")
@@ -594,12 +601,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(getApplication()).enqueueUniqueWork("cargarCoordenadas", ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 
     private void actualizarImagen(String idUsuario) {
-        //Metodo que carga la imagen de Firebase Storage
+        //Metodo que carga la imagen de Firebase Storage, para actualizar la almacenada en la BD local
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference pathReference = storageRef.child("images/" + idUsuario + ".jpg");
@@ -635,7 +641,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void actualizarPerfil(String idUsuario) {
-
+        //Método que obtiene los datos de un usuario para actualizar la BD local
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=datosUsuario&id=" + idUsuario)
@@ -680,6 +686,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void actualizarPerfiles(){
+        //Método que busca en la BD remota los perfiles de los usuarios y actualiza la info de la BD local
         BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
         SQLiteDatabase bd = gestorDB.getWritableDatabase();
 
@@ -698,7 +705,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void actualizar(String funcion, String campo) {
-
+        //Método para actualizar el campo indicado en la BD
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=" + funcion + "&id=" + id + "&" + campo)
@@ -723,7 +730,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(MainActivity.this).enqueueUniqueWork("actualizar" + funcion, ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 }

@@ -393,6 +393,8 @@ public class PerfilFragment extends Fragment {
                 //Al modificar la distancia se centra el mapa en base a la distancia indicada y se actualiza la distancia en la BD
                 textoBarraDistancia.setText(String.valueOf(progress)+"Km");
                 preferencias.edit().putInt("distancia",progress).apply();
+                ((MainActivity)getActivity()).cargarCoordenadasUsuarios();
+
                 ((MainActivity)getActivity()).centrar();
                 actualizar("editarDistancia","distancia="+progress);
 

@@ -43,21 +43,17 @@ import java.io.ByteArrayOutputStream;
 
 public class InfoUserActivity extends AppCompatActivity {
     private String idUser;
-
     private String genero;
     private String edad;
     private String descripcion;
     private String nombre;
     private String intereses;
     private String id_FCM;
-
     private TextView viewGenero;
     private TextView viewNombreEdad;
     private TextView viewDescripcion;
     private TextView viewIntereses;
-
     private ImageView imagen;
-
     private Button botonVolver;
     private Button botonEnviarMensaje;
     Boolean chat;
@@ -77,7 +73,6 @@ public class InfoUserActivity extends AppCompatActivity {
         }
 
         //Se cargan los elementos del layout
-
         viewGenero=findViewById(R.id.textViewGenero);
         viewNombreEdad=findViewById(R.id.textViewNombreEdad);
         viewDescripcion=findViewById(R.id.textViewDescripcion);
@@ -88,10 +83,12 @@ public class InfoUserActivity extends AppCompatActivity {
 
         imagen=findViewById(R.id.imageView3);
 
+        //Se llama a los métodos para que obtengan todos los datos del usuarioq que se muestra
         cargarPerfil();
         cargarIntereses();
         cargarImagen();
 
+        //Al volver, si el perfil se ha abierto desde el mapa se fuerza la recarga de este para que incluya posibles actualizaciones
         botonVolver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +106,7 @@ public class InfoUserActivity extends AppCompatActivity {
             }
         });
 
+        //Al pulsa sobre el botón enviar mensaje se abre una actividad de chat con el usuario
         botonEnviarMensaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +125,7 @@ public class InfoUserActivity extends AppCompatActivity {
 
                 i.putExtra("imagen", imageInByte);
 
+                //Se almacena el usuario en la BD local
                 BDLocal gestorDB = new BDLocal (InfoUserActivity.this, "DAS", null, 1);
                 SQLiteDatabase bd = gestorDB.getWritableDatabase();
 
@@ -150,7 +149,7 @@ public class InfoUserActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        //Método que detecta el scroll y hace que la imagen se oscurezca
         ScrollView scroll = findViewById(R.id.scroll);
         scroll.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
@@ -163,13 +162,14 @@ public class InfoUserActivity extends AppCompatActivity {
         });
 
     }
+
+
     private void cargarIntereses() {
+        //Método que carga los intereses del usuario
         Data datos = new Data.Builder()
                     .putString("fichero", "DAS_users.php")
                     .putString("parametros", "funcion=obtenerInteresesUsuario&id=" + idUser)
                     .build();
-
-
 
         OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("getDatosIntereses"+idUser).build();
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
@@ -208,9 +208,9 @@ public class InfoUserActivity extends AppCompatActivity {
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(this).enqueueUniqueWork("getDatosIntereses"+idUser, ExistingWorkPolicy.REPLACE, requesContrasena);
     }
+    //Método que carga la imagen del usuario desde Firebase
     private void cargarImagen() {
         //Metodo que carga la imagen de Firebase Storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -225,7 +225,7 @@ public class InfoUserActivity extends AppCompatActivity {
     }
 
     private void cargarPerfil() {
-
+        //Método que obtiene los datos del usuario de la BD remota
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=datosUsuario&id=" + idUser)
@@ -267,12 +267,12 @@ public class InfoUserActivity extends AppCompatActivity {
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(this).enqueueUniqueWork("getDatosUsuario"+idUser, ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 
     @Override
     public void onBackPressed() {
+        //Al pulsar atrás en el teléfono se fuerza la recarga de la activity main para que incluya los posibles cambios
         super.onBackPressed();
         if(!chat){
             Intent i=new Intent(InfoUserActivity.this, MainActivity.class);
