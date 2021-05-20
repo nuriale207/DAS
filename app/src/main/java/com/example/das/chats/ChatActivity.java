@@ -68,24 +68,27 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
+        //Se obtienen las views
         Bundle extras = getIntent().getExtras();
         imagenOtroChat = findViewById(R.id.imagenOtroChat);
         nombreOtroChat = findViewById(R.id.nombreOtroChat);
         layoutPerfil=findViewById(R.id.linearLayout3);
 
+        //Se obtiene el id de las preferencias
         SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
         miId = preferencias.getString("id", "null");
 
+        //Se obtiene de los extras la información del otro usuario para mostrarla
         if (extras != null) {
             idOtro = extras.getString("id");
-
             nombreOtro = extras.getString("nombre");
+            //Si no se tiene el nombre del otro usuario se añade a la BD local
             if(nombreOtro==null){
                 String mensaje = extras.getString("mensaje");
                 anadirUsuarioABDLocal(idOtro,mensaje);
             }
             else{
+                //Se obtienen el token e imagen del otro usuario de los extras y se añade el adaptador con los mensajes
                 tokenOtro = extras.getString("token");
                 imagenOtro = extras.getByteArray("imagen");
                 //https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
@@ -102,7 +105,7 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         }
-
+        //Al hacer click sobre el botón juego se abre la pantalla de juego
         ImageView botonJuego = findViewById(R.id.botonJuego);
         botonJuego.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +123,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        //Al hacer click sobre enviar mensaje se llama al método enviarMensaje()
         ImageButton enviarMensaje = findViewById(R.id.botonEnviarMensaje);
         enviarMensaje.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +131,7 @@ public class ChatActivity extends AppCompatActivity {
                 enviarMensaje();
             }
         });
-
+        //Al clickar sobre el nombre del otro usuario se abre una actividad con su información
         nombreOtroChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,6 +142,7 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+        //Se establece un handler que analiza cada 2 segundos si hay un nuevo mensaje en el chat
         handler = new Handler();
         Runnable actualizadorChat = new Runnable() {
             @Override
@@ -168,7 +173,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-
+    //Método que añade el usuario a la BD local del servidor
     private void anadirUsuarioABDLocal2(String id_remitente,String mensaje) {
 
         Data datos = new Data.Builder()
@@ -215,19 +220,6 @@ public class ChatActivity extends AppCompatActivity {
                                 ListView lista=findViewById(R.id.mensajes);
 
                                 actualizarListaMensajes();
-                              /*  adaptador = new AdaptadorMensajes((Activity) getBaseContext(), mensajes,mios);
-                                lista.setAdapter(adaptador);
-
-                                lista.setSelection(adaptador.getCount() - 1);
-
-                                actualizarListaMensajes();*/
-
-
-
-                                //https://stackoverflow.com/questions/13854742/byte-array-of-image-into-imageview
-//                                Bitmap bmp = BitmapFactory.decodeByteArray(imagenOtro, 0, imagenOtro.length);
-//                                imagenOtroChat.setImageBitmap(Bitmap.createScaledBitmap(bmp, 150, 150, false));
-
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -237,11 +229,11 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(this).enqueueUniqueWork("getDatosUsuario"+id_remitente, ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 
     //https://stackoverflow.com/questions/5446565/android-how-do-i-check-if-activity-is-running
+    //mëtodos que analizan los flags utilizados por Firebase para determinar si el chat está abierto y con que usuario
     @Override
     public void onStart() {
         super.onStart();
@@ -256,42 +248,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-//    private void enviarMensaje() {
-//        EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
-//        mensajes.add(mensajeEscrito.getText().toString());
-//        mios.add(true);
-//        adaptador.notifyDataSetChanged();
-//        SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
-//
-//        String nombreEmisor = preferencias.getString("nombre", "null");
-//        String idRemitente=preferencias.getString("id", "null");
-//        final String[] tokenRemitente = {""};
-//
-//        FirebaseMessaging.getInstance().getToken()
-//                .addOnCompleteListener(new OnCompleteListener<String>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<String> task) {
-//                        if (!task.isSuccessful()) {
-//                            Log.i("MYAPP", "Fetching FCM registration token failed", task.getException());
-//                            return;
-//                        }
-//
-//                        // Get new FCM registration token
-//                        tokenRemitente[0] = task.getResult();
-//
-//                       }
-//                });
-//
-//        //String miId = "0"; //RELLENAR ESTO CON MI ID, QUE ESTARÁ EN ALGUN SITIO (PREFERENCIAS, BD LOCAL...)
-//
-//        BDLocal gestorDB = new BDLocal (this, "DAS", null, 1);
-//        gestorDB.guardarMensaje(idOtro,mensajeEscrito.getText().toString(), 1);
-//        //Firebase.enviarMensajeFCM(this,mensajeEscrito.getText().toString(),tokenOtro,miId);
-//        Firebase.enviarMensajeFCM(this,nombreEmisor,mensajeEscrito.getText().toString(),idRemitente,tokenRemitente[0],tokenOtro);
-//        mensajeEscrito.setText("");
-//        ListView lista=findViewById(R.id.mensajes);
-//        lista.setSelection(adaptador.getCount() - 1);
-//    }
+    //Método que se cominica con Firebase para enviar el mensaje y lo almacena en la BD local
     private void enviarMensaje() {
         EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
         String texto=mensajeEscrito.getText().toString();
@@ -316,6 +273,10 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
+
+
+
+    //Obtiene los mensajes del chat de la BD local
     public void obtenerMensajesChat(){
         mensajes = new ArrayList<>();
         mios = new ArrayList<>();
@@ -349,6 +310,7 @@ public class ChatActivity extends AppCompatActivity {
         finish();
     }
 
+    //Actualiza la lista de mensajes para mostrar el nuevo mensaje
     public void actualizarListaMensajes(){
         obtenerMensajesChat();
         ListView lista=findViewById(R.id.mensajes);

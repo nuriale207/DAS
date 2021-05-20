@@ -35,12 +35,14 @@ public class ChatsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         rellenarListas();
-
+        //Se inicializan la lista y adaptador de la lista de chats
         ListView lista=getView().findViewById(R.id.listaChats);
         adaptador = new AdaptadorChats(getActivity(), ids,nombres,tokens, imagenes);
         lista.setAdapter(adaptador);
+        //Se informa a GestorChats cuál es el adaptador de la lista
         GestorChats.getGestorListas().asignarAdaptadorChats(adaptador);
         handler = new Handler();
+        //Si hay un chat nuevo se actualiza la lista de chats
         Runnable actualizadorChat = new Runnable() {
             @Override
             public void run() {
@@ -53,6 +55,7 @@ public class ChatsFragment extends Fragment {
         handler.postDelayed(actualizadorChat, 2000);
     }
 
+    //Método que actualiza la información de la lista de chats
     public void actualizarListaChats(){
         rellenarListas();
         ListView lista=getView().findViewById(R.id.listaChats);
@@ -62,6 +65,7 @@ public class ChatsFragment extends Fragment {
     }
 
     //https://stackoverflow.com/questions/5446565/android-how-do-i-check-if-activity-is-running
+    //Métodos que actualizan los flags empleados por firebase para ver si el fragmento de chats está activo
     @Override
     public void onStart() {
         super.onStart();
@@ -79,7 +83,7 @@ public class ChatsFragment extends Fragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_chats, container, false);
     }
-
+    //Rellena la lista con la información de los usuarios almacenados en la BD local
     public void rellenarListas(){
         BDLocal gestorDB = new BDLocal (getContext(), "DAS", null, 1);
         SQLiteDatabase bd = gestorDB.getWritableDatabase();

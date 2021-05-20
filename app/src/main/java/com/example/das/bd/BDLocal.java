@@ -14,7 +14,7 @@ public class BDLocal extends SQLiteOpenHelper {
                    @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
-
+    //En la BD local se almacenan tanto los usuarios con los que se tienen conversaciones como los mensajes
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE Mensajes (" +
@@ -32,7 +32,7 @@ public class BDLocal extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
-
+    //Método que almacena los nuevos mensajes en la BD de datos
     public void guardarMensaje(String idUsuario, String mensaje, int mio){
         ContentValues valores = new ContentValues();
         valores.put("IdUsuario", idUsuario);

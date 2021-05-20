@@ -32,7 +32,7 @@ public class AdaptadorChats extends ArrayAdapter {
         this.imagenes = imagenes;
     }
 
-
+    //Adaptador con la información de los chats
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         View fila=view;
