@@ -176,7 +176,7 @@ public class Firebase extends FirebaseMessagingService {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(imagenRemitente, 0, imagenRemitente.length);
                 PendingIntent intentEnNot = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
                 elManager.createNotificationChannel(elCanal);
-                elBuilder.setSmallIcon(R.drawable.logo_das)
+                elBuilder.setSmallIcon(R.drawable.logo_nuevo_das)
                         .setContentTitle(nombreRemitente)
                         .setLargeIcon(bitmap)
                         .setContentText(mensaje)
@@ -538,7 +538,7 @@ private void anadirUsuarioABDLocal(String id_remitente,String mensaje,byte[] ima
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             PendingIntent intentEnNot = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
             elManager.createNotificationChannel(elCanal);
-            elBuilder.setSmallIcon(R.drawable.logo_das)
+            elBuilder.setSmallIcon(R.drawable.logo_nuevo_das)
                     .setContentTitle(titulo)
                     .setContentText(messageBody)
                     .setSubText(titulo)
