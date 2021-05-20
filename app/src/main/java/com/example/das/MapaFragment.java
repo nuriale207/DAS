@@ -100,7 +100,7 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
 
                             //Se le pone el estilo al mapa para que parezca Marte
                             //Web para mapas editados: https://mapstyle.withgoogle.com/
-                            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(MapaFragment.this.getContext(), R.raw.estilo_mapa));
+                            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(MapaFragment.this.getContext(), R.raw.estilo_mapa_nuevo));
 
                             //Se le asignan varios listeners para decidir si la cámara tiene que seguir al jugador o no, de modo que
                             //cuando se pulsa el botón para centrar la cámara siga al jugador, pero tras interactuar con el mapa, deje de seguir al jugador.

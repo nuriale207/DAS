@@ -357,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             coordenadasActuales=nuevascoordenadas;
                             //Se le pone el estilo al mapa para que sea blanco
                             //Web para mapas editados: https://mapstyle.withgoogle.com/
-                            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.this, R.raw.estilo_mapa));
+                            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(MainActivity.this, R.raw.estilo_mapa_nuevo));
 
                             //Se crea un círculo con la distancia actual o 20km por defecto
                             Circle circle= googleMap.addCircle(new CircleOptions()
