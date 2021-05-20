@@ -6,7 +6,7 @@ import android.media.MediaPlayer;
 public class ReproductorSonido {
 
     private static ReproductorSonido reproductorSonido;
-    private Boolean reproducirCancioncilla;
+    private Boolean reproducirCancioncilla = false;
 
     private ReproductorSonido(){
     }
