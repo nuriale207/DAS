@@ -224,7 +224,7 @@ public class JuegoActivity extends AppCompatActivity {
             SQLiteDatabase bd = gestorDB.getWritableDatabase();
             String[] campos = new String[]{"Mensaje"};
             String[] argumentos = new String[]{idOtro};
-            Cursor cu = bd.query("Mensajes", campos, "Id=?", argumentos, null, null, null);
+            Cursor cu = bd.query("Mensajes", campos, "IdUsuario=?", argumentos, null, null, null);
             if (cu.getCount() == 0) {
                 hayMensajes=false;
 
