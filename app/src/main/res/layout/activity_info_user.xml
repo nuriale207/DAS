@@ -103,7 +103,7 @@
             <TextView
                 android:id="@+id/textViewNombreEdad"
                 android:layout_width="match_parent"
-                android:layout_height="34dp"
+                android:layout_height="wrap_content"
                 android:fontFamily="@font/shrikhand"
                 android:textAlignment="viewStart"
                 android:textColor="#FFFFFF"
@@ -129,7 +129,7 @@
             <TextView
                 android:id="@+id/textViewGenero"
                 android:layout_width="match_parent"
-                android:layout_height="43dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:clickable="false"
@@ -169,7 +169,7 @@
             <TextView
                 android:id="@+id/textViewDescripcion"
                 android:layout_width="match_parent"
-                android:layout_height="43dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:clickable="false"
@@ -210,7 +210,7 @@
             <TextView
                 android:id="@+id/textViewIntereses"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:ems="10"
