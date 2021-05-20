@@ -65,12 +65,13 @@ public class LoginActivity extends AppCompatActivity {
         inputEmail = findViewById(R.id.nombreUsuarioEdit);
         inputPassword = findViewById(R.id.contraseñaEdit);
 
-        
+
         //En caso de haber girado la pantalla se añaden los valores escritos previamente
         if(savedInstanceState!=null){
             inputEmail.setText(savedInstanceState.getString("email"));
             inputPassword.setText(savedInstanceState.getString("contraseña"));
         }
+
         //Obtener la instancia de autenticación de Firebase
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -79,10 +80,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
-               //Se comprueba si el usuario existe, en caso de que exista se inicia sesión
 
-
-                //Si no existe un usuario se crea
+                //Se intenta crear un usuario con el email y contraseña dados
                 firebaseAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -99,9 +98,9 @@ public class LoginActivity extends AppCompatActivity {
                                                             // Inicio de sesión correcto
                                                             Log.i("MY", "signInWithEmail:success");
                                                             FirebaseUser user =  firebaseAuth.getCurrentUser();
+                                                            //Se llama al método login usuario que comprueba en la BD que el usuario exista
                                                             loginUsuario(user.getUid());
                                                             Log.i("MY", "firebase: "+user.getUid(), task.getException());
-
 
 
                                                         } else {
@@ -115,12 +114,13 @@ public class LoginActivity extends AppCompatActivity {
 
                                     }
                                     else{
+                                        //Si el error al crear el usuario no está ocasionado porque ya exista se muestra un mensaje de error
                                         Toast.makeText(LoginActivity.this, "Ha habido un error al iniciar sesión." + task.getException().getMessage(),
                                                 Toast.LENGTH_SHORT).show();
 
                                     }
                                 } else {
-                                    //Se crea un usuario nuevo
+                                    //Si no existe se crea un usuario nuevo
                                     FirebaseUser user =  firebaseAuth.getCurrentUser();
                                     loginUsuario(user.getUid());
                                     Log.i("MY", "firebase: "+user.getUid(), task.getException());
@@ -162,6 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("MYAPP", "signInWithCredential:success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             String userID=user.getUid();
+                            //Se comprueba si el usuario ya existía
                             loginUsuarioGoogle(userID);
                             //updateUI(user);
                         } else {
@@ -187,8 +188,6 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i("MY", "firebaseAuthWithGoogle:" + account.getId()+ "  :"+account.getIdToken());
                 firebaseAuthWithGoogle(account.getIdToken());
 
-
-
                 //En caso de error se muestra el error
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
@@ -198,7 +197,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void loginUsuario(String id){
-
+        //Método que comprueba en la BD de la app si el usuario ya está registrado
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=datosUsuario&id=" +id)
@@ -210,24 +209,20 @@ public class LoginActivity extends AppCompatActivity {
                     public void onChanged(WorkInfo workInfo) {
                         if (workInfo != null && workInfo.getState().isFinished()) {
                             String resultado = workInfo.getOutputData().getString("resultado");
-                            Log.i("MYAPP", "inicio realizado");
-
-                            Log.i("MYAPP", resultado);
-
 
                             JSONObject jsonObject = null;
                             try {
                                 jsonObject = new JSONObject(resultado);
                                 String nombre = jsonObject.getString("nombre");
+                                //Si no se ha dado de alta todavía se muestra el diálogo para repetir la contraseña
                                 if (nombre.equals("null")){
                                     crearDialog(id);
                                 }
                                 else{
+                                    //Si ya se ha dado de alta se añade el id a las preferencias y se actualiza el token FCM por si se ha modificado
                                     SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                                     preferencias.edit().putString("id",id).apply();
                                     actualizarTokenFCM(id);
-
-
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -238,7 +233,6 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario"+id, ExistingWorkPolicy.REPLACE, requesContrasena);
 
 
@@ -246,6 +240,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void loginUsuarioGoogle(String id){
+        //Comprueba si un usuario de Google ha iniciado sesión
         Log.i("MYAPP","Obteniendo info de: "+id);
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
@@ -258,15 +253,12 @@ public class LoginActivity extends AppCompatActivity {
                     public void onChanged(WorkInfo workInfo) {
                         if (workInfo != null && workInfo.getState().isFinished()) {
                             String resultado = workInfo.getOutputData().getString("resultado");
-                            Log.i("MYAPP", "inicio realizado");
-
-                            Log.i("MYAPP", resultado);
-
 
                             JSONObject jsonObject = null;
                             try {
                                 jsonObject = new JSONObject(resultado);
                                 String nombre = jsonObject.getString("nombre");
+                                //Si el usuario no está registrado se abre la actividad de registro
                                 if (nombre.equals("null")){
                                     Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
                                     intent.putExtra("id",id);
@@ -274,22 +266,17 @@ public class LoginActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 }
                                 else{
+                                    //Si estaba registrado se actualiza su token y se añade a las preferencias
                                     SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                                     preferencias.edit().putString("id",id).apply();
                                     actualizarTokenFCM(id);
-
-
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
-
-
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario"+id, ExistingWorkPolicy.REPLACE, requesContrasena);
 
 
@@ -299,6 +286,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void crearDialog(String id) {
+        //Crea un dialogo con un edit text para repetir la contraseña
         EditText editTextField = new EditText(this);
         editTextField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
@@ -310,7 +298,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String editTextInput = editTextField.getText().toString();
-
+                        //Si las contraseñas coinciden se abre la actividad de registro
                         if (editTextInput.equals(inputPassword.getText().toString())){
                             Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
                             intent.putExtra("id",id);
@@ -318,6 +306,7 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                         else{
+                            //Si las contraseñas no coinciden se muestra un mensaje
                             Toast toast = Toast.makeText(getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                             toast.show();
@@ -358,7 +347,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void actualizarTokenFCM(String id,String token) {
-
+        //Actualiza el token de los usuarios que han iniciado sesión
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=" + "editarToken" + "&id=" + id + "&" + "token="+token+"&sesion=1")
@@ -370,16 +359,15 @@ public class LoginActivity extends AppCompatActivity {
                     public void onChanged(WorkInfo workInfo) {
                         if (workInfo != null && workInfo.getState().isFinished()) {
                             String resultado = workInfo.getOutputData().getString("resultado");
-                            Log.i("MYAPP", "inicio realizado");
-
-                            Log.i("MYAPP", resultado);
 
 
+                            //En caso de error se muestra un mensaje
                             if (resultado.contains("error")) {
                                 Toast toast = Toast.makeText(getApplicationContext(), "Ha ocurrido un error interno", Toast.LENGTH_LONG);
                                 toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                                 toast.show();
                             } else {
+                                //En caso contrario se abre la actividad principal
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 finish();
                             }
@@ -387,7 +375,6 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(this).enqueueUniqueWork("actualizar" + token, ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 
