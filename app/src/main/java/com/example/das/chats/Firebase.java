@@ -78,39 +78,40 @@ public class Firebase extends FirebaseMessagingService {
         Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
         Log.i("DAS", "----------------------------------------------------------------------------------------------------------------------");
 
-
+        //Si el mensaje se obtiene desde un php se trata como un mensaje de la app
         if (remoteMessage.getNotification() == null) {
 
             String mensaje;
             String id_remitente;
             Log.i("MYAPP", "El mensaje es nulo");
-
             mensaje = remoteMessage.getData().get("mensaje");
             id_remitente = remoteMessage.getData().get("idRemitente");
 
+            //Se obtiene la información del usuario que ha mandado el mensaje
             obtenerInfoRemitente(id_remitente, mensaje);
 
             Log.i("FIREBASE", remoteMessage.getData().toString());
         } else {
-            //En caso contrario se puede obtener directamente la información
+            //En caso contrario se puede obtener directamente la información y se trata como una notificación desde la app de firebase
             String titulo = remoteMessage.getNotification().getTitle();
-
-
             String body = remoteMessage.getNotification().getBody();
             Log.i("FIREBASE", body);
-
+            //Se envia una notificación con la información
             sendNotification(titulo, body);
         }
 
     }
 
     private void obtenerInfoRemitente(String id_remitente, String mensaje) {
+        //Obtiene los datos del emisor de la BD local
         BDLocal gestorDB = new BDLocal(getBaseContext(), "DAS", null, 1);
         SQLiteDatabase bd = gestorDB.getWritableDatabase();
         String[] campos = new String[]{"Nombre", "Token", "Imagen"};
         String[] argumentos = new String[]{id_remitente};
         Cursor cu = bd.query("Usuarios", campos, "Id=?", argumentos, null, null, null);
+
         if (cu.getCount() != 0) {
+            //Si el usuario está en la BD local
             cu.moveToFirst();
             String nombre = cu.getString(0);
             String token = cu.getString(1);
@@ -119,16 +120,18 @@ public class Firebase extends FirebaseMessagingService {
             nombreRemitente = nombre;
             token_remitente = token;
             imagenRemitente = imagen;
+            //Si no es una notificación del tres en raya se guarda el mensaje
             if(!mensaje.contains(idTresRaya)){
                 gestorDB.guardarMensaje(id_remitente, mensaje, 0);
 
             }
-
+            //Se actualiza la lista de mensajes empleando el gestor
             GestorChats.getGestorListas().activarNuevoMensaje();
+            //Se llama al método que muestra las notificaciones de los mensajes
             recibirMensajeFCM(mensaje, id_remitente, nombreRemitente, token_remitente, imagenRemitente);
 
         } else {
-            //anadirUsuarioABDLocal(id_remitente,mensaje);
+            //Se obtiene de la BD del servidor la información del emisor del mensaje
             obtenerImagen(id_remitente,mensaje);
 
 
@@ -142,33 +145,42 @@ public class Firebase extends FirebaseMessagingService {
         //Muestro una notificación con los datos del mensaje y creo en ella un intent al chat
         boolean mostrarNotificacion = true;
         boolean mensajeJuego=false;
+        //Si el mensaje es del juego
         if(mensaje.contains(idTresRaya)){
             boolean juegoAbierto=false;
             mensajeJuego=true;
             juegoAbierto= JuegoActivity.running;
+            //Se comprueba si el juego está abierto
             if(juegoAbierto){
                 String idJuego=JuegoActivity.idChat;
+                //Si el juego con el remitente está abierto no se muestra la notificación
                 if(idJuego.equals(id_remitente)){
                     mostrarNotificacion=false;
 
                 }
             }
+            //Se quita el código del mensaje
             mensaje=mensaje.substring(idTresRaya.length());
         }
+        //Se comprueba si el chat está abierto
         boolean runningChat = ChatActivity.running;
         boolean runningChatsFragment= ChatsFragment.running;
+        //Si el chat está abierto y no es un mensaje de juego
         if (runningChat && !mensajeJuego) {
+            //Si el chat con el remitente está abierto, no se muestra notificación
             String idChat = ChatActivity.idChat;
             if (idChat.equals(id_remitente)) {
                 mostrarNotificacion = false;
             }
 
         }
+        //Si se está en el chat fragment este se actualiza con el nuevo chat
         if(runningChatsFragment){
             GestorChats.getGestorListas().activarNuevoChat();
 
         }
         if (mostrarNotificacion) {
+            //Si se tiene que mostrar una notificación, se muestra una notificavión con un intent al chat con el remitente
             NotificationManager elManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(getApplicationContext(), "IdCanal");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -197,6 +209,7 @@ public class Firebase extends FirebaseMessagingService {
     }
 
     private void obtenerImagen(String id_remitente,String mensaje) {
+        //Se crea un hilo para obtener de Firebase la imagen del remitente
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         AsyncTask.execute(new Runnable() {
@@ -233,6 +246,7 @@ public class Firebase extends FirebaseMessagingService {
 
 //
 private void anadirUsuarioABDLocal(String id_remitente,String mensaje,byte[] imageInByte) {
+        //Se obtienen los datos del usuario de la BD externa y se almacenan en la BD local
     new Thread(new Runnable() {
         @Override
         public void run() {
@@ -355,10 +369,12 @@ private void anadirUsuarioABDLocal(String id_remitente,String mensaje,byte[] ima
 
     //https://stackoverflow.com/questions/37787373/firebase-fcm-how-to-get-token
     public static String getToken(Context context) {
+        //Obtiene el token del usuario loggeado en la app
         return context.getSharedPreferences("_", MODE_PRIVATE).getString("fb", "empty");
     }
 
     public static void enviarMensajeFCM(Context context, String mensaje, String idFCMDestinatario, String idAppRemitente) {
+        //Método que se comunica con el php para enviar el mensaje al otro usuario
         new Thread(new Runnable() {
             @Override
             public void run() {
