@@ -81,8 +81,13 @@ public class InteresesActivity extends AppCompatActivity {
                 builder.setMultiChoiceItems(opciones, null, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-                        seleccion.add(i);
-                    }
+                        if(!seleccion.contains(i)){
+                            seleccion.add(i);
+
+                        }
+                        else {
+                            seleccion.remove((Integer)i);
+                        }                    }
                 });
                 builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
 
@@ -99,6 +104,7 @@ public class InteresesActivity extends AppCompatActivity {
 
                         }
                         intereses.setText(texto);
+
                         dialog.cancel();
                     }
 
