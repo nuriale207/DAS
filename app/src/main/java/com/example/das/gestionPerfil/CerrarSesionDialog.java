@@ -28,10 +28,7 @@ import com.example.das.registroLogin.LoginActivity;
 
 public class CerrarSesionDialog extends DialogFragment {
     //Diálogo que pregunta al usuario si realmente quiere cerrar sesión
-//    public interface ListenerdelDialogoIniciarSesion {
-//        void alpulsarCerrarSesion();
-//
-//    }
+
     private String id;
     @NonNull
     @Override
@@ -44,6 +41,7 @@ public class CerrarSesionDialog extends DialogFragment {
         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                //Al hacer click en aceptar se elimina la información del usuario actual de las preferencias
                 SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 id=preferencias.getString("id","0");
                 SharedPreferences.Editor editor = preferencias.edit();
@@ -56,6 +54,8 @@ public class CerrarSesionDialog extends DialogFragment {
                 editor.remove("intereses");
                 editor.remove("distancia");
 
+
+                //Se resetea la BD local
                 BDLocal gestorDB = new BDLocal (getActivity(), "DAS", null, 1);
                 SQLiteDatabase bd = gestorDB.getWritableDatabase();
 
@@ -65,6 +65,7 @@ public class CerrarSesionDialog extends DialogFragment {
                 bd.execSQL("delete from Mensajes");
 
                 editor.apply();
+                //Se elimina el token FCM de la bd remota y además se indica con un 0 en la sesión que el usuario ha cerrado sesión
                 eliminarTokenFCM();
                 Intent i=new Intent(getActivity(), LoginActivity.class);
                 getActivity().finish();
@@ -89,7 +90,7 @@ public class CerrarSesionDialog extends DialogFragment {
         return dialog;
     }
     private void eliminarTokenFCM() {
-
+        //Se  comunica con la bd para indicar que se ha cerrado sesión y vaciar el token FCM
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=" + "editarToken" + "&id=" + id + "&" + "token="+"logged out&sesion=0")
@@ -120,7 +121,6 @@ public class CerrarSesionDialog extends DialogFragment {
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(getActivity()).enqueueUniqueWork("eliminarToken" + id, ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 

@@ -40,7 +40,6 @@ public class InteresesActivity extends AppCompatActivity {
     private Button botonSaltar;
     private FirebaseAuth firebaseAuth;
     private String id;
-
     private ArrayList<String> listaSeleccionIntereses;
     private ArrayList<String> listaIntereses = new ArrayList<String>();
 
@@ -71,7 +70,6 @@ public class InteresesActivity extends AppCompatActivity {
                  * Código obtenido de:https://stackoverflow.com/questions/16389581/android-create-a-popup-that-has-multiple-selection-options
                  * Usuario: https://stackoverflow.com/users/1274911/zbr
                  */
-                //String[] opciones = {"Hombre", "Mujer", "No binario"};
                 listaSeleccionIntereses = new ArrayList<String>();
                 intereses.setText("");
 
@@ -83,6 +81,7 @@ public class InteresesActivity extends AppCompatActivity {
                 builder.setMultiChoiceItems(opciones, null, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                        //Se mira si es selección o deselección del interés
                         if(!seleccion.contains(i)){
                             seleccion.add(i);
 
@@ -95,6 +94,7 @@ public class InteresesActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        //Al aceptar se escriben en el campo intereses los intereses seleccionados
                         listaSeleccionIntereses = new ArrayList<String>();
                         String texto = "";
                         for (int i = 0; i < seleccion.size(); i++) {
@@ -155,6 +155,7 @@ public class InteresesActivity extends AppCompatActivity {
     }
 
     private void guardarDescripcion() {
+        //Método que almacena la descripción en la BD
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=anadirDescripcion&id=" + id + "&descripcion=" + descripcion.getText().toString())
@@ -187,13 +188,13 @@ public class InteresesActivity extends AppCompatActivity {
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("guardarDescripcion", ExistingWorkPolicy.REPLACE, requesContrasena);
 
 
     }
 
     private void guardarIntereses() {
+        //Método que almacena los intereses en la BD
         String intereses = "";
         for (int i = 0; i < listaSeleccionIntereses.size(); i++) {
             intereses = intereses + listaSeleccionIntereses.get(i) + "#";
@@ -213,7 +214,6 @@ public class InteresesActivity extends AppCompatActivity {
                         if (workInfo != null && workInfo.getState().isFinished()) {
                             String resultado = workInfo.getOutputData().getString("resultado");
                             Log.i("MYAPP", "inicio realizado");
-
                             Log.i("MYAPP", resultado);
                             Log.i("MYAPP", resultado);
                             JSONArray jsonArray = null;
@@ -222,8 +222,6 @@ public class InteresesActivity extends AppCompatActivity {
                                 for (int x = 0; x < jsonArray.length(); x++) {
                                     JSONObject elemento = jsonArray.getJSONObject(x);
                                     Log.i("MYAPP", String.valueOf(elemento));
-
-
                                     listaIntereses.add(elemento.getString("nombre"));
                                 }
                             } catch (JSONException e) {
@@ -234,11 +232,11 @@ public class InteresesActivity extends AppCompatActivity {
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("guardarIntereses", ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 
     private void obtenerIntereses() {
+        //Método que obtiene todos los posibles intereses de la BD
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=obtenerIntereses")
@@ -251,7 +249,6 @@ public class InteresesActivity extends AppCompatActivity {
                         if (workInfo != null && workInfo.getState().isFinished()) {
                             String resultado = workInfo.getOutputData().getString("resultado");
                             Log.i("MYAPP", "inicio realizado");
-
                             Log.i("MYAPP", resultado);
                             Log.i("MYAPP", resultado);
                             JSONArray jsonArray = null;
@@ -272,7 +269,6 @@ public class InteresesActivity extends AppCompatActivity {
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("obtenerIntereses", ExistingWorkPolicy.REPLACE, requesContrasena);
 
 

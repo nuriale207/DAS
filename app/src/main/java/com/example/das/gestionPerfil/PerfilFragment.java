@@ -90,7 +90,6 @@ public class PerfilFragment extends Fragment {
     private EditText editEdad;
     private EditText editUbicacion;
 
-
     private Button cambiarNombre;
     private Button cambiarGenero;
     private Button cambiarEdad;
@@ -117,13 +116,12 @@ public class PerfilFragment extends Fragment {
 
 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        //al crear la actividad se carga la lista de ranking
+        //al crear la actividad se carga la lista de elementos
         super.onActivityCreated(savedInstanceState);
         editNombre = getView().findViewById(R.id.editTextNombre);
         editGenero = getView().findViewById(R.id.editTextGenero);
         editEdad = getView().findViewById(R.id.editTextEdad);
         editUbicacion = getView().findViewById(R.id.editTextUbicacion);
-
         cambiarNombre = getView().findViewById(R.id.button);
         cambiarEdad = getView().findViewById(R.id.button2);
         cambiarGenero = getView().findViewById(R.id.button3);
@@ -138,7 +136,7 @@ public class PerfilFragment extends Fragment {
         SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         id = preferencias.getString("id", null);
         String nombre = preferencias.getString("nombre", "null");
-
+        //En caso de que la información del usuario loggeado no se encuentre en las preferencias se carga
         if (nombre.equals("null")) {
             cargarPerfil();
             obtenerIntereses(true);
@@ -146,6 +144,7 @@ public class PerfilFragment extends Fragment {
             distancia=preferencias.getInt("distancia",20);
 
         } else {
+            //Si la información ya estaba en las preferencias, se muestra
             editNombre.setText(preferencias.getString("nombre", ""));
             editEdad.setText(preferencias.getString("edad", ""));
             editGenero.setText(preferencias.getString("genero", ""));
@@ -156,7 +155,7 @@ public class PerfilFragment extends Fragment {
             cargarImagen();
 
         }
-
+        //Al clickar en cambiar edad se muestra el date picker dialog
         cambiarEdad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,6 +164,7 @@ public class PerfilFragment extends Fragment {
             }
         });
 
+        //Al clickar en cambiar género se abre un dialog para seleccionar el género
         cambiarGenero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,13 +173,11 @@ public class PerfilFragment extends Fragment {
                  * Usuario: https://stackoverflow.com/users/1274911/zbr
                  */
                 String[] opciones = {"Hombre", "Mujer", "No binario"};
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 builder.setTitle("Género");
                 builder.setItems(opciones, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // the user clicked on colors[which]
                         actualizar("editarGenero", "genero=" + opciones[which]);
 
                     }
@@ -188,15 +186,14 @@ public class PerfilFragment extends Fragment {
             }
 
         });
-
+        //Al clickar en cambiar ubicación se obtiene la nueva ubicación
         cambiarUbicacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 obtenerUbicacion();
-
-
             }
         });
+        //Al clickar en cambiar nombre se abre un dialog con un editText que permite modificarlo
         cambiarNombre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -211,13 +208,15 @@ public class PerfilFragment extends Fragment {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 String editTextInput = editTextField.getText().toString();
                                 Log.d("onclick", "editext value is: " + editTextInput);
+                                //Se comprueba si el nombre es válido, si lo es se actualiza
                                 if(editTextInput.length()<2){
                                     Toast toast = Toast.makeText(getActivity(), "El nombre debe tener al menos dos caracteres", Toast.LENGTH_SHORT);
                                     toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
                                     toast.show();
-
                                 }
-                                actualizar("editarNombre", "nombre=" + editTextInput);
+                                else {
+                                    actualizar("editarNombre", "nombre=" + editTextInput);
+                                }
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -231,6 +230,7 @@ public class PerfilFragment extends Fragment {
             }
 
         });
+        //Se muestra un dialog con la descripción que permite editarla
         verDescripcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -282,13 +282,9 @@ public class PerfilFragment extends Fragment {
                     @Override
                     public void onClick(View v)
                     {
+                        //Al pulsar sobre editar se permite editar el editText
                         dialog.setMessage("Escribe una nueva descripción");
                         editTextField.setEnabled(true);
-//                        Boolean wantToCloseDialog = false;
-//                        //Do stuff, possibly set wantToCloseDialog to true then...
-//                        if(wantToCloseDialog)
-//                            dialog.dismiss();
-//                        //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
                     }
                 });
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
@@ -296,6 +292,7 @@ public class PerfilFragment extends Fragment {
                     @Override
                     public void onClick(View v)
                     {
+                        //Al hacer click en aceptar si el contenido del campo es correcto se añade la descripción
                         String editTextInput = editTextField.getText().toString();
                         Log.d("onclick", "editext value is: " + editTextInput);
                         if(editTextInput.length()>280){
@@ -314,7 +311,7 @@ public class PerfilFragment extends Fragment {
 
             }
         });
-
+        //Al clickar en ver intereses se muestra un dialog con una lista que contiene los intereses seleccionados
         verIntereses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -343,20 +340,17 @@ public class PerfilFragment extends Fragment {
                     }
                 });
                 builder.setNeutralButton("Editar", new DialogInterface.OnClickListener() {
+                    //Al hacer click en editar se obtienen los intereses posibles y se abre un dialog de selección
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         obtenerIntereses(false);
-
-                        //editTextField.setEnabled(true);
-//                                String editTextInput = editTextField.getText().toString();
-//                                Log.d("onclick", "editext value is: " + editTextInput);
-
                     }
                 });
                 builder.show();
 
             }
         });
+        //Al clickar en cambiar imagen se pregunta si la imagen se quiere elegir de la galería o cámara
         cambiarImagen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -379,6 +373,8 @@ public class PerfilFragment extends Fragment {
                 builder.show();
             }
         });
+
+        //Al cerrar sesión se muestra un cerrarSesionDialog
         cerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -387,12 +383,14 @@ public class PerfilFragment extends Fragment {
 
             }
         });
+
+        //La barra de la distancia muestra 20km hora al iniciar sesión
         barraDistancia.setProgress(distancia);
         textoBarraDistancia.setText(distancia+"Km");
-
         barraDistancia.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //Al modificar la distancia se centra el mapa en base a la distancia indicada y se actualiza la distancia en la BD
                 textoBarraDistancia.setText(String.valueOf(progress)+"Km");
                 preferencias.edit().putInt("distancia",progress).apply();
                 ((MainActivity)getActivity()).centrar();
@@ -470,7 +468,7 @@ public class PerfilFragment extends Fragment {
     }
 
     private void abrirDialogoIntereses() {
-
+        //Muestra el diálogo para seleccionar los intereses
         ArrayList<Integer> seleccion = new ArrayList<Integer>();
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Intereses");
@@ -479,6 +477,7 @@ public class PerfilFragment extends Fragment {
         builder.setMultiChoiceItems(opciones, null, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                //Se comprueba si se ha seleccionado o deseleccionado un interés
                 if(!seleccion.contains(i)){
                     seleccion.add(i);
 
@@ -492,7 +491,7 @@ public class PerfilFragment extends Fragment {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                //Al pulsae aceptar se actualizan los intereses
                 String texto = "";
                 for (int i = 0; i < seleccion.size(); i++) {
                     Log.i("MYAPP", String.valueOf(seleccion.get(i)));
@@ -511,6 +510,7 @@ public class PerfilFragment extends Fragment {
     }
 
     private void obtenerIntereses(Boolean usuario) {
+        //Método que obtiene de la BD todos los itnereses que se pueden elegir
         Data datos;
         if(usuario){
             datos = new Data.Builder()
@@ -551,8 +551,6 @@ public class PerfilFragment extends Fragment {
                                     else{
                                         listaIntereses.add(elemento.getString("interes"));
                                     }
-
-                                    //interesesUsuario = interesesUsuario.substring(0, interesesUsuario.length()-2);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -575,7 +573,6 @@ public class PerfilFragment extends Fragment {
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(getActivity()).enqueueUniqueWork("getDatosIntereses", ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 
@@ -583,14 +580,9 @@ public class PerfilFragment extends Fragment {
         //Se obtiene la posición del usuario
         FusedLocationProviderClient proveedordelocalizacion =
                 LocationServices.getFusedLocationProviderClient(this.getContext());
+        //Si el permiso no está concedido se concede
         if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
             Toast toast = Toast.makeText(getActivity(), "Es necesario aceptar el permiso de ubicación para usar la aplicación", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
             toast.show();
@@ -649,6 +641,7 @@ public class PerfilFragment extends Fragment {
      * Código obtenido de: https://programacionymas.com/blog/como-pedir-fecha-android-usando-date-picker
      */
     private void showDatePickerDialog() {
+        //Muestra el diálogo para seleccionar la fecha
         DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
@@ -684,6 +677,7 @@ public class PerfilFragment extends Fragment {
     }
 
     private void actualizar(String funcion, String campo) {
+        //Método que actualiza el campo indicado en la BD
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=" + funcion + "&id=" + id + "&" + campo)
@@ -711,7 +705,6 @@ public class PerfilFragment extends Fragment {
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(getActivity()).enqueueUniqueWork("actualizar" + funcion, ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 
@@ -730,7 +723,7 @@ public class PerfilFragment extends Fragment {
     }
 
     private void cargarPerfil() {
-
+        //Método que carga de la BD la información del usuario
         Data datos = new Data.Builder()
                 .putString("fichero", "DAS_users.php")
                 .putString("parametros", "funcion=datosUsuario&id=" + id)
@@ -801,7 +794,6 @@ public class PerfilFragment extends Fragment {
                         }
                     }
                 });
-        //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
         WorkManager.getInstance(getActivity()).enqueueUniqueWork("getDatosUsuarioPerfil", ExistingWorkPolicy.REPLACE, requesContrasena);
     }
 
@@ -821,35 +813,23 @@ public class PerfilFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            //Se muestra y guarda la imagen de la cámara
             //Código de:https://stackoverflow.com/questions/5991319/capture-image-from-camera-and-display-in-activity
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             imagen.setImageBitmap(photo);
             guardarImagen();
-//            BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
-//            Bitmap bitmap = drawable.getBitmap();
-//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//            byte[] fototransformada = stream.toByteArray();
-//            String fotoen64 = Base64.encodeToString(fototransformada, Base64.DEFAULT);
-//            actualizarImagenBD(fotoen64);
+
         }
         else{
             final Uri imageUri = data.getData();
             final InputStream imageStream;
             try {
+                //Se muestra y guarda la imagen de la galería
                 //Código de:https://stackoverflow.com/questions/38352148/get-image-from-the-gallery-and-show-in-imageview
                 imageStream = getActivity().getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 imagen.setImageBitmap(selectedImage);
                 guardarImagen();
-
-//                BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
-//                Bitmap bitmap = drawable.getBitmap();
-//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                byte[] fototransformada = stream.toByteArray();
-//                String fotoen64 = Base64.encodeToString(fototransformada, Base64.DEFAULT);
-//                actualizarImagenBD(fotoen64);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -896,68 +876,7 @@ public class PerfilFragment extends Fragment {
                 });
     }
 
-    private void actualizarImagenBD(String fotoen64) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String direccion = "http://ec2-54-242-79-204.compute-1.amazonaws.com/nlebena001/WEB/DAS_users.php";
-                Log.i("MYAPP", direccion);
-
-                //Los parámetros de la consulta los recibe de los input data
-                String parametros = "funcion=editarImagen&"+ "id=" + id + "&imagen=" + fotoen64;
-                Log.i("MYAPP", parametros);
-
-                HttpURLConnection urlConnection = null;
-                String result = "";
-                try {
-                    //Se realiza la conexión
-                    URL destino = new URL(direccion);
-                    urlConnection = (HttpURLConnection) destino.openConnection();
-                    urlConnection.setConnectTimeout(5000);
-                    urlConnection.setReadTimeout(5000);
-                    urlConnection.setRequestMethod("POST");
-                    urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                    urlConnection.setDoOutput(true);
-
-                    //Se añaden los parámetros a la petición
-                    PrintWriter out = new PrintWriter(urlConnection.getOutputStream());
-                    out.print(parametros);
-                    out.close();
-                    Log.i("MYAPP", "vAMOS A HACER EL POST");
-
-
-                    //En caso de obtener los datos correctamente se almacenan en una variable result que se devuelve a la clase que hizo la petición
-                    int statusCode = urlConnection.getResponseCode();
-                    Log.i("MYAPP", String.valueOf(statusCode));
-                    Log.i("MYAPP", urlConnection.getResponseMessage());
-                    if (statusCode == 200) {
-                        Log.i("MYAPP", "CONEXION ESTABLECIDA");
-
-                        BufferedInputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
-                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-                        String line = "";
-                        while ((line = bufferedReader.readLine()) != null) {
-                            result += line;
-                        }
-                        inputStream.close();
-
-
-
-
-
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Log.i("MYAPP", result);
-                Data resultados = new Data.Builder()
-                        .putString("resultado", result)
-                        .build();
-            }
-        }).start();
-    }
-
+   //Obtiene la imagen de la imageView en formato byte[]
     public byte[] getByteArray(){
         // Get the data from an ImageView as bytes
         this.imagen.setDrawingCacheEnabled(true);
@@ -969,19 +888,5 @@ public class PerfilFragment extends Fragment {
         return data;
     }
 
-//    @Override
-//    public void alpulsarCerrarSesion() {
-//        SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//        SharedPreferences.Editor editor = preferencias.edit();
-//        editor.remove("id");
-//        editor.remove("nombre");
-//        editor.remove("edad");
-//        editor.remove("genero");
-//        editor.remove("ubicacion");
-//        editor.remove("descripcion");
-//        editor.remove("intereses");
-//
-//        editor.apply();
-//
-//    }
+
 }
