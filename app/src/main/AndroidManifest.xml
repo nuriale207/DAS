@@ -18,20 +18,20 @@
 
         android:theme="@style/Theme.Design.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".JuegoActivity"></activity>
+        <activity android:name=".juego.JuegoActivity"></activity>
 
-        <service android:name=".Firebase">
+        <service android:name=".chats.Firebase">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name=".InfoUserActivity" />
-        <activity android:name=".ChatActivity" />
-        <activity android:name=".InteresesActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".mapa.InfoUserActivity" />
+        <activity android:name=".chats.ChatActivity" />
+        <activity android:name=".registroLogin.InteresesActivity" />
+        <activity android:name=".registroLogin.RegisterActivity" />
+        <activity android:name=".registroLogin.LoginActivity" />
+        <activity android:name=".mapa.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

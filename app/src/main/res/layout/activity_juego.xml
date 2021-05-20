@@ -7,7 +7,7 @@
     android:layout_columnWeight="1"
     android:background="@drawable/fondo_chat"
     android:orientation="vertical"
-    tools:context=".JuegoActivity">
+    tools:context=".juego.JuegoActivity">
 
     <TextView
         android:id="@+id/textoGanador"

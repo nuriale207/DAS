@@ -1,4 +1,4 @@
-package com.example.das;
+package com.example.das.registroLogin;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -13,7 +13,6 @@ import androidx.work.WorkManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.InputType;
@@ -24,6 +23,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.das.bd.ConexionBDWorker;
+import com.example.das.mapa.MainActivity;
+import com.example.das.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -40,13 +42,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -66,12 +61,11 @@ public class LoginActivity extends AppCompatActivity {
         //Cargar los elementos de la ventana
 
         botonIniciarSesion = findViewById(R.id.botonIniciarSesion);
-
-
         botonRegistroGoogle = findViewById(R.id.botonRegistrarse);
         inputEmail = findViewById(R.id.nombreUsuarioEdit);
         inputPassword = findViewById(R.id.contraseñaEdit);
 
+        
         //En caso de haber girado la pantalla se añaden los valores escritos previamente
         if(savedInstanceState!=null){
             inputEmail.setText(savedInstanceState.getString("email"));

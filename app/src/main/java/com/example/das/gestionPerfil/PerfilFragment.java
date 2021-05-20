@@ -1,4 +1,4 @@
-package com.example.das;
+package com.example.das.gestionPerfil;
 
 import android.Manifest;
 import android.app.Activity;
@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -31,7 +30,6 @@ import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
 import android.preference.PreferenceManager;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -46,6 +44,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.das.bd.ConexionBDWorker;
+import com.example.das.registroLogin.DatePickerFragment;
+import com.example.das.chats.Firebase;
+import com.example.das.mapa.MainActivity;
+import com.example.das.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;

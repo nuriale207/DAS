@@ -1,4 +1,4 @@
-package com.example.das;
+package com.example.das.chats;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import com.example.das.bd.BDLocal;
+import com.example.das.R;
 
 import java.util.ArrayList;
 

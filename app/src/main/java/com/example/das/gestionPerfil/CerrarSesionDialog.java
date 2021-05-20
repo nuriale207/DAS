@@ -1,4 +1,4 @@
-package com.example.das;
+package com.example.das.gestionPerfil;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -21,6 +21,10 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
+
+import com.example.das.bd.BDLocal;
+import com.example.das.bd.ConexionBDWorker;
+import com.example.das.registroLogin.LoginActivity;
 
 public class CerrarSesionDialog extends DialogFragment {
     //Diálogo que pregunta al usuario si realmente quiere cerrar sesión
@@ -62,7 +66,7 @@ public class CerrarSesionDialog extends DialogFragment {
 
                 editor.apply();
                 eliminarTokenFCM();
-                Intent i=new Intent(getActivity(),LoginActivity.class);
+                Intent i=new Intent(getActivity(), LoginActivity.class);
                 getActivity().finish();
 
                 startActivity(i);

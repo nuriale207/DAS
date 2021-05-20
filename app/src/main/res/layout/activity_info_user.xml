@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo_perfil"
-    tools:context=".InfoUserActivity">
+    tools:context=".mapa.InfoUserActivity">
 
     <Button
         android:id="@+id/buttonEnviarMensaje"

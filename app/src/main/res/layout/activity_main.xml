@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity"
+    tools:context=".mapa.MainActivity"
     android:background="@drawable/fondo_perfil"
     >
 
@@ -49,7 +49,7 @@
                     <!--Text View for applying the text to the tab-->
                     <fragment
                         android:id="@+id/fragmentChats"
-                        android:name="com.example.das.ChatsFragment"
+                        android:name="com.example.das.chats.ChatsFragment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         />
@@ -67,7 +67,7 @@
                 <!--Text View for applying the text to the tab-->
                     <!--<fragment
                         android:id="@+id/fragmentMapa"
-                        android:name="com.example.das.MapaFragment"
+                        android:name="com.example.das.mapa.MapaFragment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />-->
                     <fragment
@@ -102,7 +102,7 @@
                     <!--Text View for applying the text to the tab-->
                     <fragment
                         android:id="@+id/fragmentPerfil"
-                        android:name="com.example.das.PerfilFragment"
+                        android:name="com.example.das.gestionPerfil.PerfilFragment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>

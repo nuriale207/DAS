@@ -1,6 +1,4 @@
-package com.example.das;
-
-import android.content.Context;
+package com.example.das.chats;
 
 public class GestorChats {
 

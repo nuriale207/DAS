@@ -1,46 +1,37 @@
-package com.example.das;
+package com.example.das.chats;
 
-import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
-import android.util.Base64;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
-import androidx.work.Data;
-import androidx.work.ExistingWorkPolicy;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.example.das.R;
+import com.example.das.bd.BDLocal;
+import com.example.das.chats.ChatActivity;
+import com.example.das.chats.ChatsFragment;
+import com.example.das.chats.GestorChats;
+import com.example.das.juego.JuegoActivity;
+import com.example.das.mapa.MainActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.installations.Utils;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.firebase.storage.FirebaseStorage;
@@ -57,8 +48,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.BufferUnderflowException;
-import java.nio.ByteBuffer;
 
 public class Firebase extends FirebaseMessagingService {
     private String nombreRemitente;
@@ -156,7 +145,7 @@ public class Firebase extends FirebaseMessagingService {
         if(mensaje.contains(idTresRaya)){
             boolean juegoAbierto=false;
             mensajeJuego=true;
-            juegoAbierto=JuegoActivity.running;
+            juegoAbierto= JuegoActivity.running;
             if(juegoAbierto){
                 String idJuego=JuegoActivity.idChat;
                 if(idJuego.equals(id_remitente)){
@@ -167,7 +156,7 @@ public class Firebase extends FirebaseMessagingService {
             mensaje=mensaje.substring(idTresRaya.length());
         }
         boolean runningChat = ChatActivity.running;
-        boolean runningChatsFragment=ChatsFragment.running;
+        boolean runningChatsFragment= ChatsFragment.running;
         if (runningChat && !mensajeJuego) {
             String idChat = ChatActivity.idChat;
             if (idChat.equals(id_remitente)) {

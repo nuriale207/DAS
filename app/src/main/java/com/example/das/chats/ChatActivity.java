@@ -1,9 +1,6 @@
-package com.example.das;
+package com.example.das.chats;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.work.Data;
 import androidx.work.ExistingWorkPolicy;
@@ -11,8 +8,6 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
-import android.app.Activity;
-import android.app.AlarmManager;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,11 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,12 +31,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.das.bd.BDLocal;
+import com.example.das.bd.ConexionBDWorker;
+import com.example.das.mapa.InfoUserActivity;
+import com.example.das.juego.JuegoActivity;
+import com.example.das.R;
+import com.example.das.mapa.MainActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -53,8 +45,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.nio.BufferUnderflowException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class ChatActivity extends AppCompatActivity {
@@ -141,7 +131,7 @@ public class ChatActivity extends AppCompatActivity {
         nombreOtroChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i=new Intent(ChatActivity.this,InfoUserActivity.class);
+                Intent i=new Intent(ChatActivity.this, InfoUserActivity.class);
                 i.putExtra("id",idOtro);
                 i.putExtra("chat",true);
                 startActivity(i);

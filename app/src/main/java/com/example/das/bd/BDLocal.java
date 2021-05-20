@@ -1,4 +1,4 @@
-package com.example.das;
+package com.example.das.bd;
 
 import android.content.ContentValues;
 import android.content.Context;

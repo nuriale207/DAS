@@ -1,4 +1,4 @@
-package com.example.das;
+package com.example.das.mapa;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +36,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.das.bd.BDLocal;
+import com.example.das.bd.ConexionBDWorker;
+import com.example.das.chats.Firebase;
+import com.example.das.R;
+import com.example.das.registroLogin.LoginActivity;
+import com.example.das.registroLogin.RegisterActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -48,7 +54,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -57,7 +62,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
@@ -69,7 +73,6 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private FirebaseAuth firebaseAuth;
@@ -446,7 +449,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (idClicado!=null){
                     Log.i("MYAPP","Usuario clicado: "+idClicado);
                     //Using position get Value from arraylist
-                    Intent i=new Intent(getApplicationContext(),InfoUserActivity.class);
+                    Intent i=new Intent(getApplicationContext(), InfoUserActivity.class);
                     i.putExtra("id",idClicado);
                     finish();
                     startActivity(i);

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo_chats"
-    tools:context=".ChatsFragment">
+    tools:context=".chats.ChatsFragment">
 
     <ListView
         android:id="@+id/listaChats"

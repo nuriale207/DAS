@@ -1,4 +1,4 @@
-package com.example.das;
+package com.example.das.chats;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.das.R;
 import com.google.android.gms.maps.model.GroundOverlay;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.das;
+package com.example.das.registroLogin;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,8 +22,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.das.bd.ConexionBDWorker;
+import com.example.das.mapa.MainActivity;
+import com.example.das.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;

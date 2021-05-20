@@ -1,4 +1,4 @@
-package com.example.das;
+package com.example.das.juego;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -14,6 +14,10 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.das.bd.BDLocal;
+import com.example.das.chats.Firebase;
+import com.example.das.R;
+
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -22,7 +26,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class JuegoActivity extends AppCompatActivity {
     private String miId;
