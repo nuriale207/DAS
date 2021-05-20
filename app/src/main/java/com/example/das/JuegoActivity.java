@@ -3,6 +3,9 @@ package com.example.das;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +37,8 @@ public class JuegoActivity extends AppCompatActivity {
     private Handler handler;
     public static boolean running;
     public static String idChat;
+    private byte[] imagenOtro;
+    private  String nombreOtro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,8 @@ public class JuegoActivity extends AppCompatActivity {
 
             miNombre=extras.getString("miNombre");
             tokenOtro=extras.getString("tokenOtro");
+            nombreOtro=extras.getString("nombreOtro");
+            imagenOtro=extras.getByteArray("imagenOtro");
 
             handler = new Handler();
             Runnable runHilo = new Runnable() {
@@ -137,6 +144,10 @@ public class JuegoActivity extends AppCompatActivity {
 
 
                             if (!nuevoTablero.toString().equals(tablero)){
+                                if(!estaEnBDLocal()){
+
+                                    guardarEnBDLocal();
+                                }
                                 Firebase.enviarMensajeFCM(getBaseContext(),"TRESRAYA_010203: "+miNombre+" ha marcado una casilla. Es tu turno!",tokenOtro,miId);
                                 tablero = nuevoTablero.toString();
 
@@ -179,6 +190,44 @@ public class JuegoActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void guardarEnBDLocal() {
+        BDLocal gestorDB = new BDLocal(getApplicationContext(), "DAS", null, 1);
+        SQLiteDatabase bd = gestorDB.getWritableDatabase();
+
+        String[] campos = new String[]{"Id"};
+        String[] argumentos = new String[]{idOtro};
+        Cursor cu = bd.query("Usuarios", campos, "Id=?", argumentos, null, null, null);
+        if (cu.getCount() == 0) {
+            ContentValues nuevo = new ContentValues();
+            nuevo.put("Id", idOtro);
+            nuevo.put("Nombre", nombreOtro);
+            nuevo.put("Token", tokenOtro);
+            nuevo.put("Imagen", imagenOtro);
+            bd.insert("Usuarios", null, nuevo);
+
+            //ChatsFragment chats = (ChatsFragment)getSupportFragmentManager().getFragment(null, "fragmentChats");
+            //chats.rellenarListas();
+
+
+        }
+    }
+
+    private boolean estaEnBDLocal() {
+        boolean esta=false;
+            BDLocal gestorDB = new BDLocal(getBaseContext(), "DAS", null, 1);
+            SQLiteDatabase bd = gestorDB.getWritableDatabase();
+            String[] campos = new String[]{"Nombre", "Token", "Imagen"};
+            String[] argumentos = new String[]{idOtro};
+            Cursor cu = bd.query("Usuarios", campos, "Id=?", argumentos, null, null, null);
+            if (cu.getCount() != 0) {
+                esta=true;
+
+            }
+            return esta;
+
+    }
+
     //https://stackoverflow.com/questions/5446565/android-how-do-i-check-if-activity-is-running
     @Override
     public void onStart() {

@@ -123,6 +123,9 @@ public class ChatActivity extends AppCompatActivity {
 
                 i.putExtra("miNombre",preferencias.getString("nombre","nombre"));
                 i.putExtra("tokenOtro",tokenOtro);
+                i.putExtra("nombreOtro",nombreOtro);
+
+                i.putExtra("imagenOtro",imagenOtro);
                 startActivity(i);
             }
         });
