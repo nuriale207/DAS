@@ -84,7 +84,7 @@ public class InfoUserActivity extends AppCompatActivity {
 
         imagen=findViewById(R.id.imageView3);
 
-        //Se llama a los métodos para que obtengan todos los datos del usuarioq que se muestra
+        //Se llama a los métodos para que obtengan todos los datos del usuario que se muestra
         cargarPerfil();
         cargarIntereses();
         cargarImagen();
@@ -93,6 +93,7 @@ public class InfoUserActivity extends AppCompatActivity {
         botonVolver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ReproductorSonido.getReproductorSonido().reproducirSonido(InfoUserActivity.this, R.raw.s_enviar_mensaje);
                 if(!chat){
                     Intent i=new Intent(InfoUserActivity.this, MainActivity.class);
                     i.putExtra("tab",1);
@@ -111,6 +112,7 @@ public class InfoUserActivity extends AppCompatActivity {
         botonEnviarMensaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ReproductorSonido.getReproductorSonido().reproducirSonido(InfoUserActivity.this, R.raw.s_enviar_mensaje);
                 Intent i=new Intent(InfoUserActivity.this, ChatActivity.class);
                 i.putExtra("id", idUser);
                 i.putExtra("nombre",nombre);

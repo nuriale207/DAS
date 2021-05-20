@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.das.ReproductorSonido;
 import com.example.das.bd.BDLocal;
 import com.example.das.bd.ConexionBDWorker;
 import com.example.das.chats.Firebase;
@@ -450,6 +451,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //Se abre la actividad infouser al clicar sobre un marcador
                 String idClicado = (String) (marker.getTag());
                 if (idClicado!=null){
+                    ReproductorSonido.getReproductorSonido().reproducirSonido(MainActivity.this, R.raw.s_recibir_mensaje);
+
                     Log.i("MYAPP","Usuario clicado: "+idClicado);
                     //Using position get Value from arraylist
                     Intent i=new Intent(getApplicationContext(), InfoUserActivity.class);

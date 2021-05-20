@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.das.ReproductorSonido;
 import com.example.das.bd.ConexionBDWorker;
 import com.example.das.mapa.MainActivity;
 import com.example.das.R;
@@ -78,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         botonIniciarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ReproductorSonido.getReproductorSonido().reproducirSonido(LoginActivity.this, R.raw.s_recibir_mensaje);
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
                 if (formularioValido()) {
@@ -137,6 +139,7 @@ public class LoginActivity extends AppCompatActivity {
         botonRegistroGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ReproductorSonido.getReproductorSonido().reproducirSonido(LoginActivity.this, R.raw.s_recibir_mensaje);
                 // Configure Google Sign In
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken(getString(R.string.default_web_client_id))

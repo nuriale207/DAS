@@ -44,6 +44,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.das.ReproductorSonido;
 import com.example.das.bd.ConexionBDWorker;
 import com.example.das.registroLogin.DatePickerFragment;
 import com.example.das.chats.Firebase;
@@ -159,7 +160,7 @@ public class PerfilFragment extends Fragment {
         cambiarEdad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ReproductorSonido.getReproductorSonido().reproducirSonido(getContext(), R.raw.s_recibir_mensaje);
                 showDatePickerDialog();
             }
         });
@@ -172,6 +173,7 @@ public class PerfilFragment extends Fragment {
                  * Código obtenido de:https://stackoverflow.com/questions/16389581/android-create-a-popup-that-has-multiple-selection-options
                  * Usuario: https://stackoverflow.com/users/1274911/zbr
                  */
+                ReproductorSonido.getReproductorSonido().reproducirSonido(getContext(), R.raw.s_recibir_mensaje);
                 String[] opciones = {"Hombre", "Mujer", "No binario"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 builder.setTitle("Género");
@@ -190,6 +192,7 @@ public class PerfilFragment extends Fragment {
         cambiarUbicacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ReproductorSonido.getReproductorSonido().reproducirSonido(getContext(), R.raw.s_recibir_mensaje);
                 obtenerUbicacion();
             }
         });
@@ -197,6 +200,7 @@ public class PerfilFragment extends Fragment {
         cambiarNombre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ReproductorSonido.getReproductorSonido().reproducirSonido(getContext(), R.raw.s_recibir_mensaje);
                 EditText editTextField = new EditText(v.getContext());
                 editTextField.setText(editNombre.getText().toString());
                 AlertDialog dialog = new AlertDialog.Builder(v.getContext())
@@ -234,6 +238,7 @@ public class PerfilFragment extends Fragment {
         verDescripcion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ReproductorSonido.getReproductorSonido().reproducirSonido(getContext(), R.raw.s_recibir_mensaje);
                 EditText editTextField = new EditText(v.getContext());
                 editTextField.setText(descripcion);
                 editTextField.setEnabled(false);
@@ -315,7 +320,7 @@ public class PerfilFragment extends Fragment {
         verIntereses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ReproductorSonido.getReproductorSonido().reproducirSonido(getContext(), R.raw.s_recibir_mensaje);
                 String[] opciones =interesesUsuario.split("#");
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
@@ -354,7 +359,7 @@ public class PerfilFragment extends Fragment {
         cambiarImagen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ReproductorSonido.getReproductorSonido().reproducirSonido(getContext(), R.raw.s_recibir_mensaje);
                 String[] opciones = {"Hacer una foto", "Elegir de la galería"};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
@@ -378,6 +383,7 @@ public class PerfilFragment extends Fragment {
         cerrarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ReproductorSonido.getReproductorSonido().reproducirSonido(getContext(), R.raw.s_recibir_mensaje);
                 CerrarSesionDialog dialogoIniciarSesion=new CerrarSesionDialog();
                 dialogoIniciarSesion.show(getActivity().getSupportFragmentManager(), "etiqueta");
 

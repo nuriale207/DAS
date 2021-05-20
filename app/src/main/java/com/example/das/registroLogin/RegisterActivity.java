@@ -121,6 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
         fechaNacimiento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ReproductorSonido.getReproductorSonido().reproducirSonido(RegisterActivity.this, R.raw.s_recibir_mensaje);
                 showDatePickerDialog();
             }
 
@@ -133,6 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
                  * Código obtenido de:https://stackoverflow.com/questions/16389581/android-create-a-popup-that-has-multiple-selection-options
                  * Usuario: https://stackoverflow.com/users/1274911/zbr
                  */
+                ReproductorSonido.getReproductorSonido().reproducirSonido(RegisterActivity.this, R.raw.s_recibir_mensaje);
                 String[] opciones = {"Hombre", "Mujer", "No binario"};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
@@ -156,6 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
                  * Código obtenido de:https://stackoverflow.com/questions/16389581/android-create-a-popup-that-has-multiple-selection-options
                  * Usuario: https://stackoverflow.com/users/1274911/zbr
                  */
+                ReproductorSonido.getReproductorSonido().reproducirSonido(RegisterActivity.this, R.raw.s_recibir_mensaje);
                 String[] opciones = {"Hacer una foto", "Elegir de la galería"};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
@@ -202,6 +205,7 @@ public class RegisterActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                ReproductorSonido.getReproductorSonido().reproducirSonido(RegisterActivity.this, R.raw.s_recibir_mensaje);
                 añadirUsuario(nombre.getText().toString(), fechaNacimiento.getText().toString(), genero.getText().toString(), ubicacion.getText().toString());
 
             }
@@ -211,6 +215,7 @@ public class RegisterActivity extends AppCompatActivity {
         ubicacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ReproductorSonido.getReproductorSonido().reproducirSonido(RegisterActivity.this, R.raw.s_recibir_mensaje);
                 Log.i("MYAPP", "Obteniendo ubicacion...");
                 obtenerUbicacion();
 

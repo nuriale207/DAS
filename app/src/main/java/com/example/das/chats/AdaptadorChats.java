@@ -13,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.das.R;
+import com.example.das.ReproductorSonido;
 import com.example.das.chats.ChatActivity;
+import com.example.das.mapa.InfoUserActivity;
 
 
 public class AdaptadorChats extends ArrayAdapter {
@@ -50,6 +52,7 @@ public class AdaptadorChats extends ArrayAdapter {
         fila.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ReproductorSonido.getReproductorSonido().reproducirSonido(context, R.raw.s_recibir_mensaje);
                 Intent i = new Intent(context, ChatActivity.class);
                 i.putExtra("id", ids[position]);
                 i.putExtra("nombre", nombres[position]);
