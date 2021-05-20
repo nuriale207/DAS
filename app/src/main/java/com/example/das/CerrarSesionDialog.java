@@ -55,8 +55,10 @@ public class CerrarSesionDialog extends DialogFragment {
                 BDLocal gestorDB = new BDLocal (getActivity(), "DAS", null, 1);
                 SQLiteDatabase bd = gestorDB.getWritableDatabase();
 
-                bd.delete("Usuarios",null,null);
-                bd.delete("Mensajes",null,null);
+                //bd.delete("Usuarios",null,null);
+                bd.execSQL("delete from Usuarios");
+                //bd.delete("Mensajes",null,null);
+                bd.execSQL("delete from Mensajes");
 
                 editor.apply();
                 eliminarTokenFCM();
