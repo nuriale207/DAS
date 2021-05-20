@@ -25,12 +25,15 @@ public class JuegoActivity extends AppCompatActivity {
     private String miId;
     private String idOtro;
     private String tablero;
+    private String miNombre;
+    private String tokenOtro;
     private Boolean turno;
     private int meToca = 1;
     private String ganador = "null";
     private Thread hilo;
     private Handler handler;
-
+    public static boolean running;
+    public static String idChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,9 @@ public class JuegoActivity extends AppCompatActivity {
         if (extras != null) {
             miId = extras.getString("miId");
             idOtro = extras.getString("idOtro");
+
+            miNombre=extras.getString("miNombre");
+            tokenOtro=extras.getString("tokenOtro");
 
             handler = new Handler();
             Runnable runHilo = new Runnable() {
@@ -131,6 +137,7 @@ public class JuegoActivity extends AppCompatActivity {
 
 
                             if (!nuevoTablero.toString().equals(tablero)){
+                                Firebase.enviarMensajeFCM(getBaseContext(),"TRESRAYA_010203: "+miNombre+" ha marcado una casilla. Es tu turno!",tokenOtro,miId);
                                 tablero = nuevoTablero.toString();
 
                                 Boolean ganado = false;
@@ -149,10 +156,13 @@ public class JuegoActivity extends AppCompatActivity {
                                         tablero.charAt(0) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(8) && tablero.charAt(0) != '_' ||
                                         tablero.charAt(2) == tablero.charAt(4) && tablero.charAt(4) == tablero.charAt(6) && tablero.charAt(2) != '_'){
                                     ganado = true;
+                                    Firebase.enviarMensajeFCM(getBaseContext(),"TRESRAYA_010203: Tu partida con "+miNombre+" ha terminado Lo siento has perdido!",tokenOtro,miId);
                                 }
-                                if(tablero.charAt(0)!='_'&&tablero.charAt(1)!='_'&&tablero.charAt(2)!='_'&&tablero.charAt(3)!='_'&&tablero.charAt(4)!='_'&&tablero.charAt(5)!='_'&&
+                                else if(tablero.charAt(0)!='_'&&tablero.charAt(1)!='_'&&tablero.charAt(2)!='_'&&tablero.charAt(3)!='_'&&tablero.charAt(4)!='_'&&tablero.charAt(5)!='_'&&
                                         tablero.charAt(6)!='_'&&tablero.charAt(7)!='_'&&tablero.charAt(8)!='_'){
                                     empatado=true;
+                                    Firebase.enviarMensajeFCM(getBaseContext(),"TRESRAYA_010203: Tu partida con "+miNombre+" ha terminado. Habeis empatado!",tokenOtro,miId);
+
                                 }
 
                                 if(ganado){
@@ -168,6 +178,19 @@ public class JuegoActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+    //https://stackoverflow.com/questions/5446565/android-how-do-i-check-if-activity-is-running
+    @Override
+    public void onStart() {
+        super.onStart();
+        running = true;
+        idChat=idOtro;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        running = false;
     }
 
     private void empezarHilo(){

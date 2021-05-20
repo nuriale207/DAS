@@ -120,6 +120,9 @@ public class ChatActivity extends AppCompatActivity {
                 Intent i = new Intent(ChatActivity.this, JuegoActivity.class);
                 i.putExtra("miId", miId);
                 i.putExtra("idOtro", idOtro);
+
+                i.putExtra("miNombre",preferencias.getString("nombre","nombre"));
+                i.putExtra("tokenOtro",tokenOtro);
                 startActivity(i);
             }
         });
