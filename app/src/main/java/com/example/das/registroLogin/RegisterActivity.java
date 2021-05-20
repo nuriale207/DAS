@@ -86,8 +86,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.i("MY", currentuser);
+
 
         //Cargar elementos del layout
         imagen = findViewById(R.id.imageView);
@@ -105,7 +104,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         }
 
-        //id=  firebaseAuth.getInstance().getCurrentUser().getUid();
         Log.i("MYAPP", "El id del usuario es " + id);
 
         //En caso de haber girado la pantalla se añaden los valores escritos previamente
@@ -113,10 +111,6 @@ public class RegisterActivity extends AppCompatActivity {
             nombre.setText(savedInstanceState.getString("nombre"));
             fechaNacimiento.setText(savedInstanceState.getString("fechaNacimiento"));
             genero.setText(savedInstanceState.getString("genero"));
-
-//            Bitmap b = BitmapFactory.decodeByteArray(
-//                    getIntent().getByteArrayExtra("imagen"),0,getIntent().getByteArrayExtra("byteArray").length);
-//           imagen.setImageBitmap(b);
         }
 
         //Añadir listeners a los campos
@@ -168,8 +162,10 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // the user clicked on colors[which]
                         if (which == 0) {
+                            //Si se elige el primero se solicita permiso para usar la cámara
                             solicitarPermisoCamara();
                         } else {
+                            //Se solicita el permiso para abrir la galería
                             solicitarPermisoGaleria();
                         }
                     }
@@ -203,17 +199,12 @@ public class RegisterActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-//                BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
-//                Bitmap bitmap = drawable.getBitmap();
-//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                byte[] fototransformada = stream.toByteArray();
-//                String fotoen64 = Base64.encodeToString(fototransformada, Base64.DEFAULT);
                 añadirUsuario(nombre.getText().toString(), fechaNacimiento.getText().toString(), genero.getText().toString(), ubicacion.getText().toString());
 
             }
         });
 
+        //Al pulsar sobre ubicación se rellena el campo automáticamente tras dar el permiso de ubicación
         ubicacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,14 +230,8 @@ public class RegisterActivity extends AppCompatActivity {
         //Se obtiene la posición del usuario
         FusedLocationProviderClient proveedordelocalizacion =
                 LocationServices.getFusedLocationProviderClient(this);
+        //En caso de que el permiso esté denegado se solicita
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             Toast toast = Toast.makeText(getApplicationContext(), "Es necesario aceptar el permiso de ubicación para usar la aplicación", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
             toast.show();
@@ -254,6 +239,7 @@ public class RegisterActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     3);
         } else {
+            //Se obtiene el nombre de la localización actual
             proveedordelocalizacion.getLastLocation()
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
@@ -261,8 +247,10 @@ public class RegisterActivity extends AppCompatActivity {
                             if (location != null) {
                                 Log.i("MYAPP", "Latitud: " + location.getLatitude());
                                 Log.i("MYAPP", "Longitud: " + location.getLongitude());
+                                //Se obtienen las cooordenadas
                                 longitud = location.getLongitude();
                                 latitud = location.getLatitude();
+                                //Se busca el nombre de la ubicación
                                 Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
                                 try {
                                     List<Address> addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
@@ -270,6 +258,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         ubicacion.setText(addresses.get(0).getLocality());
 
                                     } else {
+                                        //Si se desconoce el punto, se escribe población desconocida
                                         ubicacion.setText("Población desconocida");
                                     }
                                 } catch (IOException e) {
@@ -278,6 +267,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                             } else {
+                                //En caso de error se muestra un mensaje
                                 Log.i("MYAPP", "Latitud: (desconocida)");
                                 Log.i("MYAPP", "Longitud: (desconocida)");
                                 Toast toast = Toast.makeText(getApplicationContext(), "Error al obtener la ubicación intentalo de nuevo más tarde", Toast.LENGTH_LONG);
@@ -289,6 +279,8 @@ public class RegisterActivity extends AppCompatActivity {
                     .addOnFailureListener(this, new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            //En caso de error se muestra un mensaje
+
                             Log.i("MYAPP", "Error al obtener la posición");
                             Toast toast = Toast.makeText(getApplicationContext(), "Error al obtener la ubicación intentalo de nuevo más tarde", Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
@@ -303,6 +295,7 @@ public class RegisterActivity extends AppCompatActivity {
      * Código obtenido de: https://programacionymas.com/blog/como-pedir-fecha-android-usando-date-picker
      */
     private void showDatePickerDialog() {
+        //Método que muestra el datePickerDialog para ello hace uso de datePickerFragment
         DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
@@ -310,6 +303,7 @@ public class RegisterActivity extends AppCompatActivity {
                 //final String selectedDate = day + " / " + (month+1) + " / " + year;
                 final String selectedDate = year + "-" + (month + 1) + "-" + day;
                 Log.i("MY", selectedDate);
+                //Al seleccionar la fecha se muestra en el editText fecha
                 fechaNacimiento.setText(selectedDate);
             }
         });
@@ -350,12 +344,17 @@ public class RegisterActivity extends AppCompatActivity {
             //EL PERMISO NO ESTÁ CONCEDIDO, PEDIRLO
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
                 // MOSTRAR AL USUARIO UNA EXPLICACIÓN DE POR QUÉ ES NECESARIO EL PERMISO
+                Toast toast = Toast.makeText(getApplicationContext(), "Acepta el permiso para poder usar la cámara", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+                toast.show();
 
 
             } else {
                 //EL PERMISO NO ESTÁ CONCEDIDO TODAVÍA O EL USUARIO HA INDICADO
                 //QUE NO QUIERE QUE SE LE VUELVA A SOLICITAR
-
+                Toast toast = Toast.makeText(getApplicationContext(), "Acepta el permiso para poder usar la cámara", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
+                toast.show();
             }
             //PEDIR EL PERMISO
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
@@ -378,7 +377,7 @@ public class RegisterActivity extends AppCompatActivity {
             case 1: {
                 // Si la petición se cancela, granResults estará vacío
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // PERMISO CONCEDIDO, EJECUTAR LA FUNCIONALIDAD
+                    // PERMISO DE LA CÁMARA CONCEDIDO, SE LANZA LA CÁMARA
                     Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(cameraIntent, 1);
 
@@ -394,7 +393,7 @@ public class RegisterActivity extends AppCompatActivity {
             case 2: {
                 // Si la petición se cancela, granResults estará vacío
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // PERMISO CONCEDIDO, EJECUTAR LA FUNCIONALIDAD
+                    // PERMISO GALERÍA CONCEDIDO, SE ABRE LA GALERÍA
                     Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     galleryIntent.setType("image/*");
                     startActivityForResult(galleryIntent, 2);
@@ -422,6 +421,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            //Al hacer una foto se muestra en el imageView
             //Código de:https://stackoverflow.com/questions/5991319/capture-image-from-camera-and-display-in-activity
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             Bitmap resized = Bitmap.createScaledBitmap(photo, imagen.getWidth(), imagen.getHeight(), true);
@@ -432,6 +432,7 @@ public class RegisterActivity extends AppCompatActivity {
             final InputStream imageStream;
             try {
                 //Código de:https://stackoverflow.com/questions/38352148/get-image-from-the-gallery-and-show-in-imageview
+                //Al seleccionar la imagen se muestra en el imageView
                 imageStream = getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 Bitmap resized = Bitmap.createScaledBitmap(selectedImage, imagen.getWidth(), imagen.getHeight(), true);
@@ -444,6 +445,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         }
     }
+    //Método que adapta las dimensiones de una imagen al imageView
     private static Bitmap resize(Bitmap image, int maxWidth, int maxHeight) {
         if (maxHeight > 0 && maxWidth > 0) {
             int width = image.getWidth();
@@ -513,11 +515,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 result += line;
                             }
                             inputStream.close();
-
-
-
-
-
+                            //Si los datos se han almacenado correctamente, se almacena la imagen y se abre la actividad de intereses
                             if(!result.contains("error")){
                                 guardarImagen();
                                 SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -526,8 +524,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 startActivity(i);
                                 finish();
                             }
-
-
 
                         }
 
@@ -544,65 +540,12 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-//    @RequiresApi(api = Build.VERSION_CODES.O)
-//    private void añadirUsuario(String nombre, String fecha, String genero,String ubicacion,String fotoEn64) {
-//        //Método que añade el usuario a la BD remota haciendo una solicitud a un Worker
-//        boolean valido= comprobarFormulario(nombre, fecha, genero,ubicacion);
-//        if (valido) {
-//
-////            Toast toast = Toast.makeText(getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG);
-////            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 0);
-////            toast.show();
-////        } else {
-//            Data datos = new Data.Builder()
-//                    .putString("fichero", "DAS_users.php")
-//                    .putString("parametros", "funcion=insertarUsuario&nombreUsuario=" + nombre + "&fechaNacimiento=" + fecha + "&genero=" + genero+"&id="+id+"&id_FCM="+id_FCM+"&longitud="+longitud+"&latitud="+latitud+"&imagen="+fotoEn64)
-//                    .build();
-//            OneTimeWorkRequest requesContrasena = new OneTimeWorkRequest.Builder(ConexionBDWorker.class).setInputData(datos).addTag("existeUsuario").build();
-//            WorkManager.getInstance(this).getWorkInfoByIdLiveData(requesContrasena.getId())
-//                    .observe(this, new Observer<WorkInfo>() {
-//                        @Override
-//                        public void onChanged(WorkInfo workInfo) {
-//                            if (workInfo != null && workInfo.getState().isFinished()) {
-//                                String resultado = workInfo.getOutputData().getString("resultado");
-//                                Log.i("MYAPP", "inicio realizado");
-//
-//                                Log.i("MYAPP", resultado);
-//                                if (resultado.contains("error")){
-//                                    Toast toast=Toast.makeText(getApplicationContext(),"Ya existe un usuario con ese id", Toast.LENGTH_LONG);
-//                                    toast.setGravity(Gravity.BOTTOM| Gravity.CENTER, 0, 0);
-//                                    toast.show();
-//                                }
-//                                else{
-//                                    guardarImagen();
-//                                    Toast toast=Toast.makeText(getApplicationContext(),nombre+ " bienvenido a Das", Toast.LENGTH_LONG);
-//                                    toast.setGravity(Gravity.BOTTOM| Gravity.CENTER, 0, 0);
-//                                    toast.show();
-//                                    SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//                                    preferencias.edit().putString("id",id).apply();
-//
-//                                    Intent i = new Intent(getApplicationContext(), InteresesActivity.class);
-//                                    startActivity(i);
-//                                    finish();
-//
-//
-//                                }
-//
-//
-//                            }
-//                        }
-//                    });
-//            //WorkManager.getInstance(getApplication().getBaseContext()).enqueue(requesContrasena);
-//            WorkManager.getInstance(getApplication().getBaseContext()).enqueueUniqueWork("existeUsuario", ExistingWorkPolicy.REPLACE, requesContrasena);
-//        }
-//    }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     private boolean comprobarFormulario(String nombre, String fechaNacimiento, String genero, String ubicacion) {
+        //Método que comprueba si los datos del usuario son correctos
         boolean valido = true;
 
         //Se calcula la edad del usuario
-
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
         Date now = new Date();
         long difference = 0;
@@ -614,14 +557,6 @@ public class RegisterActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-//        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        LocalDate fechaNac = LocalDate.parse(fechaNacimiento, fmt);
-//        LocalDate ahora = LocalDate.now();
-//
-//        Period periodo = Period.between(fechaNac, ahora);
-//        System.out.printf("Tu edad es: %s años, %s meses y %s días",
-//                periodo.getYears(), periodo.getMonths(), periodo.getDays());
         if (nombre.length() < 2) {
             valido = false;
             Toast toast = Toast.makeText(getApplicationContext(), "El nombre tiene que tener al menos dos caracteres", Toast.LENGTH_LONG);
@@ -661,7 +596,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
-
+        //Se guardan los datos incluidos hasta el momento
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putString("nombre", nombre.getText().toString());
         savedInstanceState.putString("fechaNacimiento", fechaNacimiento.getText().toString());
@@ -715,7 +650,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public byte[] getByteArray() {
-        // Get the data from an ImageView as bytes
+        // Obtiene el byte[] del imageView
         this.imagen.setDrawingCacheEnabled(true);
         imagen.buildDrawingCache();
         Bitmap bitmap = imagen.getDrawingCache();
