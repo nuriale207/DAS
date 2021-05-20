@@ -264,7 +264,7 @@ private void anadirUsuarioABDLocal(String id_remitente,String mensaje,byte[] ima
         public void run() {
             try {
 
-                String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/DAS_users.php";
+                String direccion = "http://ec2-54-242-79-204.compute-1.amazonaws.com/nlebena001/WEB/DAS_users.php";
                 Log.i("MYAPP", direccion);
 
                 //Los parámetros de la consulta los recibe de los input data
@@ -356,7 +356,7 @@ private void anadirUsuarioABDLocal(String id_remitente,String mensaje,byte[] ima
 
 //    private void anadirUsuarioABDLocal(String id_remitente,String mensaje) {
 //
-//                String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/DAS_users.php";
+//                String direccion = "http://ec2-54-242-79-204.compute-1.amazonaws.com/nlebena001/WEB/DAS_users.php";
 //                Log.i("MYAPP", direccion);
 //
 //                //Los parámetros de la consulta los recibe de los input data
@@ -565,8 +565,8 @@ private void anadirUsuarioABDLocal(String id_remitente,String mensaje,byte[] ima
                             .appendQueryParameter("mensaje", mensaje);
                     String parametros = builder.build().getEncodedQuery();
 
-                    //String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/igarcia353/WEB/fcmDAS.php";
-                    String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/fcm.php";
+                    //String direccion = "http://ec2-54-242-79-204.compute-1.amazonaws.com/igarcia353/WEB/fcmDAS.php";
+                    String direccion = "http://ec2-54-242-79-204.compute-1.amazonaws.com/nlebena001/WEB/fcm.php";
                     HttpURLConnection urlConnection = null;
                     URL destino = new URL(direccion);
                     urlConnection = (HttpURLConnection) destino.openConnection();
@@ -612,7 +612,7 @@ private void anadirUsuarioABDLocal(String id_remitente,String mensaje,byte[] ima
 //                            .appendQueryParameter("tokenDestinatario", tokenDestinatario);
 //                    String parametros = builder.build().getEncodedQuery();
 //
-//                    String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/enviarMensaje.php";
+//                    String direccion = "http://ec2-54-242-79-204.compute-1.amazonaws.com/nlebena001/WEB/enviarMensaje.php";
 //                    HttpURLConnection urlConnection = null;
 //                    URL destino = new URL(direccion);
 //                    urlConnection = (HttpURLConnection) destino.openConnection();

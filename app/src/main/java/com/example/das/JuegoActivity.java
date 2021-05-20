@@ -180,7 +180,7 @@ public class JuegoActivity extends AppCompatActivity {
                             .appendQueryParameter("id2",idOtro);
                     String parametros = builder.build().getEncodedQuery();
 
-                    String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/obtenerDatosJuego.php";
+                    String direccion = "http://ec2-54-242-79-204.compute-1.amazonaws.com/nlebena001/WEB/obtenerDatosJuego.php";
                     HttpURLConnection urlConnection = null;
                     URL destino = new URL(direccion);
                     urlConnection = (HttpURLConnection) destino.openConnection();
@@ -247,7 +247,7 @@ public class JuegoActivity extends AppCompatActivity {
                             .appendQueryParameter("ganador", ganador);
                     String parametros = builder.build().getEncodedQuery();
 
-                    String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/actualizarDatosJuego.php";
+                    String direccion = "http://ec2-54-242-79-204.compute-1.amazonaws.com/nlebena001/WEB/actualizarDatosJuego.php";
                     HttpURLConnection urlConnection = null;
                     URL destino = new URL(direccion);
                     urlConnection = (HttpURLConnection) destino.openConnection();
@@ -298,7 +298,7 @@ public class JuegoActivity extends AppCompatActivity {
                                     .appendQueryParameter("ganador", "null");
                             String parametros = builder.build().getEncodedQuery();
 
-                            String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/actualizarDatosJuego.php";
+                            String direccion = "http://ec2-54-242-79-204.compute-1.amazonaws.com/nlebena001/WEB/actualizarDatosJuego.php";
                             HttpURLConnection urlConnection = null;
                             URL destino = new URL(direccion);
                             urlConnection = (HttpURLConnection) destino.openConnection();

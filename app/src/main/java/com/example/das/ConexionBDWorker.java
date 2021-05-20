@@ -31,7 +31,7 @@ public class ConexionBDWorker extends Worker {
 
         String fichero=getInputData().getString("fichero");
         //La dirección se completa con la url al servidor y el nombre del fichero al que se realiza la consulta
-        String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/"+fichero;
+        String direccion = "http://ec2-54-242-79-204.compute-1.amazonaws.com/nlebena001/WEB/"+fichero;
         Log.i("MYAPP",direccion);
 
         //Los parámetros de la consulta los recibe de los input data

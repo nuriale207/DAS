@@ -891,7 +891,7 @@ public class PerfilFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String direccion = "http://ec2-54-167-31-169.compute-1.amazonaws.com/nlebena001/WEB/DAS_users.php";
+                String direccion = "http://ec2-54-242-79-204.compute-1.amazonaws.com/nlebena001/WEB/DAS_users.php";
                 Log.i("MYAPP", direccion);
 
                 //Los parámetros de la consulta los recibe de los input data
