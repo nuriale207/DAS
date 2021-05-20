@@ -184,7 +184,7 @@ public class Firebase extends FirebaseMessagingService {
             NotificationManager elManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(getApplicationContext(), "IdCanal");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel elCanal = new NotificationChannel("IdCanal", "NombreCanal",
+                NotificationChannel elCanal = new NotificationChannel("IdCanal", "DAS",
                         NotificationManager.IMPORTANCE_DEFAULT);
                 Intent i = new Intent(getApplicationContext(), ChatActivity.class);
                 i.putExtra("id", id_remitente);
@@ -351,7 +351,7 @@ private void anadirUsuarioABDLocal(String id_remitente,String mensaje,byte[] ima
         NotificationManager elManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(getApplicationContext(), "IdCanal");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel elCanal = new NotificationChannel("IdCanal", "NombreCanal",
+            NotificationChannel elCanal = new NotificationChannel("IdCanal", "DAS",
                     NotificationManager.IMPORTANCE_DEFAULT);
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             PendingIntent intentEnNot = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
