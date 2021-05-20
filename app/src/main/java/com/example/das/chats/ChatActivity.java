@@ -31,6 +31,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.das.ReproductorSonido;
 import com.example.das.bd.BDLocal;
 import com.example.das.bd.ConexionBDWorker;
 import com.example.das.mapa.InfoUserActivity;
@@ -253,6 +254,7 @@ public class ChatActivity extends AppCompatActivity {
         EditText mensajeEscrito = findViewById(R.id.mensaje_escrito);
         String texto=mensajeEscrito.getText().toString();
         if(texto.length()>0){
+            ReproductorSonido.getReproductorSonido().reproducirSonido(this, R.raw.s_enviar_mensaje);
             mensajes.add(texto);
             mios.add(true);
             adaptador.notifyDataSetChanged();
@@ -304,11 +306,13 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        ReproductorSonido.getReproductorSonido().reproducirSonido(this, R.raw.s_atras);
         super.onBackPressed();
         Intent i=new Intent(ChatActivity.this, MainActivity.class);
         startActivity(i);
         finish();
     }
+
 
     //Actualiza la lista de mensajes para mostrar el nuevo mensaje
     public void actualizarListaMensajes(){
@@ -317,5 +321,6 @@ public class ChatActivity extends AppCompatActivity {
         adaptador = new AdaptadorMensajes(this, mensajes,mios);
         lista.setAdapter(adaptador);
         lista.setSelection(adaptador.getCount() - 1);
+        ReproductorSonido.getReproductorSonido().reproducirSonido(this, R.raw.s_recibir_mensaje);
     }
 }

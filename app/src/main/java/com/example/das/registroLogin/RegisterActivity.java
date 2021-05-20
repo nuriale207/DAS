@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.das.R;
+import com.example.das.ReproductorSonido;
 import com.example.das.chats.ChatActivity;
 import com.example.das.mapa.MainActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -664,6 +665,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        ReproductorSonido.getReproductorSonido().reproducirSonido(this, R.raw.s_atras);
         super.onBackPressed();
         Intent i=new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(i);

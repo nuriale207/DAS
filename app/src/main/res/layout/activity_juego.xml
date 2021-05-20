@@ -22,7 +22,7 @@
         android:fontFamily="@font/shrikhand"
         android:foregroundGravity="center"
         android:gravity="center"
-        android:text="Hola"
+        android:text="En juego"
         android:textAlignment="center"
         android:textSize="30sp"
         android:visibility="invisible" />

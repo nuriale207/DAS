@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.das.ReproductorSonido;
 import com.example.das.bd.BDLocal;
 import com.example.das.chats.Firebase;
 import com.example.das.R;
@@ -72,17 +74,25 @@ public class JuegoActivity extends AppCompatActivity {
                         //En caso de terminar la partida se muestra el mensaje correspondiente junto al botón empezar de nuevo
                         ponerListenerABoton();
                         if (ganador.equals(miId)){
+                            if (!textoGanador.getText().toString().equals("¡Has ganado!")){
+                                textoGanador.setText("¡Has ganado!");
+                                ReproductorSonido.getReproductorSonido().reproducirFinPartida(JuegoActivity.this, R.raw.s_ganar_partida);                          }
                             empezarDeNuevo.setVisibility(View.VISIBLE);
-                            textoGanador.setText("¡Has ganado!");
                             textoGanador.setVisibility(View.VISIBLE);
                         }else if(ganador.equals(idOtro)){
+                            if (!textoGanador.getText().toString().equals("Has perdido...")){
+                                textoGanador.setText("Has perdido...");
+                                ReproductorSonido.getReproductorSonido().reproducirFinPartida(JuegoActivity.this, R.raw.s_perder_partida);
+                            }
                             empezarDeNuevo.setVisibility(View.VISIBLE);
-                            textoGanador.setText("Has perdido...");
                             textoGanador.setVisibility(View.VISIBLE);
                         }
                         else {
+                            if (!textoGanador.getText().toString().equals("Empate")){
+                                textoGanador.setText("Empate");
+                                ReproductorSonido.getReproductorSonido().reproducirFinPartida(JuegoActivity.this, R.raw.s_empatar_partida);
+                            }
                             empezarDeNuevo.setVisibility(View.VISIBLE);
-                            textoGanador.setText("Empate");
                             textoGanador.setVisibility(View.VISIBLE);
                         }
                     } else{
@@ -131,6 +141,7 @@ public class JuegoActivity extends AppCompatActivity {
                     boton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            ReproductorSonido.getReproductorSonido().habilitarCancioncilla();
                             int dif = 0;
                             for(int cont = 0;cont<9;cont++){
                                 if (tablero.charAt(cont) == 'O'){
@@ -154,6 +165,7 @@ public class JuegoActivity extends AppCompatActivity {
 
                             //Si el tablero se ha modificado
                             if (!nuevoTablero.toString().equals(tablero)){
+                                ReproductorSonido.getReproductorSonido().reproducirSonido(JuegoActivity.this,R.raw.s_poner_ficha);
                                 //Si no hay mensajes de ese usuario se almacena un mensaje para que se añada a lalista de chats
                                 if(!hayMensajes()){
                                     BDLocal gestorDB = new BDLocal(getApplicationContext(), "DAS", null, 1);
@@ -196,6 +208,7 @@ public class JuegoActivity extends AppCompatActivity {
                                 }
                                 if(empatado){
                                     ganador="empate";
+
                                 }
                                 //Se actualiza el tablero en la BD
                                 actualizarTableroBD();
@@ -354,7 +367,9 @@ public class JuegoActivity extends AppCompatActivity {
         empezarPartida.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                TextView textoGanador = findViewById(R.id.textoGanador);
                 meToca = 1;
+                ReproductorSonido.getReproductorSonido().habilitarCancioncilla();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -402,5 +417,10 @@ public class JuegoActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        ReproductorSonido.getReproductorSonido().reproducirSonido(this, R.raw.s_atras);
+        super.onBackPressed();
+    }
 
 }

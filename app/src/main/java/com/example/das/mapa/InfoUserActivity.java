@@ -25,6 +25,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.das.ReproductorSonido;
 import com.example.das.bd.BDLocal;
 import com.example.das.bd.ConexionBDWorker;
 import com.example.das.R;
@@ -273,6 +274,7 @@ public class InfoUserActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //Al pulsar atrás en el teléfono se fuerza la recarga de la activity main para que incluya los posibles cambios
+        ReproductorSonido.getReproductorSonido().reproducirSonido(this, R.raw.s_atras);
         super.onBackPressed();
         if(!chat){
             Intent i=new Intent(InfoUserActivity.this, MainActivity.class);
